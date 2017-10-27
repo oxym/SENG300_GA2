@@ -1,4 +1,4 @@
-package ca.ucalgary.seng300.a1.test;
+package ca.ucalgary.seng300.a2.test;
 
 import static org.junit.Assert.*;
 
@@ -17,9 +17,9 @@ import org.lsmr.vending.hardware.EmptyException;
 import org.lsmr.vending.hardware.SelectionButton;
 import org.lsmr.vending.hardware.VendingMachine;
 
-import ca.ucalgary.seng300.a1.InsufficientFundsException;
-import ca.ucalgary.seng300.a1.VendingListener;
-import ca.ucalgary.seng300.a1.VendingManager;
+import ca.ucalgary.seng300.a2.InsufficientFundsException;
+import ca.ucalgary.seng300.a2.VendingListener;
+import ca.ucalgary.seng300.a2.VendingManager;
 
 public class VendingManagerSystemTest {
 	

@@ -1,4 +1,4 @@
-package ca.ucalgary.seng300.a1.test;
+package ca.ucalgary.seng300.a2.test;
 import static org.junit.Assert.*;
 import org.junit.*;
 import org.lsmr.vending.*;

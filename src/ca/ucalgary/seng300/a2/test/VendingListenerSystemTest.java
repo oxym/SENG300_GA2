@@ -1,4 +1,4 @@
-package ca.ucalgary.seng300.a1.test;
+package ca.ucalgary.seng300.a2.test;
 
 import static org.junit.Assert.*;
 import org.junit.*;
@@ -6,7 +6,8 @@ import java.util.Arrays;
 import java.util.List;
 import org.lsmr.vending.*;
 import org.lsmr.vending.hardware.*;
-import ca.ucalgary.seng300.a1.*;
+
+import ca.ucalgary.seng300.a2.*;
 
 /**
  * A test suite designed to verify the implementation of the hardware logic classes 
