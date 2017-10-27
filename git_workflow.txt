@@ -1,0 +1,35 @@
+Git Workflow
+
+After Cloning the Repository
+
+The command line arguments are added and will work from the command line 
+Note: All of these commands are integrated in eclipse git plugin or another git gui.
+
+1. Create your own branch 
+        git branch <branch>
+
+2. Change to your branch
+        git checkout <branch>
+        
+3. Edit files, add changes and commit (you can do this as often as you feel necessary)
+        git add <filename> or git add . (This is called staging in the eclipse git plugin)
+        git commit -m "Message Here"
+        
+        You may also want to push your branch to the repository as well
+        (optional) git push -u origin <branch>
+        
+4. Switch to active branch "active" branch
+        git checkout active
+        
+5. Pull or fetch and merge from remote repository
+        git pull origin active
+        
+6. Merge your changes into local "active" branch
+        git merge <branch>
+        
+7. Fix any merge conflicts that may arise so your local active branch is a working implementation
+        git mergetool
+
+8.  Push the working active branch to the 
+        git push origin active
+        
