@@ -33,10 +33,13 @@ public class VendingManager {
 	private static VendingManager mgr;
 	private static VendingListener listener;
 	private static VendingMachine vm;
+	private DispListener displayListener;
 	private static DisplayDriver displayDriver;
 	private int credit = 0;
+	
+	private final static String currency = "CAD";
 
-	private DispListener displayListener;
+	
 
 	/**
 	 * Singleton constructor. Initializes and stores the singleton instance
@@ -236,10 +239,16 @@ public class VendingManager {
 	/**
 	 * Displays the current credit on the display
 	 */
-	private void displayCredit() {
-		int dollars = credit / 100;
-		int cents = credit % 100;
-		String message = String.format("Credit: $%3d.%02d", dollars, cents);
+	void displayCredit() {
+		String message = "Credit: " + credit;
+
+		//Prettify the message for known currencies.
+		if (currency.equals("CAD")){
+			int dollars = credit / 100;
+			int cents = credit % 100;
+			message = String.format("Credit: $%3d.%02d", dollars, cents);
+		}
+			
 		displayDriver.newMessage(message);
 	}
 
