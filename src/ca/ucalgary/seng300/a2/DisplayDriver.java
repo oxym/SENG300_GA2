@@ -10,8 +10,8 @@ import java.util.TimerTask;
  */
 public class DisplayDriver {
 
-	private static boolean TESTING = true;
-	private static String MSG_DEFAULT = "Hi there!";
+	private final static boolean TESTING = true;
+	private final static String MSG_DEFAULT = "Hi there!";
 	private int greetingCycleTime = 15; // in seconds
 	private int greetingTime = 5;  // in seconds
 	private Timer timer;
