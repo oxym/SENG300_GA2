@@ -76,7 +76,6 @@ public class TestDispListener {
 	 */
 	@Test
 	public void testMessageLogEmpty() {
-
 			assertEquals("", testDisplayListener.getLastMessage());
 	}
 }

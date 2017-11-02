@@ -53,6 +53,7 @@ public class VendingManagerSystemTest {
 		machine.getDisplay().register(testDisplayListener);
 	}
 
+	
 	/**
 	 * Tests that the logic can dispense the correct pop after too much change is
 	 * added and the button is pressed. Also confirms that nothing else is dispensed
