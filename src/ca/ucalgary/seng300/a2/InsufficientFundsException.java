@@ -2,7 +2,6 @@ package ca.ucalgary.seng300.a2;
 
 /**
  * An exception to signal that there are no sufficient funds to make a purchase.
- * Can contain 
  *
  */
 @SuppressWarnings("serial")

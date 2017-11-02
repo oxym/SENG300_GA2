@@ -33,10 +33,13 @@ public class VendingManager {
 	private static VendingManager mgr;
 	private static VendingListener listener;
 	private static VendingMachine vm;
-	private static DisplayDriver display;
-	private int credit = 0;
-
 	private DispListener displayListener;
+	private static DisplayDriver displayDriver;
+	private int credit = 0;
+	
+	private final static String currency = "CAD";
+
+	
 
 	/**
 	 * Singleton constructor. Initializes and stores the singleton instance
@@ -58,8 +61,8 @@ public class VendingManager {
 		mgr = new VendingManager();
 		vm = host;
 		mgr.registerListeners();
-		display = new DisplayDriver(mgr.getDisplay());
-		display.defaultMessage();
+		displayDriver = new DisplayDriver(mgr.getDisplay());
+		displayDriver.defaultMessage();
 	}
 
 	/**
@@ -220,7 +223,7 @@ public class VendingManager {
 					displayCredit();
 				} else {
 					//TODO: "Transaction Complete" per mr. client answer might conflict here, or display for x seconds
-					display.defaultMessage();
+					displayDriver.defaultMessage();
 				}
 				getCoinReceptacle().storeCoins();
 			}
@@ -236,11 +239,17 @@ public class VendingManager {
 	/**
 	 * Displays the current credit on the display
 	 */
-	private void displayCredit() {
-		int dollars = credit / 100;
-		int cents = credit % 100;
-		String message = String.format("Credit: $%3d.%02d", dollars, cents);
-		display.newMessage(message);
+	void displayCredit() {
+		String message = "Credit: " + credit;
+
+		//Prettify the message for known currencies.
+		if (currency.equals("CAD")){
+			int dollars = credit / 100;
+			int cents = credit % 100;
+			message = String.format("Credit: $%3d.%02d", dollars, cents);
+		}
+			
+		displayDriver.newMessage(message);
 	}
 
 //^^^======================VENDING LOGIC END=======================^^^
