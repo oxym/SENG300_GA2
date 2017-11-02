@@ -33,6 +33,8 @@ public class VendingManager {
 	private static DisplayDriver display;
 	private int credit = 0;
 
+	private DispListener displayListener;
+
 	/**
 	 * Singleton constructor. Initializes and stores the singleton instance
 	 * of VendingListener.
@@ -40,6 +42,7 @@ public class VendingManager {
 	private VendingManager(){
 		VendingListener.initialize(this);
 		listener = VendingListener.getInstance();
+		displayListener = new DispListener();
 	}
 
 	/**
@@ -71,6 +74,7 @@ public class VendingManager {
 	private void registerListeners(){
 		getCoinSlot().register(listener);
 		registerButtonListener(listener);
+		getDisplay().register(displayListener);
 	}
 
 	/**
@@ -183,11 +187,10 @@ public class VendingManager {
 	 */
 	void addCredit(int added){
 		credit += added;
-		int dollars = credit / 100;
-		int cents = credit % 100;
-		String message = String.format("Credit: $%3d.%02d", dollars, cents);
-		display.newMessage(message);
+		displayCredit();
 	}
+
+
 //^^^=======================ACCESSORS END=======================^^^
 
 
@@ -210,14 +213,32 @@ public class VendingManager {
 			if (canCount > 0){
 				rack.dispensePopCan();
 				credit -= cost; //Will only be performed if the pop is successfully dispensed.
+				if (credit > 0) {
+					displayCredit();
+				} else {
+					//TODO: "Transaction Complete" per mr. client answer might conflict here, or display for x seconds
+					display.defaultMessage();
+				}
 				getCoinReceptacle().storeCoins();
 			}
 		}
 		else {
 			int dif = cost - credit;
 			String popName = getPopKindName(popIndex);
+			//TODO: do we display a message here instead of exception?
 			throw new InsufficientFundsException("Cannot buy " + popName + ". " + dif + " cents missing.");
 		}
 	}
+
+	/**
+	 * Displays the current credit on the display
+	 */
+	private void displayCredit() {
+		int dollars = credit / 100;
+		int cents = credit % 100;
+		String message = String.format("Credit: $%3d.%02d", dollars, cents);
+		display.newMessage(message);
+	}
+
 //^^^======================VENDING LOGIC END=======================^^^
 }
