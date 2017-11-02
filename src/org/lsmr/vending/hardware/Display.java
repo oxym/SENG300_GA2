@@ -24,4 +24,5 @@ public final class Display extends AbstractHardware<DisplayListener> {
 	for(DisplayListener listener : listeners)
 	    listener.messageChange(this, oldMessage, newMessage);
     }
+    
 }

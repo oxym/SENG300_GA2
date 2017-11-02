@@ -1,4 +1,4 @@
-package ca.ucalgary.seng300.a1;
+package ca.ucalgary.seng300.a2;
 
 import org.lsmr.vending.*;
 import org.lsmr.vending.hardware.*;
@@ -7,31 +7,40 @@ import org.lsmr.vending.hardware.*;
  * VendingManager is the primary access-point for the logic controlling the
  * VendingMachine hardware. It is associated with VendingListener, which listens
  * for event notifications from the hardware classes.
- * 
+ *
  * USAGE: Pass VendingMachine to static method initialize(), then use getInstance()
- * to get the singleton VendingManager object. Listeners are registered automatically. 
- * 
+ * to get the singleton VendingManager object. Listeners are registered automatically.
+ *
  * DESIGN: All logic classes are designed as singletons. Currently, the only public-access methods are for initialization
  * and to get a VendingManager instance. All other functionality is restricted
- * to package access. 
- * 
+ * to package access.
+ *
  * TESTING: Due to the near-total encapsulation, VendingManager and VendingListener
  * must be tested along with a VendingMachine. Although a "stub" VendingMachine
- * *could* be created, doing so would be extremely inefficient. 
+ * *could* be created, doing so would be extremely inefficient.
  * We have been instructed that the VendingMachine and other hardware classes
  * are known-good, so integration testing will be sufficient.
- * 
- * @author Raymond Tran (30028473)
+ *
  * @author Thomas Coderre (10169277)
- * @author Thobthai Chulpongsatorn (30005238)
- * 
+ * @author Jason De Boer (30034428)
+ * @author
+ * @author
+ * @author
+ * @author
+ *
  */
 public class VendingManager {
 	private static VendingManager mgr;
 	private static VendingListener listener;
 	private static VendingMachine vm;
+	private DispListener displayListener;
+	private static DisplayDriver displayDriver;
 	private int credit = 0;
 	
+	private final static String currency = "CAD";
+
+	
+
 	/**
 	 * Singleton constructor. Initializes and stores the singleton instance
 	 * of VendingListener.
@@ -39,37 +48,41 @@ public class VendingManager {
 	private VendingManager(){
 		VendingListener.initialize(this);
 		listener = VendingListener.getInstance();
+		displayListener = new DispListener();
 	}
-	
+
 	/**
-	 * Replaces the existing singleton instances (if any) for the entire 
+	 * Replaces the existing singleton instances (if any) for the entire
 	 * the Vending logic package. Registers the VendingListener(s) with the
 	 * appropriate hardware.
 	 * @param host The VendingMachine which the VendingManager is intended to manage.
 	 */
 	public static void initialize(VendingMachine host){
-		mgr = new VendingManager(); 
+		mgr = new VendingManager();
 		vm = host;
 		mgr.registerListeners();
+		displayDriver = new DisplayDriver(mgr.getDisplay());
+		displayDriver.defaultMessage();
 	}
-	
+
 	/**
 	 * Provides public access to the VendingManager singleton.
-	 * @return The singleton VendingManager instance  
+	 * @return The singleton VendingManager instance
 	 */
 	public static VendingManager getInstance(){
 		return mgr;
 	}
-	
+
 	/*
-	 * Registers the previously instantiated listener(s) with the 
+	 * Registers the previously instantiated listener(s) with the
 	 * appropriate hardware.
 	 */
 	private void registerListeners(){
 		getCoinSlot().register(listener);
 		registerButtonListener(listener);
+		getDisplay().register(displayListener);
 	}
-	
+
 	/**
 	 * Iterates through all selection buttons in the VendingMachine and
 	 * registers a single listener with each.
@@ -79,13 +92,13 @@ public class VendingManager {
 		int buttonCount = getNumberOfSelectionButtons();
 		for (int i = 0; i< buttonCount; i++){
 			getSelectionButton(i).register(listener);;
-		}		
+		}
 	}
 
 
 	// Accessors used throughout the vending logic classes to get hardware references.
 	// Indirect access to the VM is used to simplify the removal of the
-	// VM class from the build.  
+	// VM class from the build.
 //vvv=======================ACCESSORS START=======================vvv
 	void enableSafety(){
 		vm.enableSafety();
@@ -109,40 +122,40 @@ public class VendingManager {
 		return vm.getSelectionButton(index);
 	}
 	CoinSlot getCoinSlot(){
-		return vm.getCoinSlot(); 
+		return vm.getCoinSlot();
 	}
 	CoinReceptacle getCoinReceptacle(){
-		return vm.getCoinReceptacle(); 
+		return vm.getCoinReceptacle();
 	}
 	CoinReceptacle getStorageBin(){
-		return vm.getStorageBin(); 
+		return vm.getStorageBin();
 	}
 	DeliveryChute getDeliveryChute(){
-		return vm.getDeliveryChute(); 
+		return vm.getDeliveryChute();
 	}
 	int getNumberOfCoinRacks(){
 		return vm.getNumberOfCoinRacks();
 	}
 	CoinRack getCoinRack(int index){
-		return vm.getCoinRack(index); 
+		return vm.getCoinRack(index);
 	}
 	CoinRack getCoinRackForCoinKind(int value){
-		return vm.getCoinRackForCoinKind(value); 
+		return vm.getCoinRackForCoinKind(value);
 	}
 	Integer getCoinKindForCoinRack(int index){
-		return vm.getCoinKindForCoinRack(index); 
+		return vm.getCoinKindForCoinRack(index);
 	}
 	int getNumberOfPopCanRacks(){
-		return vm.getNumberOfPopCanRacks(); 
+		return vm.getNumberOfPopCanRacks();
 	}
 	String getPopKindName(int index){
-		return vm.getPopKindName(index); 
+		return vm.getPopKindName(index);
 	}
 	int getPopKindCost(int index){
-		return vm.getPopKindCost(index); 
+		return vm.getPopKindCost(index);
 	}
 	PopCanRack getPopCanRack(int index){
-		return vm.getPopCanRack(index); 
+		return vm.getPopCanRack(index);
 	}
 	Display getDisplay(){
 		return vm.getDisplay();
@@ -160,13 +173,13 @@ public class VendingManager {
 			if (getSelectionButton(i) == button){
 				return i;
 			}
-		}	
+		}
 		return -1;
 	}
-	
+
 	/**
-	 * Gets the credit available for purchases, in cents. 
-	 * Public access for testing and external access. 
+	 * Gets the credit available for purchases, in cents.
+	 * Public access for testing and external access.
 	 * It is assumed to not be a security vulnerability.
 	 * @return The stored credit, in cents.
 	 */
@@ -180,37 +193,64 @@ public class VendingManager {
 	 */
 	void addCredit(int added){
 		credit += added;
+		displayCredit();
 	}
-//^^^=======================ACCESSORS END=======================^^^
-	
 
-//vvv=======================VENDING LOGIC START=======================vvv	
+
+//^^^=======================ACCESSORS END=======================^^^
+
+
+//vvv=======================VENDING LOGIC START=======================vvv
 	/**
-	 * Handles a pop purchase. Checks if the pop rack has pop, confirms funds available,  
-	 *  dispenses the pop, reduces available funds and deposits the added coins into storage. 
-	 * @param popIndex The index of the selected pop rack. 	 
+	 * Handles a pop purchase. Checks if the pop rack has pop, confirms funds available,
+	 *  dispenses the pop, reduces available funds and deposits the added coins into storage.
+	 * @param popIndex The index of the selected pop rack.
 	 * @throws InsufficientFundsException Thrown if credit < cost.
 	 * @throws EmptyException Thrown if the selected pop rack is empty.
 	 * @throws DisabledException Thrown if the pop rack or delivery chute is disabled.
 	 * @throws CapacityExceededException Thrown if the delivery chute is full.
 	 */
-	void buy(int popIndex) throws InsufficientFundsException, EmptyException, 
+	void buy(int popIndex) throws InsufficientFundsException, EmptyException,
 											DisabledException, CapacityExceededException {
 		int cost = getPopKindCost(popIndex);
 		if (getCredit() >= cost){
 			PopCanRack rack = getPopCanRack(popIndex);
 			int canCount = rack.size(); //Bad method name; returns # of cans stored
 			if (canCount > 0){
-				rack.dispensePopCan(); 
+				rack.dispensePopCan();
 				credit -= cost; //Will only be performed if the pop is successfully dispensed.
-				getCoinReceptacle().storeCoins(); 
+				if (credit > 0) {
+					displayCredit();
+				} else {
+					//TODO: "Transaction Complete" per mr. client answer might conflict here, or display for x seconds
+					displayDriver.defaultMessage();
+				}
+				getCoinReceptacle().storeCoins();
 			}
 		}
 		else {
-			int dif = cost - credit;  
+			int dif = cost - credit;
 			String popName = getPopKindName(popIndex);
+			//TODO: do we display a message here instead of exception?
 			throw new InsufficientFundsException("Cannot buy " + popName + ". " + dif + " cents missing.");
 		}
 	}
+
+	/**
+	 * Displays the current credit on the display
+	 */
+	void displayCredit() {
+		String message = "Credit: " + credit;
+
+		//Prettify the message for known currencies.
+		if (currency.equals("CAD")){
+			int dollars = credit / 100;
+			int cents = credit % 100;
+			message = String.format("Credit: $%3d.%02d", dollars, cents);
+		}
+			
+		displayDriver.newMessage(message);
+	}
+
 //^^^======================VENDING LOGIC END=======================^^^
 }
