@@ -1,6 +1,9 @@
 package ca.ucalgary.seng300.a2;
 
 import org.lsmr.vending.hardware.Display;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -26,7 +29,14 @@ public class DisplayDriver {
 	public DisplayDriver(Display display) {
 		this.display = display;
 		timer = new Timer();
-		defaultTask = new TaskDisplayGreeting(MSG_DEFAULT, display, greetingCycleTime);
+	}
+
+	/**
+	 * Cancels the currently executing timer and tasks, and instantiates a new timer
+	 */
+	private void cancelCycle(){
+	    timer.cancel();
+	    timer = new Timer();
 	}
 
 	/**
@@ -36,9 +46,22 @@ public class DisplayDriver {
 	 *            The message to display
 	 */
 	public void newMessage(String message) {
-		defaultTask.cancel();
-		timer.purge();
+		cancelCycle();
 		display.display(message);
+		if (TESTING)
+			System.out.println(message);
+	}
+
+	/**
+	 * Displays a new message for some arbitrary duration on the display
+	 *
+	 * @param message The message to display
+	 * @param duration The duration of the message to display
+	 */
+	public void newMessage(String message, int duration) {
+		cancelCycle();
+		TaskDisplayMessage newMessageTask = new TaskDisplayMessage(message, display);
+		timer.schedule(newMessageTask, duration * 1000);
 		if (TESTING)
 			System.out.println(message);
 	}
@@ -48,10 +71,11 @@ public class DisplayDriver {
 	 * and is then blank for the remainder of the cycle time
 	 */
 	public void defaultMessage() {
-		defaultTask.cancel();
-		timer.purge();
-		defaultTask = new TaskDisplayGreeting(MSG_DEFAULT, display, greetingTime);
-		timer.scheduleAtFixedRate(defaultTask, 0, greetingCycleTime * 1000);// 15 second interval
+		cancelCycle();
+		defaultTask = new TaskDisplayMessage(MSG_DEFAULT, display);
+		TaskDisplayClear clearTask = new TaskDisplayClear(display);
+		timer.scheduleAtFixedRate(defaultTask, 0, greetingCycleTime * 1000);
+		timer.scheduleAtFixedRate(clearTask, greetingTime * 1000, greetingCycleTime * 1000);
 	}
 
 	/**
@@ -59,8 +83,7 @@ public class DisplayDriver {
 	 *
 	 */
 	public void clearMessage() {
-		defaultTask.cancel();
-		timer.purge();
+		cancelCycle();
 		display.display("");
 		if (TESTING)
 			System.out.println("<clear display>");
@@ -70,8 +93,7 @@ public class DisplayDriver {
 	 * Clears the display and stops displaying the default message
 	 */
 	public void displayOff() {
-		defaultTask.cancel();
-		timer.purge();
+		cancelCycle();
 		clearMessage();
 	}
 
@@ -87,7 +109,7 @@ public class DisplayDriver {
 	 * Inner Class for the default message task
 	 *
 	 */
-	private class TaskDisplayGreeting extends TimerTask {
+	private class TaskDisplayMessage extends TimerTask {
 		private String message = "";
 		private Display display;
 
@@ -96,7 +118,7 @@ public class DisplayDriver {
 		 * @param display The display where the message is displayed
 		 * @param greetingTime The number of seconds that the message is displayed before clearing
 		 */
-		TaskDisplayGreeting(String message, Display display, int greetingTime) {
+		TaskDisplayMessage(String message, Display display) {
 			this.message = message;
 			this.display = display;
 		}
@@ -106,19 +128,41 @@ public class DisplayDriver {
 		 */
 		@Override
 		public void run() {
-			display.display(message); // display greeting message for 5 seconds
-			if (TESTING)
-				System.out.println(message);
-			try {
-				Thread.sleep(greetingTime * 1000);
-			} catch (InterruptedException e) {
-				//should not get here
-				e.printStackTrace();
+			display.display(message);
+			if (TESTING) {
+				DateTimeFormatter format = DateTimeFormatter.ofPattern("HH:mm:ss.SSSSSS");
+				String a = LocalDateTime.now().format(format);
+				System.out.println(message + ": " + a);
 			}
+		}
+	}
 
-			display.display(""); // clear display for remainder of cycle
-			if (TESTING)
-				System.out.println("<clear display>");
+	/**
+	 * Inner Class for the a timer task that clears the display
+	 *
+	 */
+	private class TaskDisplayClear extends TimerTask {
+		private String message = "";
+		private Display display;
+
+		/**
+		 * @param display The display where the message is displayed
+		 */
+		TaskDisplayClear(Display display) {
+			this.display = display;
+		}
+
+		/* (non-Javadoc)
+		 * @see java.util.TimerTask#run()
+		 */
+		@Override
+		public void run() {
+			display.display(""); // clear display
+			if (TESTING) {
+				DateTimeFormatter format = DateTimeFormatter.ofPattern("HH:mm:ss.SSSSSS");
+				String a = LocalDateTime.now().format(format);
+				System.out.println("<clear display>: " + a);
+			}
 		}
 	}
 
