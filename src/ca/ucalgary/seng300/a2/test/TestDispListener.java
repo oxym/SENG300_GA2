@@ -61,11 +61,13 @@ public class TestDispListener {
 	public void testMessageLog() {
 
 		String messageOld = "";
+		String messageCurrent= "";
 
 		for (int i = 0; i< 10; i++) {
 			String message = "Test " + i;
 			testDisplayListener.messageChange(dummyDisplay, messageOld, message);
-			assertEquals(messageOld, testDisplayListener.getLastMessage());
+			assertEquals(message, testDisplayListener.getMessageCurrent());
+			assertEquals(messageOld, testDisplayListener.getMessageLast());
 
 		}
 	}
@@ -76,6 +78,6 @@ public class TestDispListener {
 	 */
 	@Test
 	public void testMessageLogEmpty() {
-			assertEquals("", testDisplayListener.getLastMessage());
+			assertEquals("", testDisplayListener.getMessageLast());
 	}
 }

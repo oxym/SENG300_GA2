@@ -53,7 +53,6 @@ public class VendingManagerSystemTest {
 		machine.getDisplay().register(testDisplayListener);
 	}
 
-	
 	/**
 	 * Tests that the logic can dispense the correct pop after too much change is
 	 * added and the button is pressed. Also confirms that nothing else is dispensed
@@ -160,61 +159,8 @@ public class VendingManagerSystemTest {
 	// Test Display
 	////////////////////////////////////////////////////////////////////////
 
-	// NOTE: Because of threading, these tests may need to be run in a separate or
-	// multiple separate
-	// classes to test the desired effect and ensure correct behaviour as junit runs
-	// multiple
-	// tests concurrently, which produces out of sync messages on the display.
-
-	/**
-	 * Tests default message display
-	 *
-	 * Note: This test should be disabled if shorter test times are desired Note:
-	 * Due to this running threaded, if some processes take up a larger amount of
-	 * time, it is possible this test might fail, as it is dependent on delays and
-	 * timing
-	 */
-	@Test
-	public void testDefaultGreeting() {
-
-		try {
-			Thread.sleep(2000); // initial delay
-			for (int i = 0; i < 3; i++) { // Loops 3 times
-				assertEquals("Hi there!", testDisplayListener.getLastMessage());
-				Thread.sleep(5000);
-				assertEquals("", testDisplayListener.getLastMessage());
-				Thread.sleep(10000);
-			}
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Tests messageUpdates and stops displaying default when event happens
-	 *
-	 * Note: This test should be disabled if shorter test times are desired
-	 *
-	 * @throws DisabledException
-	 */
-	@Test
-	public void testUpdateDisplay() throws DisabledException {
-		assertEquals(0, manager.getCredit()); // credit should be 0 for default message to work
-
-		try {
-			Thread.sleep(8000); // let the default message be displayed for 8 seconds
-			userAddCoin(100);
-			Thread.sleep(20000);
-			assertEquals("Credit: $  1.00", testDisplayListener.getLastMessage());
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
-
 	/**
 	 * Tests the display is correct when coin is inserted
-	 *
-	 * Note: This test should be disabled if shorter test times are desired
 	 *
 	 * @throws DisabledException
 	 */
@@ -231,7 +177,7 @@ public class VendingManagerSystemTest {
 			int dollars = manager.getCredit() / 100;
 			int cents = manager.getCredit() % 100;
 			String testMessage = String.format("Credit: $%3d.%02d", dollars, cents);
-			assertEquals(testMessage, testDisplayListener.getLastMessage());
+			assertEquals(testMessage, testDisplayListener.getMessageLast());
 		}
 	}
 

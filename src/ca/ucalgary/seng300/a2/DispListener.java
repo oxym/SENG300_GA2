@@ -6,29 +6,34 @@ import org.lsmr.vending.*;
 import org.lsmr.vending.hardware.*;
 
 /**
- * This class is registered by VendingManager with hardware classes to listen for display
- * events and return various messages and the status.
+ * This class is registered by VendingManager with hardware classes to listen
+ * for display events and return various messages and the status.
  *
  * ACCESS: Only listener methods are public access.
  *
  * HANDLED EVENTS: messageChange, enabled, disabled
  *
  *
- * NOTES: In the messageChange, the the display that had the message changed is ignored for now.
+ * NOTES: In the messageChange, the the display that had the message changed is
+ * ignored for now.
  *
  */
 public class DispListener implements DisplayListener {
 
 	private String status;
-	private String lastMessage = "";
+	private String messageLast = "";
 	private String messageCurrent = "";
 
-	public DispListener(){
+	public DispListener() {
 		status = "Initializing...";
 	}
 
-	/* (non-Javadoc)
-	 * @see org.lsmr.vending.hardware.AbstractHardwareListener#enabled(org.lsmr.vending.hardware.AbstractHardware)
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * org.lsmr.vending.hardware.AbstractHardwareListener#enabled(org.lsmr.vending.
+	 * hardware.AbstractHardware)
 	 */
 	@Override
 	public void enabled(AbstractHardware<? extends AbstractHardwareListener> hardware) {
@@ -36,8 +41,12 @@ public class DispListener implements DisplayListener {
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.lsmr.vending.hardware.AbstractHardwareListener#disabled(org.lsmr.vending.hardware.AbstractHardware)
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * org.lsmr.vending.hardware.AbstractHardwareListener#disabled(org.lsmr.vending.
+	 * hardware.AbstractHardware)
 	 */
 	@Override
 	public void disabled(AbstractHardware<? extends AbstractHardwareListener> hardware) {
@@ -45,28 +54,43 @@ public class DispListener implements DisplayListener {
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.lsmr.vending.hardware.DisplayListener#messageChange(org.lsmr.vending.hardware.Display, java.lang.String, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * org.lsmr.vending.hardware.DisplayListener#messageChange(org.lsmr.vending.
+	 * hardware.Display, java.lang.String, java.lang.String)
 	 */
 	@Override
 	public void messageChange(Display display, String oldMessage, String newMessage) {
-		lastMessage = oldMessage;
+		messageLast = oldMessage;
 		messageCurrent = newMessage;
 	}
 
 	/**
 	 * Returns the status of the display
+	 *
 	 * @return status
 	 */
 	public String getStatus() {
 		return status;
 	}
 
-	/** Returns the last message displayed
+	/**
+	 * Returns the last message displayed
+	 *
 	 * @return lastMessage
 	 */
-	public String getLastMessage() {
-		return lastMessage;
+	public String getMessageLast() {
+		return messageLast;
+	}
+
+	/**
+	 * Returns the currently displaying message
+	 *
+	 * @return Current Message
+	 */
+	public String getMessageCurrent() {
+		return messageCurrent;
 	}
 }
-

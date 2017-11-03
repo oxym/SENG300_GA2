@@ -36,10 +36,10 @@ public class VendingManager {
 	private DispListener displayListener;
 	private static DisplayDriver displayDriver;
 	private int credit = 0;
-	
+
 	private final static String currency = "CAD";
 
-	
+
 
 	/**
 	 * Singleton constructor. Initializes and stores the singleton instance
@@ -62,7 +62,7 @@ public class VendingManager {
 		vm = host;
 		mgr.registerListeners();
 		displayDriver = new DisplayDriver(mgr.getDisplay());
-		displayDriver.defaultMessage();
+		displayDriver.greetingMessage();
 	}
 
 	/**
@@ -222,8 +222,8 @@ public class VendingManager {
 				if (credit > 0) {
 					displayCredit();
 				} else {
-					//TODO: "Transaction Complete" per mr. client answer might conflict here, or display for x seconds
-					displayDriver.defaultMessage();
+					displayDriver.newMessage("Transaction Complete.", 3, true);
+					//displayDriver.defaultMessage();
 				}
 				getCoinReceptacle().storeCoins();
 			}
@@ -248,7 +248,7 @@ public class VendingManager {
 			int cents = credit % 100;
 			message = String.format("Credit: $%3d.%02d", dollars, cents);
 		}
-			
+
 		displayDriver.newMessage(message);
 	}
 
