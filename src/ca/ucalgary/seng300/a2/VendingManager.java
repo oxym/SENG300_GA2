@@ -1,7 +1,7 @@
 package ca.ucalgary.seng300.a2;
 
-import org.lsmr.vending.*;
 import org.lsmr.vending.hardware.*;
+import java.io.FileNotFoundException;
 
 /**
  * VendingManager is the primary access-point for the logic controlling the
@@ -23,18 +23,23 @@ import org.lsmr.vending.hardware.*;
  *
  * @author Thomas Coderre (10169277)
  * @author Jason De Boer (30034428)
- * @author
- * @author
- * @author
- * @author
+ * @author 
+ * @author 
+ * @author 
+ * @author 
  *
  */
 public class VendingManager {
+	private static boolean debug = true;
+	
 	private static VendingManager mgr;
 	private static VendingListener listener;
 	private static VendingMachine vm;
-	private DispListener displayListener;
+	private static DispListener displayListener;
 	private static DisplayDriver displayDriver;
+	
+	private static Logger eventLog;
+	private static String eventLogName = "VendingLog.txt";
 	private int credit = 0;
 
 	private final static String currency = "CAD";
@@ -49,6 +54,7 @@ public class VendingManager {
 		VendingListener.initialize(this);
 		listener = VendingListener.getInstance();
 		displayListener = new DispListener();
+		eventLog = new Logger(eventLogName);
 	}
 
 	/**
@@ -73,14 +79,14 @@ public class VendingManager {
 		return mgr;
 	}
 
-	/*
+	/**
 	 * Registers the previously instantiated listener(s) with the
 	 * appropriate hardware.
 	 */
 	private void registerListeners(){
 		getCoinSlot().register(listener);
-		registerButtonListener(listener);
 		getDisplay().register(displayListener);
+		registerButtonListener(listener);
 	}
 
 	/**
@@ -240,17 +246,61 @@ public class VendingManager {
 	 * Displays the current credit on the display
 	 */
 	void displayCredit() {
-		String message = "Credit: " + credit;
+		String message;
 
 		//Prettify the message for known currencies.
-		if (currency.equals("CAD")){
+		if (currency.equals("CAD") || currency.equals("USD")){
 			int dollars = credit / 100;
 			int cents = credit % 100;
 			message = String.format("Credit: $%3d.%02d", dollars, cents);
+		}
+		else{
+			message = "Credit: " + credit;
 		}
 
 		displayDriver.newMessage(message);
 	}
 
 //^^^======================VENDING LOGIC END=======================^^^
+
+//vvv======================LOGIC INTERNALS START=======================vvv
+	
+	/**
+	 * Provides a simplified interface for the Logger.log() methods.
+	 * See details in ca.ucalgary.seng300.a2.Logger.
+	 * 
+	 * @param msgs String array of events to log. None can be null or empty.
+	 */
+	void log(String msg){
+		try{
+			eventLog.log(msg);			
+		}
+		catch(IllegalArgumentException e){
+			if (debug) System.out.println(e);
+		}
+		catch(FileNotFoundException e){
+			if (debug) System.out.println(e);
+		}
+	}
+	
+	/**
+	 * See log(String). 
+	 * @param msgs String array of events to log.
+	 */
+	void log(String[] msgs){
+		for (String msg : msgs){
+			try{
+				eventLog.log(msg);			
+			}
+			catch(IllegalArgumentException e){
+				if (debug) System.out.println(e);
+			}
+			catch(FileNotFoundException e){
+				if (debug) System.out.println(e);
+			}
+		}
+	}
+	
+//^^^======================LOGIC INTERNALS END=======================^^^
+	
 }
