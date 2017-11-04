@@ -15,21 +15,27 @@ import java.util.Date;
  *
  * ==== Usage ====
  *
- * Construct Logger object:
- *        Logger(String filename)
+ * See log(String) and log(String[]) in VendingManager for ordinary use.
+ * 	 >> Access is relayed through VendingManager to mitigate changes if Logger changes. 
+ * 
+ * For use without VendingManager:
+ * 
+ * 	Construct Logger instance:
+ *  	Logger(String filename)
  *
- * Log a single message:
- *        log(String msg)
+ * 	Log a single message:
+ *     	log(String msg)
  *      
- * Log a series of messages:
- *        log(String[] msg)
+ *	Log a series of messages:
+ *  	log(String[] msg)
+ *  
  */
 public class Logger {
-
+    private boolean debug = true;
+	
     private static DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
     private static Date date = new Date();
 	
-    private boolean debug = true;
     private String name;
     private PrintWriter writer;
     
@@ -37,8 +43,7 @@ public class Logger {
      * Initializes a Logger instance for a given log file.
      * @throws  
      */
-    Logger(String filename, boolean debugging) throws IllegalArgumentException {
-    	debug = debugging;
+    Logger(String filename) throws IllegalArgumentException {
     	
     	if (!filename.equals("") && !filename.equals(null))
     		name = filename;
@@ -53,7 +58,7 @@ public class Logger {
      * @throws IllegalArgumentException If the message string is empty or null
      * @throws FileNotFoundException If the file cannot be created or is a directory.
      */
-    public void log(String msg) throws IllegalArgumentException,
+    void log(String msg) throws IllegalArgumentException,
     								   FileNotFoundException {
     	initializeLog();
         write(msg);
@@ -67,7 +72,7 @@ public class Logger {
      * @throws IllegalArgumentException If the message string is empty or null
      * @throws FileNotFoundException If the file cannot be created or is a directory.
      */
-    public void log(String[] msgs) throws IllegalArgumentException,
+    void log(String[] msgs) throws IllegalArgumentException,
     								   FileNotFoundException {
     	initializeLog();
     	for (String msg : msgs){
