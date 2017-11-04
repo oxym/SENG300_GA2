@@ -1,3 +1,5 @@
+package ca.ucalgary.seng300.a2;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -7,67 +9,105 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Allows to log actions of the user and the actions of the machine that are visible to the user.
+ * Creates and maintains a file event log for user-initiated actions 
+ * and relevant hardware events.
  * Uses JVM's internal clock to stamp each log.
  *
  * ==== Usage ====
  *
- * Create byte output steam:
- *          initializeLogger(String filename)
+ * Construct Logger object:
+ *        Logger(String filename)
  *
- * Log a message:
- *          log(String msg)
- *
- * Close the byte output steam:
- *          closeLog()
+ * Log a single message:
+ *        log(String msg)
+ *      
+ * Log a series of messages:
+ *        log(String[] msg)
  */
 public class Logger {
 
-    private static PrintWriter writer;
     private static DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
     private static Date date = new Date();
-
+	
+    private boolean debug = true;
+    private String name;
+    private PrintWriter writer;
+    
+    /**
+     * Initializes a Logger instance for a given log file.
+     * @throws  
+     */
+    Logger(String filename, boolean debugging) throws IllegalArgumentException {
+    	debug = debugging;
+    	
+    	if (!filename.equals("") && !filename.equals(null))
+    		name = filename;
+    	else
+    		throw new IllegalArgumentException("Filename cannot be empty or null.");
+    }
+    
     /**
      * Opens byte output steam for the specified file.
      * @param filename name of the existing or new file (eg. log.txt)
-     * @throws Exception if error
+     * @throws FileNotFoundException If the file cannot be created or is a directory.
      */
-    public static void initializeLogger(String filename) throws Exception {
-
-        if (!filename.equals(null)) {
-
-            try {
-                writer = new PrintWriter(new FileOutputStream(new File(filename), true));
-            } catch (FileNotFoundException e) {
-                System.out.println(e.getMessage());
-            }
-        } else {
-            throw new Exception("Could not initialize Logger");
-        }
+    private void initializeLog() throws FileNotFoundException {
+        writer = new PrintWriter(new FileOutputStream(new File(name), true));
     }
 
     /**
-     * Date and time stamps each msg, and appends it to the file
-     * @param msg the text to be logged
-     * @throws Exception if error
+     * Closes the opened byte output steam.
      */
-    public static void log(String msg) throws Exception {
-
-        if (!msg.equals(null)) {
-
-            System.out.println(String.format("%s - %s", dateFormat.format(date), msg));
-            writer.append(String.format("%s - %s\n", dateFormat.format(date), msg));
-            writer.flush();
-        } else {
-            throw new Exception("No message found");
-        }
+    private void closeLog() {
+    	if (writer != null)
+    		writer.close();
     }
-
+    
     /**
-     * Closes the opened byte output steam, which was opened
-     * with the initializeLogger(String filename) method.
+     * Adds a single message to the log file, as a single new line. 
+     * Date and time are prepended to each message.
+     * @param msg The text to be logged
+     * @throws IllegalArgumentException If the message string is empty or null
+     * @throws FileNotFoundException If the file cannot be created or is a directory.
      */
-    public static void closeLog() {
-        writer.close();
+    public void log(String msg) throws IllegalArgumentException,
+    								   FileNotFoundException {
+    	initializeLog();
+        write(msg);
+        closeLog();
+    }
+    
+   
+    /**
+     * Adds a series of messages to the log file, as a separate new lines. 
+     * Date and time are prepended to each message.
+     * @param msg The texts to be logged. Cannot elements cannot be empty or null.
+     * @throws IllegalArgumentException If the message string is empty or null
+     * @throws FileNotFoundException If the file cannot be created or is a directory.
+     */
+    public void log(String[] msgs) throws IllegalArgumentException,
+    								   FileNotFoundException {
+    	initializeLog();
+    	for (String msg : msgs){
+    		write(msg);
+    	}
+        closeLog();
+    }
+    
+    /**
+     * Private method to handle log writing.
+     * Assumes the byte stream is already open and will be closed
+     * by calling code.
+     * @throws IllegalArgumentException If the message string is empty or null
+     */
+    private void write(String msg) throws IllegalArgumentException,
+	   								 FileNotFoundException {
+    	 if (!msg.equals("") && !msg.equals(null)) {
+             if (debug) System.out.println(String.format("%s - %s", dateFormat.format(date), msg));
+             writer.append(String.format("%s - %s\n", dateFormat.format(date), msg));
+             writer.flush();
+         } else {
+             throw new IllegalArgumentException("Message cannot be empty.");
+         }
     }
 }
