@@ -25,11 +25,11 @@ import java.util.Date;
  *        log(String[] msg)
  */
 public class Logger {
-
+    private boolean debug = true;
+	
     private static DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
     private static Date date = new Date();
 	
-    private boolean debug = true;
     private String name;
     private PrintWriter writer;
     
@@ -37,8 +37,7 @@ public class Logger {
      * Initializes a Logger instance for a given log file.
      * @throws  
      */
-    Logger(String filename, boolean debugging) throws IllegalArgumentException {
-    	debug = debugging;
+    Logger(String filename) throws IllegalArgumentException {
     	
     	if (!filename.equals("") && !filename.equals(null))
     		name = filename;
