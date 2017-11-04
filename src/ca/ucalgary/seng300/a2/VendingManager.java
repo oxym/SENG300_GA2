@@ -282,34 +282,38 @@ public class VendingManager {
 	
 	/**
 	 * A method for returning change.
-	 * TODO: Organize coin racks in descending denomination order if possible
-	 * @throws DisabledException 
-	 * @throws EmptyException 
-	 * @throws CapacityExceededException 
+	 * May not return exact change. 
+	 * Dispenses the largest denominations first.
+	 * 
+	 * @throws DisabledException Some necessary hardware is disabled
+	 * @throws EmptyException CoinSlot is empty and a coin removal was attempted
+	 * @throws CapacityExceededException DeliveryChute is full
 	 */
 	public void returnChange() throws CapacityExceededException, EmptyException, DisabledException{
-		int[] descending = descendingOrder();
-		for (int i=0; i < getNumberOfCoinRacks(); i++){		
-			while (getCredit() >= descending[i] && getCoinRackForCoinKind(descending[i]).size() != 0){
-				getCoinRackForCoinKind(descending[i]).releaseCoin();
-				subtractCredit(descending[i]);
+		int[] rackValues = getDescendingRackValues();
+		int coinVal = 0;
+		CoinRack rack;
+		
+		for (int i=0; i < getNumberOfCoinRacks(); i++){
+			coinVal = rackValues[i];
+			rack = getCoinRackForCoinKind(coinVal); 
+		
+			while (getCredit() >= coinVal && rack.size() != 0){
+				rack.releaseCoin();
+				subtractCredit(coinVal);
 			}
+			
 			if (getCredit() == 0){
 				break;
 			}
 		}
-		
-		//don't need to bother with handling the indicator light. Should be done externally.
-		
-		
-		displayCredit();
 	}
 	
 	/**
 	 * Takes the coin values inside the machine and sorts them in descending order for the purpose of change return
 	 * @return coins denominations in descending order as an array
 	 */
-	public int[] descendingOrder() {
+	int[] getDescendingRackValues() {
 		int rackNumber = getNumberOfCoinRacks();
 		int[] rackAmounts = new int[rackNumber];
 		
@@ -327,36 +331,66 @@ public class VendingManager {
 	}
 
 	/**
+	 * Checks that exact change could be provided for each possible purchase,
+	 * given the current credit.
+	 * @return True if exact change can be provided for each purchase
+	 */
+	public boolean checkExactChangeState(){
+		boolean exact = true;
+		int rackCount = getNumberOfPopCanRacks();
+		
+		int popCost;
+		for (int i = 0; i < rackCount; i++){
+			popCost = getPopKindCost(i);
+			exact = canReturnExactChange(popCost);
+			if (!exact)
+				break;
+		}
+		
+		return exact;
+	}
+	
+	/**
 	 * Checks if valid change can be returned, but does not return anything.
 	 * Similar to returnChange, but sets the indicator light instead
+	 * @param cost The cost (in cents) of a hypothetical purchase
+	 * @return Whether exact change could be provided for an item of the given cost
 	 */
-	public void canReturnChange(){
-		int[] descending = new int[getNumberOfCoinRacks()]; 
-		descending = descendingOrder();
+	boolean canReturnExactChange(int cost){
+		boolean exact = true;
+		
 		int credit = getCredit();
-		int[] rackAmounts = new int[getNumberOfCoinRacks()];
-		int[] rackValues = new int[getNumberOfCoinRacks()];
-		for (int i=0; i < getNumberOfCoinRacks(); i++){
-			rackAmounts[i] = getCoinRackForCoinKind(descending[i]).size();
-			rackValues[i] = descending[i];
-			if (debug) System.out.println("rackAmounts " + rackAmounts[i] + " values " + rackValues[i]);
-		}
+		int excess = credit - cost; // i.e. credit after the possible purchase
+		
+		int rackCount = getNumberOfCoinRacks();
+		int[] rackValues = getDescendingRackValues();
 
-		for (int i=0; i < getNumberOfCoinRacks(); i++){		
-			while (credit >= descending[i] && rackAmounts[i] != 0){
-				credit -= descending[i];
+		//Populate CoinRack count array
+		int[] rackAmounts = new int[getNumberOfCoinRacks()];
+		for (int i=0; i < rackCount; i++){
+			rackAmounts[i] = getCoinRackForCoinKind(rackValues[i]).size();
+			if (debug) System.out.println("CoinRack with value: " + rackValues[i] 
+										+ " has " + rackAmounts[i] + " coins.");
+		}
+		//Try to reduce the excess credit to 0
+		for (int i=0; i < rackCount; i++){		
+			while (excess >= rackValues[i] && rackAmounts[i] != 0){
+				excess -= rackValues[i];
 				rackAmounts[i]--;
 			}
-			if (credit == 0){
-				getExactChangeLight().deactivate();
+			if (excess == 0){
 				if (debug) System.out.println("Correct Change");
 				break;
 			}
 		}
-		if (credit > 0){
-			getExactChangeLight().activate();
+
+		//If credit remains, inexact change would need to be be provided 
+		if (excess > 0){
+			exact = false;
 			if (debug) System.out.println("Wrong change");
 		}
+		
+		return exact;
 	}
 
 

@@ -98,7 +98,7 @@ public class VendingManagerSystemTest {
 			machine.getCoinSlot().addCoin(coin);
 		} catch (DisabledException e) {
 		}
-		manager.canReturnChange();
+		manager.checkExactChangeState();
 		System.out.println("END CHANGE");
 	}
 	

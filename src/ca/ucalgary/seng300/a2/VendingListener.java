@@ -89,10 +89,17 @@ public class VendingListener implements CoinSlotListener, SelectionButtonListene
 	/**
 	 * Responds to "Valid coin inserted" notifications from the registered CoinSlot.
 	 * Adds the value of the coin to the VendingManager's tracked credit.
+	 * Toggles the "Exact Change" light according to whether exact change could be
+	 * provide for each possible purchase.
 	 */
 	@Override
 	public void validCoinInserted(CoinSlot slot, Coin coin) {
 		mgr.addCredit(coin.getValue());
+ 
+		if (mgr.checkExactChangeState())
+			mgr.getExactChangeLight().deactivate();
+		else
+			mgr.getExactChangeLight().activate();
 	}
 
 	/**
