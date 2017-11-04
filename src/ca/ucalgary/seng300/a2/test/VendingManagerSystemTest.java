@@ -85,6 +85,24 @@ public class VendingManagerSystemTest {
 	}
 
 	/**
+	 * 
+	 * @throws CapacityExceededException
+	 * @throws EmptyException
+	 * @throws DisabledException
+	 */
+	@Test	
+	public void testCoinReturn() throws CapacityExceededException, EmptyException, DisabledException{		
+		machine.loadCoins(2, 1, 2, 2, 2);
+		Coin coin = new Coin(100);
+		try {
+			machine.getCoinSlot().addCoin(coin);
+		} catch (DisabledException e) {
+		}
+		manager.canReturnChange();
+		System.out.println("END CHANGE");
+	}
+	
+	/**
 	 * Tests that the logic is able to handle the case where the selected pop is not
 	 * available but there were sufficient funds added. Ensures that the credit is
 	 * not reduced in this case.
