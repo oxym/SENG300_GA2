@@ -18,7 +18,7 @@ import org.lsmr.vending.hardware.*;
  * @author Thobthai Chulpongsatorn (30005238)
  *
  */
-public class VendingListener implements CoinSlotListener, SelectionButtonListener {
+public class VendingListener implements CoinSlotListener, SelectionButtonListener, LockListener {
 	private static VendingListener listener;
 	private static VendingManager mgr;
 	
@@ -89,5 +89,23 @@ public class VendingListener implements CoinSlotListener, SelectionButtonListene
 	@Override
 	public void validCoinInserted(CoinSlot slot, Coin coin) {
 		mgr.addCredit(coin.getValue());
+	}
+
+	/**
+	 * Handles the "locked" event from the registered Lock.
+	 * Causes the vm to turn on safety-mode. 
+	 */
+	@Override
+	public void locked(Lock lock) {
+		mgr.enableSafety();		
+	}
+	
+	/**
+	 * Handles the "unlocked" event from the registered Lock.
+	 * Causes the vm to turn off safety-mode.
+	 */
+	@Override
+	public void unlocked(Lock lock) {
+		mgr.disableSafety();		
 	}
 }
