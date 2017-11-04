@@ -286,12 +286,10 @@ public class VendingManager {
 			}
 		}
 		
-		if (getCredit() > 0){
-			//turn on "incorrect change" light
-			System.out.println("Wrong change");
-		}
+		//don't need to bother with handling the indicator light. Should be done externally.
 		
-		displayDriver.newMessage("Credit= " + getCredit());
+		
+		displayCredit();
 	}
 	
 	/**
@@ -337,13 +335,13 @@ public class VendingManager {
 				rackAmounts[i]--;
 			}
 			if (credit == 0){
-				//turn off change light if on
+				getExactChangeLight().deactivate();
 				System.out.println("Correct Change");
 				break;
 			}
 		}
 		if (credit > 0){
-			//turn on "incorrect change" light
+			getExactChangeLight().activate();
 			System.out.println("Wrong change");
 		}
 	}
