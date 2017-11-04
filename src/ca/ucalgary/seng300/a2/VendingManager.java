@@ -339,7 +339,7 @@ public class VendingManager {
 		for (int i=0; i < getNumberOfCoinRacks(); i++){
 			rackAmounts[i] = getCoinRackForCoinKind(descending[i]).size();
 			rackValues[i] = descending[i];
-			System.out.println("rackAmounts " + rackAmounts[i] + " values " + rackValues[i]);
+			if (debug) System.out.println("rackAmounts " + rackAmounts[i] + " values " + rackValues[i]);
 		}
 
 		for (int i=0; i < getNumberOfCoinRacks(); i++){		
@@ -349,13 +349,13 @@ public class VendingManager {
 			}
 			if (credit == 0){
 				getExactChangeLight().deactivate();
-				System.out.println("Correct Change");
+				if (debug) System.out.println("Correct Change");
 				break;
 			}
 		}
 		if (credit > 0){
 			getExactChangeLight().activate();
-			System.out.println("Wrong change");
+			if (debug) System.out.println("Wrong change");
 		}
 	}
 
