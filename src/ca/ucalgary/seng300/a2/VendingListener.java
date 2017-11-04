@@ -13,9 +13,13 @@ import org.lsmr.vending.hardware.*;
  * HANDLED EVENTS: 	SelectionButtonListener: pressed() 
  *   				CoinSlotListener: ValidCoinInserted()
  *
+ * Assignment 1:
  * @author Raymond Tran (30028473)
  * @author Thomas Coderre (10169277)
  * @author Thobthai Chulpongsatorn (30005238)
+ * 
+ * Assignment 2:
+ * See authorship in VendingManager.
  *
  */
 public class VendingListener implements CoinSlotListener, SelectionButtonListener, LockListener {
