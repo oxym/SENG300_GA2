@@ -15,14 +15,20 @@ import java.util.Date;
  *
  * ==== Usage ====
  *
- * Construct Logger object:
- *        Logger(String filename)
+ * See log(String) and log(String[]) in VendingManager for ordinary use.
+ * 	 >> Access is relayed through VendingManager to mitigate changes if Logger changes. 
+ * 
+ * For use without VendingManager:
+ * 
+ * 	Construct Logger instance:
+ *  	Logger(String filename)
  *
- * Log a single message:
- *        log(String msg)
+ * 	Log a single message:
+ *     	log(String msg)
  *      
- * Log a series of messages:
- *        log(String[] msg)
+ *	Log a series of messages:
+ *  	log(String[] msg)
+ *  
  */
 public class Logger {
     private boolean debug = true;
