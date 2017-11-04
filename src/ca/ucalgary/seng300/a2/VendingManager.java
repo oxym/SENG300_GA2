@@ -1,7 +1,14 @@
 package ca.ucalgary.seng300.a2;
 
+import static org.junit.Assert.fail;
+
+import java.util.Arrays;
+
+import org.junit.Test;
 import org.lsmr.vending.*;
 import org.lsmr.vending.hardware.*;
+
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections;
 
 /**
  * VendingManager is the primary access-point for the logic controlling the
@@ -195,6 +202,14 @@ public class VendingManager {
 		credit += added;
 		displayCredit();
 	}
+	
+	/**
+	 * Subtracts value to the tracked credit.
+	 * @param added The credit to add, in cents.
+	 */
+	void subtractCredit(int subtracted){
+		credit -= subtracted;
+	}
 
 
 //^^^=======================ACCESSORS END=======================^^^
@@ -251,6 +266,89 @@ public class VendingManager {
 
 		displayDriver.newMessage(message);
 	}
+	
+	/**
+	 * A method for returning change.
+	 * TODO: Organize coin racks in descending denomination order if possible
+	 * @throws DisabledException 
+	 * @throws EmptyException 
+	 * @throws CapacityExceededException 
+	 */
+	public void returnChange() throws CapacityExceededException, EmptyException, DisabledException{
+		int[] descending = descendingOrder();
+		for (int i=0; i < getNumberOfCoinRacks(); i++){		
+			while (getCredit() >= descending[i] && getCoinRackForCoinKind(descending[i]).size() != 0){
+				getCoinRackForCoinKind(descending[i]).releaseCoin();
+				subtractCredit(descending[i]);
+			}
+			if (getCredit() == 0){
+				break;
+			}
+		}
+		
+		if (getCredit() > 0){
+			//turn on "incorrect change" light
+			System.out.println("Wrong change");
+		}
+		
+		displayDriver.newMessage("Credit= " + getCredit());
+	}
+	
+	/**
+	 * Takes the coin values inside the machine and sorts them in descending order for the purpose of change return
+	 * @return coins denominations in descending order as an array
+	 */
+	public int[] descendingOrder() {
+		int rackNumber = getNumberOfCoinRacks();
+		int[] rackAmounts = new int[rackNumber];
+		
+		for (int i=0; i < rackNumber; i++){
+			rackAmounts[i] = getCoinKindForCoinRack(i);
+		}
+		
+		Arrays.sort(rackAmounts);
+		int[] descending = new int[rackNumber];
+		//Reverse the array
+		for (int i = rackNumber - 1; i >= 0; i--){
+			descending[rackNumber - i - 1] = rackAmounts[i];
+		}
+		return descending;
+	}
+
+	/**
+	 * Checks if valid change can be returned, but does not return anything.
+	 * Similar to returnChange, but sets the indicator light instead
+	 */
+	public void canReturnChange(){
+		int[] descending = new int[getNumberOfCoinRacks()]; 
+		descending = descendingOrder();
+		int credit = getCredit();
+		int[] rackAmounts = new int[getNumberOfCoinRacks()];
+		int[] rackValues = new int[getNumberOfCoinRacks()];
+		for (int i=0; i < getNumberOfCoinRacks(); i++){
+			rackAmounts[i] = getCoinRackForCoinKind(descending[i]).size();
+			rackValues[i] = descending[i];
+			System.out.println("rackAmounts " + rackAmounts[i] + " values " + rackValues[i]);
+		}
+
+		for (int i=0; i < getNumberOfCoinRacks(); i++){		
+			while (credit >= descending[i] && rackAmounts[i] != 0){
+				credit -= descending[i];
+				rackAmounts[i]--;
+			}
+			if (getCredit() == 0){
+				System.out.println("Correct Change");
+				break;
+			}
+		}
+		if (getCredit() > 0){
+			//turn on "incorrect change" light
+			System.out.println("Wrong change");
+		}
+	}
+
+}
+
 
 //^^^======================VENDING LOGIC END=======================^^^
-}
+
