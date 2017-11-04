@@ -97,7 +97,7 @@ public class VendingListener implements CoinSlotListener, SelectionButtonListene
 	 */
 	@Override
 	public void locked(Lock lock) {
-		mgr.enableSafety();		
+		mgr.disableSafety();	
 	}
 	
 	/**
@@ -106,6 +106,6 @@ public class VendingListener implements CoinSlotListener, SelectionButtonListene
 	 */
 	@Override
 	public void unlocked(Lock lock) {
-		mgr.disableSafety();		
+		mgr.enableSafety();		
 	}
 }
