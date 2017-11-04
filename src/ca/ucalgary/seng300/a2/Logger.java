@@ -11,7 +11,7 @@ import java.util.Date;
 /**
  * Creates and maintains a file event log for user-initiated actions 
  * and relevant hardware events.
- * Uses JVM's internal clock to stamp each log.
+ * Uses JVM's internal clock to add a time stamp to each entry.
  *
  * ==== Usage ====
  *
@@ -47,23 +47,6 @@ public class Logger {
     }
     
     /**
-     * Opens byte output steam for the specified file.
-     * @param filename name of the existing or new file (eg. log.txt)
-     * @throws FileNotFoundException If the file cannot be created or is a directory.
-     */
-    private void initializeLog() throws FileNotFoundException {
-        writer = new PrintWriter(new FileOutputStream(new File(name), true));
-    }
-
-    /**
-     * Closes the opened byte output steam.
-     */
-    private void closeLog() {
-    	if (writer != null)
-    		writer.close();
-    }
-    
-    /**
      * Adds a single message to the log file, as a single new line. 
      * Date and time are prepended to each message.
      * @param msg The text to be logged
@@ -77,7 +60,6 @@ public class Logger {
         closeLog();
     }
     
-   
     /**
      * Adds a series of messages to the log file, as a separate new lines. 
      * Date and time are prepended to each message.
@@ -95,6 +77,15 @@ public class Logger {
     }
     
     /**
+     * Opens byte output steam for the specified file.
+     * @param filename name of the existing or new file (eg. log.txt)
+     * @throws FileNotFoundException If the file cannot be created or is a directory.
+     */
+    private void initializeLog() throws FileNotFoundException {
+        writer = new PrintWriter(new FileOutputStream(new File(name), true));
+    }
+
+    /**
      * Private method to handle log writing.
      * Assumes the byte stream is already open and will be closed
      * by calling code.
@@ -109,5 +100,13 @@ public class Logger {
          } else {
              throw new IllegalArgumentException("Message cannot be empty.");
          }
+    }
+    
+    /**
+     * Closes the opened byte output steam, if it exists
+     */
+    private void closeLog() {
+    	if (writer != null)
+    		writer.close();
     }
 }
