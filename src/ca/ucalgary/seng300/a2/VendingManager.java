@@ -359,8 +359,6 @@ public class VendingManager {
 		}
 	}
 
-}
-
 
 //^^^======================VENDING LOGIC END=======================^^^
 
