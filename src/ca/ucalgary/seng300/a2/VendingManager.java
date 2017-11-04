@@ -210,7 +210,7 @@ public class VendingManager {
 	void addCredit(int added){
 		credit += added;
 		displayCredit();
-		log("Credit added:" + credit);
+		log("Credit added:" + added);
 	}
 	
 	/**
