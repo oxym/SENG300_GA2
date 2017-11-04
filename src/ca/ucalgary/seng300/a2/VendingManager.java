@@ -42,7 +42,7 @@ public class VendingManager {
 	private static String eventLogName = "VendingLog.txt";
 	private int credit = 0;
 
-	private final static String currency = "CAD";
+	private static String currency = "CAD";
 
 
 
@@ -107,10 +107,13 @@ public class VendingManager {
 	// VM class from the build.
 //vvv=======================ACCESSORS START=======================vvv
 	void enableSafety(){
-		vm.enableSafety();
+		if (!mgr.isSafetyEnabled())
+			vm.enableSafety();
 	}
 	void disableSafety(){
-		vm.disableSafety();
+		//TODO Add more conditions; should not disable if something is otherwise wrong
+		if (mgr.isSafetyEnabled())
+			vm.disableSafety();
 	}
 	boolean isSafetyEnabled(){
 		return vm.isSafetyEnabled();
@@ -243,7 +246,7 @@ public class VendingManager {
 	}
 
 	/**
-	 * Displays the current credit on the display
+	 * Displays the current credit on the hardware display
 	 */
 	void displayCredit() {
 		String message;
@@ -288,19 +291,15 @@ public class VendingManager {
 	 * @param msgs String array of events to log.
 	 */
 	void log(String[] msgs){
-		for (String msg : msgs){
-			try{
-				eventLog.log(msg);			
-			}
-			catch(IllegalArgumentException e){
-				if (debug) System.out.println(e);
-			}
-			catch(FileNotFoundException e){
-				if (debug) System.out.println(e);
-			}
+		try{
+			eventLog.log(msgs);			
+		}
+		catch(IllegalArgumentException e){
+			if (debug) System.out.println(e);
+		}
+		catch(FileNotFoundException e){
+			if (debug) System.out.println(e);
 		}
 	}
-	
-//^^^======================LOGIC INTERNALS END=======================^^^
-	
+//^^^======================LOGIC INTERNALS END=======================^^^	
 }
