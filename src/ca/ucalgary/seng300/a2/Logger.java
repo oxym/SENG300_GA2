@@ -52,7 +52,7 @@ public class Logger {
      * @throws IllegalArgumentException If the message string is empty or null
      * @throws FileNotFoundException If the file cannot be created or is a directory.
      */
-    public void log(String msg) throws IllegalArgumentException,
+    void log(String msg) throws IllegalArgumentException,
     								   FileNotFoundException {
     	initializeLog();
         write(msg);
@@ -66,7 +66,7 @@ public class Logger {
      * @throws IllegalArgumentException If the message string is empty or null
      * @throws FileNotFoundException If the file cannot be created or is a directory.
      */
-    public void log(String[] msgs) throws IllegalArgumentException,
+    void log(String[] msgs) throws IllegalArgumentException,
     								   FileNotFoundException {
     	initializeLog();
     	for (String msg : msgs){
