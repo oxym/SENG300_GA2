@@ -336,12 +336,13 @@ public class VendingManager {
 				credit -= descending[i];
 				rackAmounts[i]--;
 			}
-			if (getCredit() == 0){
+			if (credit == 0){
+				//turn off change light if on
 				System.out.println("Correct Change");
 				break;
 			}
 		}
-		if (getCredit() > 0){
+		if (credit > 0){
 			//turn on "incorrect change" light
 			System.out.println("Wrong change");
 		}
