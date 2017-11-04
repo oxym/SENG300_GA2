@@ -1,11 +1,7 @@
 package ca.ucalgary.seng300.a2;
 
-import static org.junit.Assert.fail;
-
 import java.util.Arrays;
 
-import org.junit.Test;
-import org.lsmr.vending.*;
 import org.lsmr.vending.hardware.*;
 import java.io.FileNotFoundException;
 
@@ -238,12 +234,15 @@ public class VendingManager {
 	void buy(int popIndex) throws InsufficientFundsException, EmptyException,
 											DisabledException, CapacityExceededException {
 		int cost = getPopKindCost(popIndex);
+		String popName = getPopKindName(popIndex);
+		
 		if (getCredit() >= cost){
 			PopCanRack rack = getPopCanRack(popIndex);
 			int canCount = rack.size(); //Bad method name; returns # of cans stored
 			if (canCount > 0){
 				rack.dispensePopCan();
 				credit -= cost; //Will only be performed if the pop is successfully dispensed.
+				returnChange();
 				if (credit > 0) {
 					displayCredit();
 				} else {
@@ -252,12 +251,14 @@ public class VendingManager {
 				}
 				getCoinReceptacle().storeCoins();
 			}
+			else {
+				displayDriver.newMessage(popName + " is out of stock.");
+			}				
 		}
 		else {
-			int dif = cost - credit;
-			String popName = getPopKindName(popIndex);
+			int diff = cost - credit;
 			//TODO: do we display a message here instead of exception?
-			throw new InsufficientFundsException("Cannot buy " + popName + ". " + dif + " cents missing.");
+			throw new InsufficientFundsException("Cannot buy " + popName + ". " + diff + " cents missing.");
 		}
 	}
 
