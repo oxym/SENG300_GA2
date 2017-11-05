@@ -13,13 +13,14 @@ import ca.ucalgary.seng300.a2.DisplayDriver;
 public class TestDisplayDriver {
 
 	private DispListener testDisplayListener;
-	private Display dummyDisplay = new Display();
-	private DisplayDriver displayDriver = new DisplayDriver(dummyDisplay);
+	private Display dummyDisplay;
+	private DisplayDriver displayDriver;
 
+	// Instantiate a new hardware and logic classes for each test
 	@Before
 	public void setup() throws Exception {
-
-		// Instantiate a testlistener to receive messages with this test class
+		displayDriver = new DisplayDriver(dummyDisplay);
+		dummyDisplay = new Display();
 		testDisplayListener = new DispListener();
 		dummyDisplay.register(testDisplayListener);
 	}
@@ -74,7 +75,7 @@ public class TestDisplayDriver {
 
 	/**
 	 * Test a newMessage(message, duration, resumeGreeting) - Check duration of
-	 * message and see if Greeting plays after a message is displaye
+	 * message and see if Greeting plays after a message is displayed
 	 *
 	 * @throws DisabledException
 	 * @throws InterruptedException
@@ -83,27 +84,8 @@ public class TestDisplayDriver {
 	public void testNewMessageDurationWithGreeting() throws DisabledException, InterruptedException {
 		// ensure that default greeting is still not scheduled after coin is added, or
 		// display is updated.
-		displayDriver.newMessage("Greeting After Message", 5, true);
+		displayDriver.newMessage("Greeting After Message", 5);
 		Thread.sleep(6000);
 		assertEquals("Hi there!", testDisplayListener.getMessageLast());
-		displayDriver.clearMessage();
 	}
-
-	/**
-	 * Test a newMessage(message, duration, resumeGreeting) - Check duration of
-	 * message and see if Greeting plays after a message is displaye
-	 *
-	 * @throws DisabledException
-	 * @throws InterruptedException
-	 */
-	@Test
-	public void testNewMessageDurationNoGreeting() throws DisabledException, InterruptedException {
-		// ensure that default greeting is still not scheduled after coin is added, or
-		// display is updated.
-		displayDriver.newMessage("No Greeting", 5, false);
-		Thread.sleep(7000);
-		assertEquals("", testDisplayListener.getMessageCurrent());
-		displayDriver.clearMessage();
-	}
-
 }

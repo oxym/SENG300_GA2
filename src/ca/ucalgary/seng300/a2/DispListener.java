@@ -23,9 +23,11 @@ public class DispListener implements DisplayListener {
 	private String status;
 	private String messageLast = "";
 	private String messageCurrent = "";
-
+	private VendingManager vm;
+	
 	public DispListener() {
 		status = "Initializing...";
+		vm = VendingManager.getInstance();
 	}
 
 	/*
@@ -65,6 +67,7 @@ public class DispListener implements DisplayListener {
 	public void messageChange(Display display, String oldMessage, String newMessage) {
 		messageLast = oldMessage;
 		messageCurrent = newMessage;
+		if (vm != null) vm.log("Message displayed: " + newMessage);
 	}
 
 	/**

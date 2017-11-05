@@ -110,10 +110,12 @@ public class VendingManager {
 	// VM class from the build.
 //vvv=======================ACCESSORS START=======================vvv
 	void enableSafety(){
+		log("Safety enabled");
 		if (!mgr.isSafetyEnabled())
 			vm.enableSafety();
 	}
 	void disableSafety(){
+		log("Safety disabled");
 		//TODO Add more conditions; should not disable if something is otherwise wrong
 		if (mgr.isSafetyEnabled())
 			vm.disableSafety();
@@ -234,38 +236,30 @@ public class VendingManager {
 	void buy(int popIndex) throws InsufficientFundsException, EmptyException,
 											DisabledException, CapacityExceededException {
 		int cost = getPopKindCost(popIndex);
-		String popName = getPopKindName(popIndex);
-		
+
 		if (getCredit() >= cost){
-			PopCanRack rack = getPopCanRack(popIndex);
-			int canCount = rack.size(); //Bad method name; returns # of cans stored
-			if (canCount > 0){
-				rack.dispensePopCan();
-				credit -= cost; //Will only be performed if the pop is successfully dispensed.
-				returnChange();
-				if (credit > 0) {
-					displayCredit();
-				} else {
-					displayDriver.newMessage("Transaction Complete.", 3, true);
-					//displayDriver.defaultMessage();
-				}
-				getCoinReceptacle().storeCoins();
+			getPopCanRack(popIndex).dispensePopCan(); //Will throw EmptyException if pop rack is empty
+			credit -= cost; //Will only be performed if the pop is successfully dispensed.
+			returnChange();
+			
+			if (credit > 0) {
+				displayCredit();
+			} else {
+				display("Transaction Complete", 3);
 			}
-			else {
-				displayDriver.newMessage(popName + " is out of stock.");
-			}				
-		}
-		else {
+			getCoinReceptacle().storeCoins();
+		} else {
 			int diff = cost - credit;
-			//TODO: do we display a message here instead of exception?
+			String popName = getPopKindName(popIndex);
 			throw new InsufficientFundsException("Cannot buy " + popName + ". " + diff + " cents missing.");
 		}
 	}
 
 	/**
-	 * Displays the current credit on the hardware display
+	 * Returns a formatted string to display credit.
+	 * @return The formatted credit string.
 	 */
-	void displayCredit() {
+	public String getCreditMessage(){
 		String message;
 
 		//Prettify the message for known currencies.
@@ -277,8 +271,15 @@ public class VendingManager {
 		else{
 			message = "Credit: " + credit;
 		}
+		
+		return message;
+	}
 
-		displayDriver.newMessage(message);
+	/**
+	 * Displays the current credit on the hardware display
+	 */
+	void displayCredit() {
+		displayDriver.newMessage(getCreditMessage());
 	}
 	
 	/**
@@ -432,5 +433,23 @@ public class VendingManager {
 			if (debug) System.out.println(e);
 		}
 	}
+	
+	/**
+	 * Convenience method to display a message from other logic classes.
+	 * @param msg The message to be displayed.
+	 */
+	void display(String msg){
+		displayDriver.newMessage(msg);
+	}
+	
+	/**
+	 * Convenience method to display a timed message from other logic classes.
+	 * @param msg The message to be displayed.
+	 * @param duration The duration of the message.
+	 */
+	void display(String msg, int duration){
+		displayDriver.newMessage(msg, duration);
+	}
+	
 //^^^======================LOGIC INTERNALS END=======================^^^	
 }

@@ -20,7 +20,8 @@ public class DisplayDriver {
 	private Timer timer;
 	private TimerTask messageTask;
 	private TimerTask clearTask;
-
+	
+	private VendingManager vm;
 	private Display display;
 
 	/**
@@ -29,8 +30,9 @@ public class DisplayDriver {
 	 */
 	public DisplayDriver(Display display) {
 		this.display = display;
+		vm = VendingManager.getInstance();
 		timer = new Timer();
-		clearTask = new TaskDisplayClear(display);
+		clearTask = new DisplayMessageTask("", display);
 	}
 
 	/**
@@ -50,40 +52,47 @@ public class DisplayDriver {
 	public void newMessage(String message) {
 		cancelCycle();
 		display.display(message);
+		if (vm != null)
+			VendingManager.getInstance().log("Displayed message: " + message);
 		if (TESTING)
 			System.out.println(message);
 	}
 
 	/**
-	 * Displays a new message for some arbitrary duration on the display
+	 * Displays a new message for some arbitrary duration on the display.
+	 * After the given duration, either the then-current credit will be shown,
+	 * or the flashing greeting screen will be shown.
 	 *
 	 * @param message
 	 *            The message to display
 	 * @param duration
-	 *            The duration of the message to display
-	 * @param display
-	 *            greeting after time expired
+	 *            The duration to display the message for
 	 */
-	public void newMessage(String message, int duration, Boolean resumeGreeting) {
-		cancelCycle();
-		display.display(message);
+	public void newMessage(String message, int duration) {
+		newMessage(message);
+		
+		if (vm != null)
+			VendingManager.getInstance().log("Waiting for: " + duration + " seconds.");
 		if (TESTING) {
 			DateTimeFormatter format = DateTimeFormatter.ofPattern("HH:mm:ss.SSSSSS");
 			String time = LocalDateTime.now().format(format);
-			System.out.println(message + " " + time);
+			System.out.println("Waiting for: " + duration + " at: " + time);
 		}
 
-		// clear the task after the specified time
-		TimerTask newClearTask = new TaskDisplayClear(display);
-		timer.schedule(newClearTask, duration * 1000);
-
-		// resume the regular greeting message
-		if (resumeGreeting) {
-			messageTask = new TaskDisplayMessage(MSG_DEFAULT, display);
-			int newStart = duration * 1000;
-			timer.scheduleAtFixedRate(messageTask, newStart, greetingCycleTime * 1000);
-			timer.scheduleAtFixedRate(clearTask, newStart + greetingDuration * 1000, greetingCycleTime * 1000);
+		
+		int delay = duration * 1000;		
+		if (vm != null && VendingManager.getInstance().getCredit() > 0 ){
+			messageTask = new DisplayMessageTask("$CREDIT$", display);
+			timer.schedule(messageTask, delay);
 		}
+		else { //Restore greeting message
+			messageTask = new DisplayMessageTask(MSG_DEFAULT, display);
+			timer.scheduleAtFixedRate(messageTask, delay, greetingCycleTime * 1000);
+			timer.scheduleAtFixedRate(clearTask, delay + greetingDuration * 1000, greetingCycleTime * 1000);
+		}
+		//TODO Decide if this is really the best way to default to displaying credit.
+		
+		
 	}
 
 	/**
@@ -92,14 +101,14 @@ public class DisplayDriver {
 	 */
 	public void greetingMessage() {
 		cancelCycle();
-		messageTask = new TaskDisplayMessage(MSG_DEFAULT, display);
+		messageTask = new DisplayMessageTask(MSG_DEFAULT, display);
 		timer.scheduleAtFixedRate(messageTask, 0, greetingCycleTime * 1000);
 		timer.scheduleAtFixedRate(clearTask, greetingDuration * 1000, greetingCycleTime * 1000);
 	}
 
 	/**
-	 * Clears the display
-	 *
+	 * Clears the display indefinitely.
+	 * @deprecated This method should not be used. The display should never be perma-cleared.
 	 */
 	public void clearMessage() {
 		cancelCycle();
@@ -114,15 +123,15 @@ public class DisplayDriver {
 	 * @param seconds
 	 */
 	public void setGreetingCycleTime(int duration, int cycleTime) {
+		greetingDuration = duration;
 		greetingCycleTime = cycleTime;
-		greetingDuration = cycleTime;
 	}
 
 	/**
 	 * Inner Class for the display message task
 	 *
 	 */
-	private class TaskDisplayMessage extends TimerTask {
+	private class DisplayMessageTask extends TimerTask {
 		private String message = "";
 		private Display display;
 
@@ -135,7 +144,7 @@ public class DisplayDriver {
 		 *            The number of seconds that the message is displayed before
 		 *            clearing
 		 */
-		TaskDisplayMessage(String message, Display display) {
+		DisplayMessageTask(String message, Display display) {
 			this.message = message;
 			this.display = display;
 		}
@@ -147,44 +156,18 @@ public class DisplayDriver {
 		 */
 		@Override
 		public void run() {
-			display.display(message);
+			if (message.equals("$CREDIT$")){
+				display.display(VendingManager.getInstance().getCreditMessage());
+			}
+			else{
+				display.display(message);
+			}
 			if (TESTING) {
 				DateTimeFormatter format = DateTimeFormatter.ofPattern("HH:mm:ss.SSSSSS");
 				String time = LocalDateTime.now().format(format);
-				System.out.println(message + ": " + time);
+				String logEntry = message.equals("") ? "<clear display>: " : message + ": "; 
+				System.out.println(logEntry + time);
 			}
 		}
 	}
-
-	/**
-	 * Inner Class for the a timer task that clears the display
-	 *
-	 */
-	private class TaskDisplayClear extends TimerTask {
-		private Display display;
-
-		/**
-		 * @param display
-		 *            The display where the message is displayed
-		 */
-		TaskDisplayClear(Display display) {
-			this.display = display;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 *
-		 * @see java.util.TimerTask#run()
-		 */
-		@Override
-		public void run() {
-			display.display(""); // clear display
-			if (TESTING) {
-				DateTimeFormatter format = DateTimeFormatter.ofPattern("HH:mm:ss.SSSSSS");
-				String time = LocalDateTime.now().format(format);
-				System.out.println("<clear display>: " + time);
-			}
-		}
-	}
-
 }

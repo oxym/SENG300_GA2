@@ -74,14 +74,14 @@ public class VendingListener implements CoinSlotListener, SelectionButtonListene
 				//Assumes a 1-to-1, strictly ordered mapping between popIndex and and butttonindex
 				mgr.buy(bIndex); 
 			} catch(InsufficientFundsException e){
-				//TODO Respond to insufficient funds by printing message to display.
-				// Should use e.toString().
+				mgr.display(e.toString(), 5);
 			} catch(DisabledException e){
-				//TODO Respond to the system being disabled.
+				mgr.display("Vending machine disabled", 5);
 			} catch (EmptyException e){
-				//TODO Respond to the pop rack being empty
+				String popName = mgr.getPopKindName(bIndex);
+				mgr.display(popName + " is out of stock.", 5);
 			} catch (CapacityExceededException e){
-				//TODO Respond to the delivery chute being full.
+				mgr.display("Delivery chute full", 5);
 			}
 		}		
 	}
