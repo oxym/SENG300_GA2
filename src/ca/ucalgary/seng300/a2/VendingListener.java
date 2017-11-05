@@ -15,21 +15,14 @@ import org.lsmr.vending.hardware.*;
  * 
  * TODO: Divide this class into separate listener classes. Be sure to consult team first.
  * TEMPORARILY HANDLED EVENTS TYPES:
- * 	LockListener, DeliveryChute, PopCanRack, CoinRack, CoinReceptacle
- *
- * Assignment 1:
- * @author Raymond Tran (30028473)
- * @author Thomas Coderre (10169277)
- * @author Thobthai Chulpongsatorn (30005238)
- * 
- * Assignment 2:
- * See authorship in VendingManager.
+ * 	LockListener, DeliveryChute, PopCanRack, CoinRack, 
+ *  CoinReceptacle, IndicatorLight
  *
  */
 public class VendingListener implements CoinSlotListener, SelectionButtonListener,
 										LockListener, DeliveryChuteListener,
 										CoinRackListener, PopCanRackListener,
-										CoinReceptacleListener
+										CoinReceptacleListener, IndicatorLightListener
 										{
 	private static VendingListener listener;
 	private static VendingManager mgr;
@@ -55,11 +48,14 @@ public class VendingListener implements CoinSlotListener, SelectionButtonListene
 		return listener;
 	}
 
-	// Currently unused listener events
+	
+//vvv=======================TEMPLATE LISTENER METHODS START=======================vvv
+	// AbstractHardwareListener (en-/dis-)able events are currently unused
 	@Override
 	public void enabled(AbstractHardware<? extends AbstractHardwareListener> hardware) {}
 	@Override
 	public void disabled(AbstractHardware<? extends AbstractHardwareListener> hardware) {}
+//^^^=======================TEMPLATE LISTENER METHODS END=======================^^^
 
 //vvv=======================BUTTON LISTENER METHODS START=======================vvv
 	/**
@@ -113,7 +109,8 @@ public class VendingListener implements CoinSlotListener, SelectionButtonListene
 	@Override
 	public void validCoinInserted(CoinSlot slot, Coin coin) {
 		mgr.addCredit(coin.getValue());
- 
+		mgr.displayCredit();
+		
 		if (mgr.checkExactChangeState()){
 			mgr.getExactChangeLight().deactivate();
 			mgr.log("ExactChange light off");
@@ -163,13 +160,15 @@ public class VendingListener implements CoinSlotListener, SelectionButtonListene
 	@Override
 	public void doorClosed(DeliveryChute chute) {
 		mgr.log("Delivery chute door closed");
-		
+		if (chute.getCapacity() > chute.size())
+			mgr.disableSafety();
 	}
 	
 	//TODO Document
 	@Override
 	public void chuteFull(DeliveryChute chute) {
-		mgr.log("Delivery chute full");		
+		mgr.log("Delivery chute full");
+		mgr.enableSafety();
 	}
 //^^^=======================DELIVERY CHUTE LISTENER METHODS END=======================^^^
 
@@ -202,7 +201,9 @@ public class VendingListener implements CoinSlotListener, SelectionButtonListene
 	public void popCansEmpty(PopCanRack popCanRack) {
 		String popName = mgr.getPopCanRackName(popCanRack);
 		mgr.log(popName + " rack empty.");
-		
+		if (mgr.checkAllProductsEmpty()){
+			mgr.enableSafety();
+		}
 	}
 //^^^=======================POP CAN RACK LISTENER METHODS END=======================^^^
 
@@ -283,6 +284,35 @@ public class VendingListener implements CoinSlotListener, SelectionButtonListene
 	}
 //^^^=======================COIN RECEPTACLE LISTENER METHODS END=======================^^^
 
+//vvv=======================INDICATOR LIGHT LISTENER METHODS START=======================vvv
+	//TODO Document
+	@Override
+	public void activated(IndicatorLight light) {
+		String message;
+		if (light == mgr.getExactChangeLight())
+				message = "Exact change light turned on.";
+		else if (light == mgr.getOutOfOrderLight())
+			message = "Out of order (safety) light turned on.";
+		else
+			message = "Unknown light turned on.";
+		mgr.log(message);
+	}
+	
+	//TODO Document
+	@Override
+	public void deactivated(IndicatorLight light) {
+		String message;
+		if (light == mgr.getExactChangeLight())
+				message = "Exact change light turned off.";
+		else if (light == mgr.getOutOfOrderLight())
+			message = "Out of order (safety) light turned off.";
+		else
+			message = "Unknown light turned off.";
+		mgr.log(message);		
+	}
+//^^^=======================INDICATOR LIGHT LISTENER METHODS END=======================^^^	
+
+	
 //vvv=======================TEMPLATE LISTENER METHODS START=======================vvv
 //^^^=======================TEMPLATE LISTENER METHODS END=======================^^^	
 }

@@ -68,8 +68,8 @@ public class DispListener implements DisplayListener {
 		messageLast = oldMessage;
 		messageCurrent = newMessage;
 		String greeting = DisplayDriver.getGreeetingMessage();
-		if (vm != null && !newMessage.equals("") && !newMessage.equals(greeting)) 
-			vm.log("Message displayed: " + newMessage);
+		if (newMessage != (null) && !newMessage.equals("") && !newMessage.equals(greeting)) 
+			if (vm != null) vm.log("Message displayed: " + newMessage);
 	}
 
 	/**

@@ -86,16 +86,21 @@ public class VendingManager {
 	 * Registers the previously instantiated listener(s) with the appropriate hardware.
 	 */
 	private void registerListeners(){
-		getCoinSlot().register(listener);
 		getDisplay().register(displayListener);
+		
+		getCoinSlot().register(listener);
 		getDeliveryChute().register(listener);
 		getStorageBin().register(listener);
 		getCoinReceptacle().register(listener);
-		
+		getOutOfOrderLight().register(listener);
+		getExactChangeLight().register(listener);
+
+		//TODO implement Lock
+		//getLock().register(listener)
+
 		registerCoinRackListener(listener);
 		registerPopCanRackListener(listener);
 		registerButtonListener(listener);
-		
 	}
 
 	/**
@@ -137,17 +142,6 @@ public class VendingManager {
 	// Indirect access to the VM is used to simplify the removal of the
 	// VM class from the build.
 //vvv=======================ACCESSORS START=======================vvv
-	void enableSafety(){
-		log("Safety enabled");
-		if (!mgr.isSafetyEnabled())
-			vm.enableSafety();
-	}
-	void disableSafety(){
-		log("Safety disabled");
-		//TODO Add more conditions; should not disable if something is otherwise wrong
-		if (mgr.isSafetyEnabled())
-			vm.disableSafety();
-	}
 	boolean isSafetyEnabled(){
 		return vm.isSafetyEnabled();
 	}
@@ -203,6 +197,30 @@ public class VendingManager {
 		return vm.getDisplay();
 	}
 
+	/**
+	 * Used by calling code to to enable the safety.
+	 * If the safety is not already enabled, it will always relay the message
+	 * to the hardware.
+	 */
+	void enableSafety(){
+		if (!mgr.isSafetyEnabled())
+			log("Safety enabled");
+			vm.enableSafety();
+	}
+	
+	/**
+	 * Used by calling code to *attempt* to disable the safety.
+	 * The calling code is assumed to be ignorant of system state, so
+	 * there are many cases where this will be called but the message will
+	 * not be relayed to the hardware.
+	 */
+	void disableSafety(){
+		//TODO Add more conditions; should not disable if something is still wrong
+		if (mgr.isSafetyEnabled())
+			log("Safety disabled");
+			vm.disableSafety();
+	}
+	
 	/**
 	 * Returns the index of the given SelectionButton,
 	 * which implies the index of the associated PopRack.
@@ -283,7 +301,6 @@ public class VendingManager {
 	void addCredit(int added){
 		credit += added;
 		log("Credit added:" + added);
-		displayCredit();
 	}
 	
 	/**
@@ -291,11 +308,9 @@ public class VendingManager {
 	 * @param added The credit to add, in cents.
 	 */
 	void subtractCredit(int subtracted){
-		log("Credit removed:" + subtracted);
 		credit -= subtracted;
+		log("Credit removed:" + subtracted);
 	}
-
-
 //^^^=======================ACCESSORS END=======================^^^
 
 
@@ -330,7 +345,7 @@ public class VendingManager {
 			throw new InsufficientFundsException("Cannot buy " + popName + ". " + diff + " cents missing.");
 		}
 	}
-
+	
 	/**
 	 * Returns a formatted string to display credit.
 	 * @return The formatted credit string.
@@ -426,6 +441,24 @@ public class VendingManager {
 		}
 		
 		return exact;
+	}
+	
+	/**
+	 * Checks if all of the pop racks are empty.
+	 * @return True if all are empty, else false
+	 */
+	boolean checkAllProductsEmpty(){
+		boolean empty = true;
+		
+		int popCount = getNumberOfPopCanRacks();
+		for (int i = 0; i < popCount; i++){
+			if (this.getPopCanRack(i).size() != 0){
+				empty = false;
+				break;
+			}
+		}
+		
+		return empty;
 	}
 	
 	/**

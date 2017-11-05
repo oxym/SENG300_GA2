@@ -74,16 +74,20 @@ public class VendingManagerSystemTest {
 		machine.getSelectionButton(1).press();
 
 		Deliverable[] delivered = machine.getDeliveryChute().removeItems();
-
-		//TODO Fix this to account for the added "change return" feature
-		// We need to exclude coins from our count
-		assertEquals(1, delivered.length);
-			
+		
 		String expected = machine.getPopKindName(1);
-		String dispensed = delivered[0].toString();
-
+		String dispensed = "";
+		
+		int popCount = 0; 
+		for (Deliverable each : delivered){
+			if (each.getClass().getSimpleName().equals("PopCan")){
+				popCount++;
+				dispensed = each.toString(); 
+			}
+		}
+		assertEquals(1, popCount);
 		assertEquals(dispensed, expected);
-		assertEquals(manager.getCredit(), 50);
+		assertEquals(0, manager.getCredit());
 	}
 
 	/**

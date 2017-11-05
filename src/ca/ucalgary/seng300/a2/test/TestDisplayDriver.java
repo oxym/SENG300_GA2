@@ -19,10 +19,10 @@ public class TestDisplayDriver {
 	// Instantiate a new hardware and logic classes for each test
 	@Before
 	public void setup() throws Exception {
-		displayDriver = new DisplayDriver(dummyDisplay);
 		dummyDisplay = new Display();
 		testDisplayListener = new DispListener();
 		dummyDisplay.register(testDisplayListener);
+		displayDriver = new DisplayDriver(dummyDisplay);
 	}
 
 	////////////////////////////////////////////////////////////////////////
