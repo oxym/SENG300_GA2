@@ -75,8 +75,10 @@ public class VendingManagerSystemTest {
 
 		Deliverable[] delivered = machine.getDeliveryChute().removeItems();
 
+		//TODO Fix this to account for the added "change return" feature
+		// We need to exclude coins from our count
 		assertEquals(1, delivered.length);
-
+			
 		String expected = machine.getPopKindName(1);
 		String dispensed = delivered[0].toString();
 
@@ -161,14 +163,15 @@ public class VendingManagerSystemTest {
 	 */
 	@Test
 	public void testNoCreditAndPop() {
-
+		 
 		machine.loadPopCans(10, 10, 10, 10, 10, 10);
 		machine.loadCoins(10, 10, 10, 10, 10);
 
 		machine.getSelectionButton(1).press();
 
 		Deliverable[] delivered = machine.getDeliveryChute().removeItems();
-
+		//TODO Fix this to account for the added "change return" feature
+		// We want to popCans.length == 0, not just anything from the chute
 		assertEquals(delivered.length, 0);
 		assertEquals(manager.getCredit(), 0);
 	}
