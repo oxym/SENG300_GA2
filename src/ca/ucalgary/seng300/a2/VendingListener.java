@@ -12,6 +12,10 @@ import org.lsmr.vending.hardware.*;
  * 
  * HANDLED EVENTS: 	SelectionButtonListener: pressed() 
  *   				CoinSlotListener: ValidCoinInserted()
+ * 
+ * TODO: Divide this class into separate listener classes. Be sure to consult team first.
+ * TEMPORARILY HANDLED EVENTS TYPES:
+ * 	LockListener, DeliveryChute, PopCanRack, CoinRack, CoinReceptacle
  *
  * Assignment 1:
  * @author Raymond Tran (30028473)
@@ -23,7 +27,10 @@ import org.lsmr.vending.hardware.*;
  *
  */
 public class VendingListener implements CoinSlotListener, SelectionButtonListener,
-										LockListener, DeliveryChuteListener {
+										LockListener, DeliveryChuteListener,
+										CoinRackListener, PopCanRackListener,
+										CoinReceptacleListener
+										{
 	private static VendingListener listener;
 	private static VendingManager mgr;
 	
@@ -90,7 +97,7 @@ public class VendingListener implements CoinSlotListener, SelectionButtonListene
 	}
 //^^^=======================BUTTON LISTENER METHODS END=======================^^^
 
-//vvv=======================COINSLOT LISTENER METHODS START=======================vvv
+//vvv=======================COIN SLOT LISTENER METHODS START=======================vvv
 	//TODO: Document
 	@Override
 	public void coinRejected(CoinSlot slot, Coin coin) {
@@ -107,12 +114,17 @@ public class VendingListener implements CoinSlotListener, SelectionButtonListene
 	public void validCoinInserted(CoinSlot slot, Coin coin) {
 		mgr.addCredit(coin.getValue());
  
-		if (mgr.checkExactChangeState())
+		if (mgr.checkExactChangeState()){
 			mgr.getExactChangeLight().deactivate();
-		else
+			mgr.log("ExactChange light off");
+		}
+		else{
 			mgr.getExactChangeLight().activate();
+			mgr.log("ExactChange light on");
+		}
+			
 	}
-//^^^=======================COINSlOT LISTENER METHODS END=======================^^^
+//^^^=======================COIN SlOT LISTENER METHODS END=======================^^^
 	
 //vvv=======================LOCK LISTENER METHODS START=======================vvv
 	/**
@@ -160,4 +172,117 @@ public class VendingListener implements CoinSlotListener, SelectionButtonListene
 		mgr.log("Delivery chute full");		
 	}
 //^^^=======================DELIVERY CHUTE LISTENER METHODS END=======================^^^
+
+//vvv=======================POP CAN RACK LISTENER METHODS START=======================vvv
+	//TODO Decide whether these events should be logged or handled
+	@Override
+	public void popCanAdded(PopCanRack popCanRack, PopCan popCan) {}
+	@Override
+	public void popCansLoaded(PopCanRack rack, PopCan... popCans) {}
+	@Override
+	public void popCansUnloaded(PopCanRack rack, PopCan... popCans) {}
+
+
+	//TODO Document
+	@Override
+	public void popCanRemoved(PopCanRack popCanRack, PopCan popCan) {
+		String popName = mgr.getPopCanRackName(popCanRack);
+		mgr.log(popCan.getName() + " removed from " + popName + " rack.");	
+	}
+	
+	//TODO Document
+	@Override
+	public void popCansFull(PopCanRack popCanRack) {
+		String popName = mgr.getPopCanRackName(popCanRack);
+		mgr.log(popName + " rack full.");
+	}
+	
+	//TODO Document
+	@Override
+	public void popCansEmpty(PopCanRack popCanRack) {
+		String popName = mgr.getPopCanRackName(popCanRack);
+		mgr.log(popName + " rack empty.");
+		
+	}
+//^^^=======================POP CAN RACK LISTENER METHODS END=======================^^^
+
+//vvv=======================COIN RACK LISTENER METHODS START=======================vvv
+	//TODO: Decide if these events should be logged or handled.
+	@Override
+	public void coinsLoaded(CoinRack rack, Coin... coins) {}
+	@Override
+	public void coinsUnloaded(CoinRack rack, Coin... coins) {}
+	
+	//TODO Document
+	@Override
+	public void coinsFull(CoinRack rack) {
+		int rackVal = mgr.getCoinRackValue(rack);
+		mgr.log("Coin (" + rackVal + ") rack empty.");
+	}
+	
+	//TODO Document
+	@Override
+	public void coinsEmpty(CoinRack rack) {
+		int rackVal = mgr.getCoinRackValue(rack);
+		mgr.log("Coin (" + rackVal + ") rack empty.");
+	}
+	
+	//TODO Document
+	@Override
+	public void coinAdded(CoinRack rack, Coin coin) {
+		int rackVal = mgr.getCoinRackValue(rack);
+		mgr.log("Coin (" + coin.getValue() + ") removed from (" + rackVal + ") rack.");
+	}
+	
+	//TODO Document
+	@Override
+	public void coinRemoved(CoinRack rack, Coin coin) {
+		int rackVal = mgr.getCoinRackValue(rack);
+		mgr.log("Coin (" + coin.getValue() + ") removed from (" + rackVal + ") rack.");
+	}
+//^^^=======================COIN RACK LISTENER METHODS END=======================^^^
+
+//vvv=======================COIN RECEPTACLE LISTENER METHODS START=======================vvv
+	//TODO Decide whether these events should be logged or handled 
+	@Override
+	public void coinsLoaded(CoinReceptacle receptacle, Coin... coins) {}
+	@Override
+	public void coinsUnloaded(CoinReceptacle receptacle, Coin... coins) {}
+
+	//TODO Document
+	@Override
+	public void coinAdded(CoinReceptacle receptacle, Coin coin) {
+		if (receptacle == mgr.getStorageBin()){
+			mgr.log("Coin (" + coin.getValue() + ") added to storage bin");
+		}
+		else{
+			//TODO: Decide whether to log when the coin enters the "holding" coin receptacle.
+		}
+	}
+
+	//TODO Document
+	@Override
+	public void coinsRemoved(CoinReceptacle receptacle) {
+		mgr.disableSafety();
+		String message= (receptacle == mgr.getStorageBin())
+				? "Coins removed from storage bin."
+				: "Coins removed from coin receptacle.";
+		mgr.log(message);
+	}
+	
+	//TODO Document
+	@Override
+	public void coinsFull(CoinReceptacle receptacle) {
+		//NOTE: safety is being enabled when storage bin is full, even if
+		// there is still room in some coin racks. MAY BE CHANGED.
+		mgr.enableSafety();
+		String message= (receptacle == mgr.getStorageBin())
+				? "Storage bin full."
+				: "Coin receptacle full.";
+		mgr.log(message);
+	}
+//^^^=======================COIN RECEPTACLE LISTENER METHODS END=======================^^^
+
+//vvv=======================TEMPLATE LISTENER METHODS START=======================vvv
+//^^^=======================TEMPLATE LISTENER METHODS END=======================^^^	
 }

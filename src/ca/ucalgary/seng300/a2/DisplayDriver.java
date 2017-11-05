@@ -126,6 +126,15 @@ public class DisplayDriver {
 		greetingDuration = duration;
 		greetingCycleTime = cycleTime;
 	}
+	
+	/**
+	 * Gets the greeting message which is displayed when the vending machine is
+	 * idle and has no credit stored.
+	 * @return The default (greeting) message.
+	 */
+	public static String getGreeetingMessage(){
+		return MSG_DEFAULT;
+	}
 
 	/**
 	 * Inner Class for the display message task

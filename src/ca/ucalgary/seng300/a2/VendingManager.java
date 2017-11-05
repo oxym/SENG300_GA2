@@ -83,19 +83,25 @@ public class VendingManager {
 	}
 
 	/**
-	 * Registers the previously instantiated listener(s) with the
-	 * appropriate hardware.
+	 * Registers the previously instantiated listener(s) with the appropriate hardware.
 	 */
 	private void registerListeners(){
 		getCoinSlot().register(listener);
 		getDisplay().register(displayListener);
+		getDeliveryChute().register(listener);
+		getStorageBin().register(listener);
+		getCoinReceptacle().register(listener);
+		
+		registerCoinRackListener(listener);
+		registerPopCanRackListener(listener);
 		registerButtonListener(listener);
+		
 	}
 
 	/**
 	 * Iterates through all selection buttons in the VendingMachine and
 	 * registers a single listener with each.
-	 * @param listener The listener that will handle SelectionButton events.
+	 * @param listener The listener that will handle SelectionButtonListener events.
 	 */
 	private void registerButtonListener(SelectionButtonListener listener){
 		int buttonCount = getNumberOfSelectionButtons();
@@ -103,8 +109,30 @@ public class VendingManager {
 			getSelectionButton(i).register(listener);;
 		}
 	}
+	/**
+	 * Iterates through all coin racks in the VendingMachine and
+	 * registers a single listener with each.
+	 * @param listener The listener that will handle CoinRackListener events.
+	 */
+	private void registerCoinRackListener(CoinRackListener listener){
+		int rackCount = getNumberOfCoinRacks();
+		for (int i = 0; i< rackCount; i++){
+			getCoinRack(i).register(listener);;
+		}
+	}
+	/**
+	 * Iterates through all pop can racks in the VendingMachine and
+	 * registers a single listener with each.
+	 * @param listener The listener that will handle PopCanRackListener events.
+	 */
+	private void registerPopCanRackListener(PopCanRackListener listener){
+		int rackCount = getNumberOfPopCanRacks();
+		for (int i = 0; i< rackCount; i++){
+			getPopCanRack(i).register(listener);;
+		}
+	}
 
-
+	
 	// Accessors used throughout the vending logic classes to get hardware references.
 	// Indirect access to the VM is used to simplify the removal of the
 	// VM class from the build.
@@ -183,12 +211,59 @@ public class VendingManager {
 	 */
 	int getButtonIndex(SelectionButton button){
 		int buttonCount = getNumberOfSelectionButtons();
-		for (int i = 0; i< buttonCount; i++){
+		for (int i = 0; i < buttonCount; i++){
 			if (getSelectionButton(i) == button){
 				return i;
 			}
 		}
 		return -1;
+	}
+
+	/**
+	 * Returns the index of the given PopCanRack.
+	 * @param poprack The PopCanRack of interest.
+	 * @return The matching index, or -1 if no match.
+	 */
+	int getPopCanRackIndex(PopCanRack popRack){
+		int rackCount = getNumberOfPopCanRacks();
+		for (int i = 0; i < rackCount; i++){
+			if (this.getPopCanRack(i) == popRack){
+				return i;
+			}
+		}
+		return -1;
+	}
+	/**
+	  * Returns the name pop in the given PopCanRack.
+	 * @param popRack The PopCanRack to check the name for.
+	 * @return The name of the pop.
+	 */
+	String getPopCanRackName(PopCanRack popRack){
+		return mgr.getPopKindName(mgr.getPopCanRackIndex(popRack));
+	}
+	
+	/**
+	 * Returns the index of the given CoinRack.
+	 * @param coinRack The CoinRack of interest.
+	 * @return The matching index, or -1 if no match.
+	 */
+	int getCoinRackIndex(CoinRack coinRack){
+		int rackCount = getNumberOfCoinRacks();
+		for (int i = 0; i < rackCount; i++){
+			if (this.getCoinRack(i) == coinRack){
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	/**
+	  * Returns the coin value in the given CoinRack.
+	 * @param coinRack The CoinRack to check the value for.
+	 * @return The value (in cents) of the stored coins.
+	 */
+	int getCoinRackValue(CoinRack coinRack){
+		return getCoinKindForCoinRack(getCoinRackIndex(coinRack));
 	}
 
 	/**
@@ -216,6 +291,7 @@ public class VendingManager {
 	 * @param added The credit to add, in cents.
 	 */
 	void subtractCredit(int subtracted){
+		log("Credit removed:" + subtracted);
 		credit -= subtracted;
 	}
 
