@@ -18,8 +18,6 @@ public class DisplayDriver {
 	private int greetingCycleTime = 15; // in seconds
 	private int greetingDuration = 5; // in seconds
 	private Timer timer;
-	private TimerTask messageTask;
-	private TimerTask clearTask;
 	
 	private VendingManager vm;
 	private Display display;
@@ -32,7 +30,6 @@ public class DisplayDriver {
 		this.display = display;
 		vm = VendingManager.getInstance();
 		timer = new Timer();
-		clearTask = new DisplayMessageTask("", display);
 	}
 
 	/**
@@ -82,30 +79,35 @@ public class DisplayDriver {
 		
 		int delay = duration * 1000;		
 		if (vm != null && VendingManager.getInstance().getCredit() > 0 ){
-			messageTask = new DisplayMessageTask("$CREDIT$", display);
+			DisplayMessageTask messageTask = getMessageTask("$CREDIT$");
 			timer.schedule(messageTask, delay);
 		}
 		else { //Restore greeting message
-			messageTask = new DisplayMessageTask(MSG_DEFAULT, display);
+			DisplayMessageTask messageTask = getMessageTask(MSG_DEFAULT);
 			timer.scheduleAtFixedRate(messageTask, delay, greetingCycleTime * 1000);
-			timer.scheduleAtFixedRate(clearTask, delay + greetingDuration * 1000, greetingCycleTime * 1000);
+			timer.scheduleAtFixedRate(getClearTask(), delay + greetingDuration * 1000, greetingCycleTime * 1000);
 		}
 		//TODO Decide if this is really the best way to default to displaying credit.
 		
 		
 	}
-
+	DisplayMessageTask getMessageTask(String message){
+		return new DisplayMessageTask(message, display);
+	}
+	DisplayMessageTask getClearTask(){
+		return new DisplayMessageTask("", display);
+	}
 	/**
 	 * Displays the default message The default message is displayed for set time
 	 * and is then blank for the remainder of the cycle time
 	 */
 	public void greetingMessage() {
 		cancelCycle();
-		messageTask = new DisplayMessageTask(MSG_DEFAULT, display);
+		DisplayMessageTask messageTask = getMessageTask(MSG_DEFAULT);
 		timer.scheduleAtFixedRate(messageTask, 0, greetingCycleTime * 1000);
-		timer.scheduleAtFixedRate(clearTask, greetingDuration * 1000, greetingCycleTime * 1000);
+		timer.scheduleAtFixedRate(getClearTask(), greetingDuration * 1000, greetingCycleTime * 1000);
 	}
-
+	
 	/**
 	 * Clears the display indefinitely.
 	 * @deprecated This method should not be used. The display should never be perma-cleared.
