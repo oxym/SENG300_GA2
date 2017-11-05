@@ -296,7 +296,7 @@ public class VendingListener implements CoinSlotListener, SelectionButtonListene
 	public void activated(IndicatorLight light) {
 		String message;
 		if (light == mgr.getExactChangeLight())
-				message = "Exact change light turned on.";
+			message = "Exact change light turned on.";
 		else if (light == mgr.getOutOfOrderLight())
 			message = "Out of order (safety) light turned on.";
 		else
@@ -309,7 +309,7 @@ public class VendingListener implements CoinSlotListener, SelectionButtonListene
 	public void deactivated(IndicatorLight light) {
 		String message;
 		if (light == mgr.getExactChangeLight())
-				message = "Exact change light turned off.";
+			message = "Exact change light turned off.";
 		else if (light == mgr.getOutOfOrderLight())
 			message = "Out of order (safety) light turned off.";
 		else
