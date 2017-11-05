@@ -1,8 +1,5 @@
 package ca.ucalgary.seng300.a2;
 
-import java.util.ArrayList;
-
-import org.lsmr.vending.*;
 import org.lsmr.vending.hardware.*;
 
 /**
