@@ -87,9 +87,6 @@ public class DisplayDriver {
 			timer.scheduleAtFixedRate(messageTask, delay, greetingCycleTime * 1000);
 			timer.scheduleAtFixedRate(getClearTask(), delay + greetingDuration * 1000, greetingCycleTime * 1000);
 		}
-		//TODO Decide if this is really the best way to default to displaying credit.
-		
-		
 	}
 	DisplayMessageTask getMessageTask(String message){
 		return new DisplayMessageTask(message, display);
