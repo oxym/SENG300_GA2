@@ -207,8 +207,8 @@ public class VendingManager {
 	 */
 	void addCredit(int added){
 		credit += added;
-		displayCredit();
 		log("Credit added:" + added);
+		displayCredit();
 	}
 	
 	/**

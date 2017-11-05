@@ -22,7 +22,8 @@ import org.lsmr.vending.hardware.*;
  * See authorship in VendingManager.
  *
  */
-public class VendingListener implements CoinSlotListener, SelectionButtonListener, LockListener {
+public class VendingListener implements CoinSlotListener, SelectionButtonListener,
+										LockListener, DeliveryChuteListener {
 	private static VendingListener listener;
 	private static VendingManager mgr;
 	
@@ -47,15 +48,13 @@ public class VendingListener implements CoinSlotListener, SelectionButtonListene
 		return listener;
 	}
 
-	// Currently unneeded listener events.
-	@Override
-	public void coinRejected(CoinSlot slot, Coin coin) {}
+	// Currently unused listener events
 	@Override
 	public void enabled(AbstractHardware<? extends AbstractHardwareListener> hardware) {}
 	@Override
 	public void disabled(AbstractHardware<? extends AbstractHardwareListener> hardware) {}
 
-
+//vvv=======================BUTTON LISTENER METHODS START=======================vvv
 	/**
 	 * Responds to "pressed" notifications from registered SelectionButtons. 
 	 * If no matching button is found in the VendingMachine, nothing is done.
@@ -64,7 +63,11 @@ public class VendingListener implements CoinSlotListener, SelectionButtonListene
 	 */
 	@Override
 	public void pressed(SelectionButton button) {
-		int bIndex = mgr.getButtonIndex(button); 
+		int bIndex = mgr.getButtonIndex(button);
+		
+		String popName = mgr.getPopKindName(bIndex);
+		mgr.log("Button for: " + popName + ", button: " + bIndex + " pressed.");
+		
 		if (bIndex == -1){
 			//Then it's not a pop selection button. 
 			//This may be where we handle "change return" button presses
@@ -78,14 +81,22 @@ public class VendingListener implements CoinSlotListener, SelectionButtonListene
 			} catch(DisabledException e){
 				mgr.display("Vending machine disabled", 5);
 			} catch (EmptyException e){
-				String popName = mgr.getPopKindName(bIndex);
+				
 				mgr.display(popName + " is out of stock.", 5);
 			} catch (CapacityExceededException e){
 				mgr.display("Delivery chute full", 5);
 			}
 		}		
 	}
+//^^^=======================BUTTON LISTENER METHODS END=======================^^^
 
+//vvv=======================COINSLOT LISTENER METHODS START=======================vvv
+	//TODO: Document
+	@Override
+	public void coinRejected(CoinSlot slot, Coin coin) {
+		mgr.log("Coin with value: " + coin.getValue() + " rejected by coin slot.");
+	}
+	
 	/**
 	 * Responds to "Valid coin inserted" notifications from the registered CoinSlot.
 	 * Adds the value of the coin to the VendingManager's tracked credit.
@@ -101,7 +112,9 @@ public class VendingListener implements CoinSlotListener, SelectionButtonListene
 		else
 			mgr.getExactChangeLight().activate();
 	}
-
+//^^^=======================COINSlOT LISTENER METHODS END=======================^^^
+	
+//vvv=======================LOCK LISTENER METHODS START=======================vvv
 	/**
 	 * Handles the "locked" event from the registered Lock.
 	 * Causes the vm to turn on safety-mode. 
@@ -119,4 +132,32 @@ public class VendingListener implements CoinSlotListener, SelectionButtonListene
 	public void unlocked(Lock lock) {
 		mgr.enableSafety();		
 	}
+//^^^=======================LOCK LISTENER METHODS END=======================^^^
+	
+//vvv=======================DELIVERY CHUTE LISTENER METHODS START=======================vvv
+	//TODO Document
+	@Override
+	public void itemDelivered(DeliveryChute chute) {
+		//TODO Decide if an item entering the delivery chute should be logged
+	}
+
+	//TODO Document
+	@Override
+	public void doorOpened(DeliveryChute chute) {
+		mgr.log("Delivery chute door opened");
+	}
+	
+	//TODO Document
+	@Override
+	public void doorClosed(DeliveryChute chute) {
+		mgr.log("Delivery chute door closed");
+		
+	}
+	
+	//TODO Document
+	@Override
+	public void chuteFull(DeliveryChute chute) {
+		mgr.log("Delivery chute full");		
+	}
+//^^^=======================DELIVERY CHUTE LISTENER METHODS END=======================^^^
 }
