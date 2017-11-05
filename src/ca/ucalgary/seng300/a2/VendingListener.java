@@ -174,14 +174,20 @@ public class VendingListener implements CoinSlotListener, SelectionButtonListene
 
 //vvv=======================POP CAN RACK LISTENER METHODS START=======================vvv
 	//TODO Decide whether these events should be logged or handled
-	@Override
-	public void popCanAdded(PopCanRack popCanRack, PopCan popCan) {}
+	
 	@Override
 	public void popCansLoaded(PopCanRack rack, PopCan... popCans) {}
 	@Override
 	public void popCansUnloaded(PopCanRack rack, PopCan... popCans) {}
 
-
+	//TODO Document
+	@Override
+	public void popCanAdded(PopCanRack popCanRack, PopCan popCan) {
+		mgr.disableSafety();
+		//TODO Decide if we should log the added pop. 
+		// Should only happen during loading, so maybe we'll just log it there.
+	}
+	
 	//TODO Document
 	@Override
 	public void popCanRemoved(PopCanRack popCanRack, PopCan popCan) {
