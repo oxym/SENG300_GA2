@@ -190,30 +190,45 @@ public class VendingListener implements CoinSlotListener, SelectionButtonListene
 	@Override
 	public void popCansUnloaded(PopCanRack rack, PopCan... popCans) {}
 
-	//TODO Document
-	@Override
+	/*
+	 * Disables the machines safety during the loading of the machine
+	 * 
+	 * @param curent pop can rack of interest
+	 * @param curent pop can of interest 
+	 */
 	public void popCanAdded(PopCanRack popCanRack, PopCan popCan) {
 		mgr.disableSafety();
 		//TODO Decide if we should log the added pop. 
 		// Should only happen during loading, so maybe we'll just log it there.
 	}
 	
-	//TODO Document
-	@Override
+	/*
+	 * Logs that the given pop has been removed from the rack
+	 * 
+	 *@param curent pop can rack of interest
+	 *@param curent pop can of interest  
+	 */
 	public void popCanRemoved(PopCanRack popCanRack, PopCan popCan) {
 		String popName = mgr.getPopCanRackName(popCanRack);
 		mgr.log(popCan.getName() + " removed from " + popName + " rack.");	
 	}
 	
-	//TODO Document
-	@Override
+/*
+ * logs that the given pop can rack is full
+ * 
+ * @param curent pop can rack of interest
+ */
 	public void popCansFull(PopCanRack popCanRack) {
 		String popName = mgr.getPopCanRackName(popCanRack);
 		mgr.log(popName + " rack full.");
 	}
 	
-	//TODO Document
-	@Override
+/*
+ * logs that the given pop rack is empty. If all pop 
+ * racks are empty then enable the safety of the machine.
+ * 
+ * @param curent pop can rack of interest 
+ */
 	public void popCansEmpty(PopCanRack popCanRack) {
 		String popName = mgr.getPopCanRackName(popCanRack);
 		mgr.log(popName + " rack empty.");
@@ -230,29 +245,46 @@ public class VendingListener implements CoinSlotListener, SelectionButtonListene
 	@Override
 	public void coinsUnloaded(CoinRack rack, Coin... coins) {}
 	
-	//TODO Document
-	@Override
+/*
+ * logs that the given coin value rack is full
+ * 
+ * @param the given coin rack of interest
+ */
 	public void coinsFull(CoinRack rack) {
 		int rackVal = mgr.getCoinRackValue(rack);
-		mgr.log("Coin (" + rackVal + ") rack empty.");
+		mgr.log("Coin (" + rackVal + ") rack full.");
 	}
 	
-	//TODO Document
-	@Override
+	/*
+	 * logs that the given coin value rack is empty
+	 * 
+	 * @param the given coin rack of interest
+	 */	@Override
 	public void coinsEmpty(CoinRack rack) {
 		int rackVal = mgr.getCoinRackValue(rack);
 		mgr.log("Coin (" + rackVal + ") rack empty.");
 	}
 	
-	//TODO Document
+	 /*
+	  * logs that the given coin rack has had a coin value
+	  * added to the rack
+	  * 
+	  * @param the given coin rack of interest
+	  * @param any arbritrary coin value
+	  */
 	@Override
 	public void coinAdded(CoinRack rack, Coin coin) {
 		int rackVal = mgr.getCoinRackValue(rack);
-		mgr.log("Coin (" + coin.getValue() + ") removed from (" + rackVal + ") rack.");
+		mgr.log("Coin (" + coin.getValue() + ") added to (" + rackVal + ") rack.");
 	}
 	
-	//TODO Document
-	@Override
+	 /*
+	  * logs that the given coin rack has had a coin value
+	  * removed from the rack
+	  * 
+	  * @param the given coin rack of interest
+	  * @param any arbritrary coin value
+	  */	@Override
 	public void coinRemoved(CoinRack rack, Coin coin) {
 		int rackVal = mgr.getCoinRackValue(rack);
 		mgr.log("Coin (" + coin.getValue() + ") removed from (" + rackVal + ") rack.");
@@ -266,7 +298,13 @@ public class VendingListener implements CoinSlotListener, SelectionButtonListene
 	@Override
 	public void coinsUnloaded(CoinReceptacle receptacle, Coin... coins) {}
 
-	//TODO Document
+	/*
+	 * Log that a coin has been added to the storage bin. This should happen
+	 * when there is no more room in the coin rack? 
+	 * 
+	 * @param Current coin receptacle
+	 * @param any arbritrary coin value
+	 */
 	@Override
 	public void coinAdded(CoinReceptacle receptacle, Coin coin) {
 		if (receptacle == mgr.getStorageBin()){
