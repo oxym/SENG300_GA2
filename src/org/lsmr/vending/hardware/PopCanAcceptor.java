@@ -6,7 +6,7 @@ import org.lsmr.vending.PopCan;
  * A simple interface to allow a device to communicate with another device that
  * accepts pop cans.
  */
-public interface AbstractPopCanAcceptor {
+public interface PopCanAcceptor {
     /**
      * Instructs the device to take the pop can as input.
      * 
@@ -17,6 +17,15 @@ public interface AbstractPopCanAcceptor {
      * @throws DisabledException
      *             if the device is currently disabled.
      */
-    public void acceptPopCan(PopCan popCan) throws CapacityExceededException,
-	    DisabledException;
+    public void acceptPopCan(PopCan popCan) throws CapacityExceededException, DisabledException;
+
+    /**
+     * Checks whether the device has enough space to expect one more item. If
+     * this method returns true, an immediate call to acceptPopCan should not
+     * throw CapacityExceededException, unless an asynchronous addition has
+     * occurred in the meantime.
+     * 
+     * @return true if there is space, false if there is not space
+     */
+    public boolean hasSpace();
 }

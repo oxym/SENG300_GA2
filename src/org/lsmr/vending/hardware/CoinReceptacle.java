@@ -16,7 +16,7 @@ import org.lsmr.vending.Coin;
  * coin (usually used for storing to coin racks) and another for the coin
  * return.
  */
-public final class CoinReceptacle extends AbstractHardware<CoinReceptacleListener> implements AbstractCoinAcceptor {
+public final class CoinReceptacle extends AbstractHardware<CoinReceptacleListener> implements CoinAcceptor {
     private Vector<Coin> coinsEntered = new Vector<Coin>();
     private int maxCapacity;
     private CoinChannel coinReturn, other = null;

@@ -13,11 +13,10 @@ import org.lsmr.vending.PopCan;
 /**
  * Represents a standard configuration of the vending machine hardware:
  * <ul>
+ * <li>one configuration panel;</li>
+ * <li>one coin return;</li>
  * <li>one coin slot;</li>
- * <li>one coin receptacle (called the coin receptacle) to temporarily store
- * coins entered by the user;</li>
- * <li>one coin receptacle (called the storage bin) to store coins that have
- * been accepted as payment;</li>
+ * <li>one coin receptacle to store coins entered by the user;</li>
  * <li>a set of one or more coin racks (the number and the denomination of coins
  * stored by each is specified in the constructor);</li>
  * <li>one delivery chute used to deliver pop cans and to return coins;</li>
@@ -35,10 +34,9 @@ import org.lsmr.vending.PopCan;
  * <li>the output of the coin slot is connected to the input of the coin
  * receptacle;</li>
  * <li>the outputs of the coin receptacle are connected to the inputs of the
- * coin racks (for valid coins to be stored therein), the delivery chute (for
- * invalid coins or other coins to be returned), and the storage bin (for coins
- * to be accepted that do not fit in the coin racks);</li>
- * <li>the output of each coin rack is connected to the delivery chute; and</li>
+ * coin racks (for valid coins to be stored therein), and the coin return (for
+ * invalid coins or other coins to be returned);</li>
+ * <li>the output of each coin rack is connected to the coin return; and</li>
  * <li>the output of each pop can rack is connected to the delivery chute.</li>
  * </ul>
  * <p>
@@ -55,16 +53,18 @@ public final class VendingMachine {
 
     private int[] coinKinds;
     private CoinSlot coinSlot;
-    private CoinReceptacle receptacle, storageBin;
+    private CoinReceptacle receptacle;
     private DeliveryChute deliveryChute;
     private CoinRack[] coinRacks;
     private Map<Integer, CoinChannel> coinRackChannels;
     private PopCanRack[] popCanRacks;
     private Display display;
-    private SelectionButton[] buttons;
+    private PushButton[] buttons;
     private int[] popCanCosts;
     private String[] popCanNames;
     private IndicatorLight exactChangeLight, outOfOrderLight;
+    private CoinReturn coinReturn;
+    private ConfigurationPanel configurationPanel;
 
     /**
      * Creates a standard arrangement for the vending machine. All the
@@ -89,16 +89,15 @@ public final class VendingMachine {
      *            The maximum capacity of each pop can rack in the machine. Must
      *            be positive.
      * @param receptacleCapacity
-     *            The maximum capacity of the coin receptacle, storage bin, and
-     *            delivery chute. Must be positive.
+     *            The maximum capacity of the coin receptacle. Must be positive.
      * @throws SimulationException
      *             If any of the arguments is null.
      */
-    public VendingMachine(int[] coinKinds, int selectionButtonCount, int coinRackCapacity, int popCanRackCapacity, int receptacleCapacity) {
+    public VendingMachine(int[] coinKinds, int selectionButtonCount, int coinRackCapacity, int popCanRackCapacity, int receptacleCapacity, int deliveryChuteCapacity, int coinReturnCapacity) {
 	if(coinKinds == null)
 	    throw new SimulationException("Arguments may not be null");
 
-	if(selectionButtonCount < 1 || coinRackCapacity < 1 || popCanRackCapacity < 1)
+	if(selectionButtonCount < 1 || coinRackCapacity < 1 || popCanRackCapacity < 1 || deliveryChuteCapacity < 1 || coinReturnCapacity < 1)
 	    throw new SimulationException("Counts and capacities must be positive");
 
 	if(coinKinds.length < 1)
@@ -117,16 +116,16 @@ public final class VendingMachine {
 	    currentCoinKinds.add(coinKind);
 	}
 
+	configurationPanel = new ConfigurationPanel();
 	display = new Display();
 	coinSlot = new CoinSlot(coinKinds);
 	receptacle = new CoinReceptacle(receptacleCapacity);
-	storageBin = new CoinReceptacle(receptacleCapacity);
 	deliveryChute = new DeliveryChute(receptacleCapacity);
 	coinRacks = new CoinRack[coinKinds.length];
 	coinRackChannels = new HashMap<Integer, CoinChannel>();
 	for(int i = 0; i < coinKinds.length; i++) {
 	    coinRacks[i] = new CoinRack(coinRackCapacity);
-	    coinRacks[i].connect(new CoinChannel(deliveryChute));
+	    coinRacks[i].connect(new CoinChannel(coinReturn));
 	    coinRackChannels.put(new Integer(coinKinds[i]), new CoinChannel(coinRacks[i]));
 	}
 
@@ -143,12 +142,12 @@ public final class VendingMachine {
 	for(int i = 0; i < selectionButtonCount; i++)
 	    popCanCosts[i] = 1;
 
-	buttons = new SelectionButton[selectionButtonCount];
+	buttons = new PushButton[selectionButtonCount];
 	for(int i = 0; i < selectionButtonCount; i++)
-	    buttons[i] = new SelectionButton();
+	    buttons[i] = new PushButton();
 
-	coinSlot.connect(new CoinChannel(receptacle), new CoinChannel(deliveryChute));
-	receptacle.connect(coinRackChannels, new CoinChannel(deliveryChute), new CoinChannel(storageBin));
+	coinSlot.connect(new CoinChannel(receptacle), new CoinChannel(coinReturn));
+	receptacle.connect(coinRackChannels, new CoinChannel(coinReturn), new CoinChannel(null));
 
 	exactChangeLight = new IndicatorLight();
 	outOfOrderLight = new IndicatorLight();
@@ -248,6 +247,24 @@ public final class VendingMachine {
     }
 
     /**
+     * Accesses the configuration panel.
+     * 
+     * @return The relevant device.
+     */
+    public ConfigurationPanel getConfigurationPanel() {
+	return configurationPanel;
+    }
+
+    /**
+     * Accesses the coin return.
+     * 
+     * @return The relevant device.
+     */
+    public CoinReturn getCoinReturn() {
+	return coinReturn;
+    }
+
+    /**
      * Accesses a selection button at the indicated index.
      * 
      * @param index
@@ -257,7 +274,7 @@ public final class VendingMachine {
      *             if the index &lt; 0 or the index &gt;= number of selection
      *             buttons.
      */
-    public SelectionButton getSelectionButton(int index) {
+    public PushButton getSelectionButton(int index) {
 	return buttons[index];
     }
 
@@ -286,15 +303,6 @@ public final class VendingMachine {
      */
     public CoinReceptacle getCoinReceptacle() {
 	return receptacle;
-    }
-
-    /**
-     * Accesses the storage bin.
-     * 
-     * @return The relevant device.
-     */
-    public CoinReceptacle getStorageBin() {
-	return storageBin;
     }
 
     /**

@@ -4,8 +4,8 @@ package org.lsmr.vending.hardware;
  * Represents a simple push button on the vending machine. It ignores the
  * enabled/disabled state.
  */
-public final class SelectionButton extends
-        AbstractHardware<SelectionButtonListener> {
+public final class PushButton extends
+        AbstractHardware<PushButtonListener> {
     /**
      * Simulates the pressing of the button. Notifies its listeners of a
      * "pressed" event.
@@ -15,7 +15,7 @@ public final class SelectionButton extends
     }
 
     private void notifyPressed() {
-	for(SelectionButtonListener listener : listeners)
+	for(PushButtonListener listener : listeners)
 	    listener.pressed(this);
     }
 }
