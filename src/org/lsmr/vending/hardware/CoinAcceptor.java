@@ -6,7 +6,7 @@ import org.lsmr.vending.Coin;
  * A simple interface to allow a device to communicate with another device that
  * accepts coins.
  */
-public interface AbstractCoinAcceptor {
+public interface CoinAcceptor {
     /**
      * Instructs the device to take the coin as input.
      * 
@@ -17,7 +17,7 @@ public interface AbstractCoinAcceptor {
      * @throws DisabledException
      *             If the device is disabled.
      */
-    void acceptCoin(Coin coin) throws CapacityExceededException, DisabledException;
+    public void acceptCoin(Coin coin) throws CapacityExceededException, DisabledException;
 
     /**
      * Checks whether the device has enough space to expect one more item. If
@@ -27,5 +27,5 @@ public interface AbstractCoinAcceptor {
      * 
      * @return true if there is space, false if there is not space
      */
-    boolean hasSpace();
+    public boolean hasSpace();
 }

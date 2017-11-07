@@ -13,7 +13,7 @@ import org.lsmr.vending.PopCan;
  * has finite, positive capacity. A pop can rack can be disabled, which prevents
  * it from dispensing pop cans.
  */
-public final class PopCanRack extends AbstractHardware<PopCanRackListener> implements AbstractPopCanAcceptor {
+public final class PopCanRack extends AbstractHardware<PopCanRackListener> implements PopCanAcceptor {
     private int maxCapacity;
     private Queue<PopCan> queue = new LinkedList<PopCan>();
     private PopCanChannel sink;
@@ -187,5 +187,10 @@ public final class PopCanRack extends AbstractHardware<PopCanRackListener> imple
     private void notifyPopCanRemoved(PopCan popCan) {
 	for(PopCanRackListener listener : listeners)
 	    listener.popCanRemoved(this, popCan);
+    }
+
+    @Override
+    public boolean hasSpace() {
+	return queue.size() < maxCapacity;
     }
 }

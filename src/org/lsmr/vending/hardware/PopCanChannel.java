@@ -7,8 +7,8 @@ import org.lsmr.vending.PopCan;
  * another. Once the hardware is configured, pop can channels will not be used
  * directly by other applications.
  */
-public final class PopCanChannel implements AbstractPopCanAcceptor {
-    private AbstractPopCanAcceptor sink;
+public final class PopCanChannel implements PopCanAcceptor {
+    private PopCanAcceptor sink;
 
     /**
      * Creates a new pop can channel whose output will go to the indicated sink.
@@ -17,7 +17,7 @@ public final class PopCanChannel implements AbstractPopCanAcceptor {
      *            The output of the channel. Can be null, which disconnects any
      *            current output device.
      */
-    public PopCanChannel(AbstractPopCanAcceptor sink) {
+    public PopCanChannel(PopCanAcceptor sink) {
 	this.sink = sink;
     }
 
@@ -32,5 +32,10 @@ public final class PopCanChannel implements AbstractPopCanAcceptor {
     @Override
     public void acceptPopCan(PopCan popCan) throws CapacityExceededException, DisabledException {
 	sink.acceptPopCan(popCan);
+    }
+
+    @Override
+    public boolean hasSpace() {
+	return true;
     }
 }
