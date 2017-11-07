@@ -90,7 +90,6 @@ public class VendingManager {
 		
 		getCoinSlot().register(listener);
 		getDeliveryChute().register(listener);
-		getStorageBin().register(listener);
 		getCoinReceptacle().register(listener);
 		getOutOfOrderLight().register(listener);
 		getExactChangeLight().register(listener);
@@ -108,7 +107,7 @@ public class VendingManager {
 	 * registers a single listener with each.
 	 * @param listener The listener that will handle SelectionButtonListener events.
 	 */
-	private void registerButtonListener(SelectionButtonListener listener){
+	private void registerButtonListener(PushButtonListener listener){
 		int buttonCount = getNumberOfSelectionButtons();
 		for (int i = 0; i< buttonCount; i++){
 			getSelectionButton(i).register(listener);;
@@ -154,7 +153,7 @@ public class VendingManager {
 	int getNumberOfSelectionButtons(){
 		return vm.getNumberOfSelectionButtons();
 	}
-	SelectionButton getSelectionButton(int index){
+	PushButton getSelectionButton(int index){
 		return vm.getSelectionButton(index);
 	}
 	CoinSlot getCoinSlot(){
@@ -162,9 +161,6 @@ public class VendingManager {
 	}
 	CoinReceptacle getCoinReceptacle(){
 		return vm.getCoinReceptacle();
-	}
-	CoinReceptacle getStorageBin(){
-		return vm.getStorageBin();
 	}
 	DeliveryChute getDeliveryChute(){
 		return vm.getDeliveryChute();
@@ -227,7 +223,7 @@ public class VendingManager {
 	 * @param button The button of interest.
 	 * @return The matching index, or -1 if no match.
 	 */
-	int getButtonIndex(SelectionButton button){
+	int getButtonIndex(PushButton button){
 		int buttonCount = getNumberOfSelectionButtons();
 		for (int i = 0; i < buttonCount; i++){
 			if (getSelectionButton(i) == button){

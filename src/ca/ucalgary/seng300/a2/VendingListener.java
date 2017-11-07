@@ -10,7 +10,7 @@ import org.lsmr.vending.hardware.*;
  * 
  * ACCESS: Only listener methods are public access. 
  * 
- * HANDLED EVENTS: 	SelectionButtonListener: pressed() 
+ * HANDLED EVENTS: 	PushButtonListener: pressed() 
  *   				CoinSlotListener: ValidCoinInserted()
  * 
  * TODO: Divide this class into separate listener classes. Be sure to consult team first.
@@ -19,7 +19,7 @@ import org.lsmr.vending.hardware.*;
  *  CoinReceptacle, IndicatorLight
  *
  */
-public class VendingListener implements CoinSlotListener, SelectionButtonListener,
+public class VendingListener implements CoinSlotListener, PushButtonListener,
 										LockListener, DeliveryChuteListener,
 										CoinRackListener, PopCanRackListener,
 										CoinReceptacleListener, IndicatorLightListener
@@ -59,13 +59,13 @@ public class VendingListener implements CoinSlotListener, SelectionButtonListene
 
 //vvv=======================BUTTON LISTENER METHODS START=======================vvv
 	/**
-	 * Responds to "pressed" notifications from registered SelectionButtons. 
+	 * Responds to "pressed" notifications from registered PushButtons. 
 	 * If no matching button is found in the VendingMachine, nothing is done.
 	 * Uses the buy() method in VendingManager to process the purchase.
 	 * All exceptions thrown by buy() are caught here (InsufficientFunds, Disabled, Empty, etc.) 
 	 */
 	@Override
-	public void pressed(SelectionButton button) {
+	public void pressed(PushButton button) {
 		int bIndex = mgr.getButtonIndex(button);
 		
 		String popName = mgr.getPopKindName(bIndex);
@@ -252,41 +252,24 @@ public class VendingListener implements CoinSlotListener, SelectionButtonListene
 //vvv=======================COIN RECEPTACLE LISTENER METHODS START=======================vvv
 	//TODO Decide whether these events should be logged or handled 
 	@Override
+	public void coinAdded(CoinReceptacle receptacle, Coin coin) {}
+	@Override
 	public void coinsLoaded(CoinReceptacle receptacle, Coin... coins) {}
 	@Override
 	public void coinsUnloaded(CoinReceptacle receptacle, Coin... coins) {}
 
 	//TODO Document
 	@Override
-	public void coinAdded(CoinReceptacle receptacle, Coin coin) {
-		if (receptacle == mgr.getStorageBin()){
-			mgr.log("Coin (" + coin.getValue() + ") added to storage bin");
-		}
-		else{
-			//TODO: Decide whether to log when the coin enters the "holding" coin receptacle.
-		}
-	}
-
-	//TODO Document
-	@Override
 	public void coinsRemoved(CoinReceptacle receptacle) {
 		mgr.disableSafety();
-		String message= (receptacle == mgr.getStorageBin())
-				? "Coins removed from storage bin."
-				: "Coins removed from coin receptacle.";
-		mgr.log(message);
+		mgr.log("Coins removed from coin receptacle.");
 	}
 	
 	//TODO Document
 	@Override
 	public void coinsFull(CoinReceptacle receptacle) {
-		//NOTE: safety is being enabled when storage bin is full, even if
-		// there is still room in some coin racks. MAY BE CHANGED.
 		mgr.enableSafety();
-		String message= (receptacle == mgr.getStorageBin())
-				? "Storage bin full."
-				: "Coin receptacle full.";
-		mgr.log(message);
+		mgr.log("Coin receptacle full.");
 	}
 //^^^=======================COIN RECEPTACLE LISTENER METHODS END=======================^^^
 

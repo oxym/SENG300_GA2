@@ -8,13 +8,13 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.lsmr.vending.Coin;
-import org.lsmr.vending.Deliverable;
+import org.lsmr.vending.PopCan;
 import org.lsmr.vending.hardware.CapacityExceededException;
 import org.lsmr.vending.hardware.CoinSlot;
 import org.lsmr.vending.hardware.DeliveryChute;
 import org.lsmr.vending.hardware.DisabledException;
 import org.lsmr.vending.hardware.EmptyException;
-import org.lsmr.vending.hardware.SelectionButton;
+import org.lsmr.vending.hardware.PushButton;
 import org.lsmr.vending.hardware.VendingMachine;
 
 import ca.ucalgary.seng300.a2.DispListener;
@@ -41,8 +41,11 @@ public class VendingManagerSystemTest {
 		int coinRackCapacity = 15;
 		int popCanRackCapacity = 10;
 		int receptacleCapacity = 200;
+		int deliveryChuteCapacity = 200;
+		int coinReturnCapacity = 200;
+		
 		machine = new VendingMachine(coinKinds, selectionButtonCount, coinRackCapacity, popCanRackCapacity,
-				receptacleCapacity);
+				receptacleCapacity, deliveryChuteCapacity, coinReturnCapacity);
 		machine.configure(popCanNames, popCanCosts);
 
 		VendingManager.initialize(machine);
@@ -73,19 +76,12 @@ public class VendingManagerSystemTest {
 		}
 		machine.getSelectionButton(1).press();
 
-		Deliverable[] delivered = machine.getDeliveryChute().removeItems();
+		PopCan[] delivered = machine.getDeliveryChute().removeItems();
 		
-		String expected = machine.getPopKindName(1);
-		String dispensed = "";
-		
-		int popCount = 0; 
-		for (Deliverable each : delivered){
-			if (each.getClass().getSimpleName().equals("PopCan")){
-				popCount++;
-				dispensed = each.toString(); 
-			}
-		}
-		assertEquals(1, popCount);
+		String expected = machine.getPopKindName(1);		
+		String dispensed = delivered[0].toString();
+			
+		assertEquals(1, delivered.length);
 		assertEquals(dispensed, expected);
 		assertEquals(0, manager.getCredit());
 	}
@@ -129,7 +125,7 @@ public class VendingManagerSystemTest {
 
 		machine.getSelectionButton(1).press();
 
-		Deliverable[] delivered = machine.getDeliveryChute().removeItems();
+		PopCan[] delivered = machine.getDeliveryChute().removeItems();
 
 		assertEquals(delivered.length, 0);
 		assertEquals(manager.getCredit(), 300);
@@ -155,7 +151,7 @@ public class VendingManagerSystemTest {
 
 		machine.getSelectionButton(1).press();
 
-		Deliverable[] delivered = machine.getDeliveryChute().removeItems();
+		PopCan[] delivered = machine.getDeliveryChute().removeItems();
 
 		assertEquals(delivered.length, 0);
 		assertEquals(manager.getCredit(), 200);
@@ -173,7 +169,7 @@ public class VendingManagerSystemTest {
 
 		machine.getSelectionButton(1).press();
 
-		Deliverable[] delivered = machine.getDeliveryChute().removeItems();
+		PopCan[] delivered = machine.getDeliveryChute().removeItems();
 		//TODO Fix this to account for the added "change return" feature
 		// We want to popCans.length == 0, not just anything from the chute
 		assertEquals(delivered.length, 0);
