@@ -5,17 +5,17 @@ import org.lsmr.vending.hardware.*;
 
 /**
  * This class is registered by VendingManager with hardware classes to listen for hardware
- * events and perform first-pass checks and error-handling for them. Most "heavy-lifting" 
+ * events and perform first-pass checks and error-handling for them. Most "heavy-lifting"
  * is completed within VendingManager.
- * 
- * ACCESS: Only listener methods are public access. 
- * 
- * HANDLED EVENTS: 	PushButtonListener: pressed() 
+ *
+ * ACCESS: Only listener methods are public access.
+ *
+ * HANDLED EVENTS: 	PushButtonListener: pressed()
  *   				CoinSlotListener: ValidCoinInserted()
- * 
+ *
  * TODO: Divide this class into separate listener classes. Be sure to consult team first.
  * TEMPORARILY HANDLED EVENTS TYPES:
- * 	LockListener, DeliveryChute, PopCanRack, CoinRack, 
+ * 	LockListener, DeliveryChute, PopCanRack, CoinRack,
  *  CoinReceptacle, IndicatorLight
  *
  */
@@ -24,11 +24,13 @@ public class VendingListener implements CoinSlotListener, PushButtonListener,
 										CoinRackListener, PopCanRackListener,
 										CoinReceptacleListener, IndicatorLightListener
 										{
+	private static boolean debug = false;
 	private static VendingListener listener;
 	private static VendingManager mgr;
-	
+
+
 	private VendingListener (){}
-	
+
 	/**
 	 * Forces the existing singleton instance to be replaced.
 	 * Called by VendingManager during its instantiation.
@@ -39,7 +41,7 @@ public class VendingListener implements CoinSlotListener, PushButtonListener,
 			listener = new VendingListener();
 		}
 	}
-	
+
 	/**
 	 * Provides access to the singleton instance for package-internal classes.
 	 * @return The singleton VendingListener instance
@@ -48,48 +50,54 @@ public class VendingListener implements CoinSlotListener, PushButtonListener,
 		return listener;
 	}
 
-	
+
 //vvv=======================TEMPLATE LISTENER METHODS START=======================vvv
 	// AbstractHardwareListener (en-/dis-)able events are currently unused
 	@Override
-	public void enabled(AbstractHardware<? extends AbstractHardwareListener> hardware) {}
+	public void enabled(AbstractHardware<? extends AbstractHardwareListener> hardware) {
+		if (debug)
+			System.out.println("[debug] hardware was enabled");
+	}
 	@Override
-	public void disabled(AbstractHardware<? extends AbstractHardwareListener> hardware) {}
+	public void disabled(AbstractHardware<? extends AbstractHardwareListener> hardware) {
+		if (debug)
+			System.out.println("[debug] hardware was disabled");
+	}
 //^^^=======================TEMPLATE LISTENER METHODS END=======================^^^
 
 //vvv=======================BUTTON LISTENER METHODS START=======================vvv
 	/**
-	 * Responds to "pressed" notifications from registered PushButtons. 
+	 * Responds to "pressed" notifications from registered PushButtons.
 	 * If no matching button is found in the VendingMachine, nothing is done.
 	 * Uses the buy() method in VendingManager to process the purchase.
-	 * All exceptions thrown by buy() are caught here (InsufficientFunds, Disabled, Empty, etc.) 
+	 * All exceptions thrown by buy() are caught here (InsufficientFunds, Disabled, Empty, etc.)
 	 */
 	@Override
 	public void pressed(PushButton button) {
 		int bIndex = mgr.getButtonIndex(button);
-		
+
 		String popName = mgr.getPopKindName(bIndex);
 		mgr.log("Button for: " + popName + ", button: " + bIndex + " pressed.");
-		
+
 		if (bIndex == -1){
-			//Then it's not a pop selection button. 
+			//Then it's not a pop selection button.
 			//This may be where we handle "change return" button presses
 		}
 		else{
 			try{
 				//Assumes a 1-to-1, strictly ordered mapping between popIndex and and butttonindex
-				mgr.buy(bIndex); 
+				mgr.buy(bIndex);
 			} catch(InsufficientFundsException e){
 				mgr.display(e.toString(), 5);
 			} catch(DisabledException e){
 				mgr.display("Vending machine disabled", 5);
 			} catch (EmptyException e){
-				
+
 				mgr.display(popName + " is out of stock.", 5);
 			} catch (CapacityExceededException e){
 				mgr.display("Delivery chute full", 5);
 			}
-		}		
+		}
 	}
 //^^^=======================BUTTON LISTENER METHODS END=======================^^^
 
@@ -110,7 +118,7 @@ public class VendingListener implements CoinSlotListener, PushButtonListener,
 	public void validCoinInserted(CoinSlot slot, Coin coin) {
 		mgr.addCredit(coin.getValue());
 		mgr.displayCredit();
-		
+
 		if (mgr.checkExactChangeState()){
 			mgr.getExactChangeLight().deactivate();
 			mgr.log("ExactChange light off");
@@ -119,20 +127,20 @@ public class VendingListener implements CoinSlotListener, PushButtonListener,
 			mgr.getExactChangeLight().activate();
 			mgr.log("ExactChange light on");
 		}
-			
+
 	}
 //^^^=======================COIN SlOT LISTENER METHODS END=======================^^^
-	
+
 //vvv=======================LOCK LISTENER METHODS START=======================vvv
 	/**
 	 * Handles the "locked" event from the registered Lock.
-	 * Causes the vm to turn on safety-mode. 
+	 * Causes the vm to turn on safety-mode.
 	 */
 	@Override
 	public void locked(Lock lock) {
-		mgr.disableSafety();	
+		mgr.disableSafety();
 	}
-	
+
 	/**
 	 * Handles the "unlocked" event from the registered Lock.
 	 * Causes the vm to turn off safety-mode.
@@ -155,7 +163,7 @@ public class VendingListener implements CoinSlotListener, PushButtonListener,
 	public void doorOpened(DeliveryChute chute) {
 		mgr.log("Delivery chute door opened");
 	}
-	
+
 	//TODO Document
 	@Override
 	public void doorClosed(DeliveryChute chute) {
@@ -163,7 +171,7 @@ public class VendingListener implements CoinSlotListener, PushButtonListener,
 		if (chute.hasSpace())
 			mgr.disableSafety();
 	}
-	
+
 	//TODO Document
 	@Override
 	public void chuteFull(DeliveryChute chute) {
@@ -174,7 +182,7 @@ public class VendingListener implements CoinSlotListener, PushButtonListener,
 
 //vvv=======================POP CAN RACK LISTENER METHODS START=======================vvv
 	//TODO Decide whether these events should be logged or handled
-	
+
 	@Override
 	public void popCansLoaded(PopCanRack rack, PopCan... popCans) {}
 	@Override
@@ -184,24 +192,24 @@ public class VendingListener implements CoinSlotListener, PushButtonListener,
 	@Override
 	public void popCanAdded(PopCanRack popCanRack, PopCan popCan) {
 		mgr.disableSafety();
-		//TODO Decide if we should log the added pop. 
+		//TODO Decide if we should log the added pop.
 		// Should only happen during loading, so maybe we'll just log it there.
 	}
-	
+
 	//TODO Document
 	@Override
 	public void popCanRemoved(PopCanRack popCanRack, PopCan popCan) {
 		String popName = mgr.getPopCanRackName(popCanRack);
-		mgr.log(popCan.getName() + " removed from " + popName + " rack.");	
+		mgr.log(popCan.getName() + " removed from " + popName + " rack.");
 	}
-	
+
 	//TODO Document
 	@Override
 	public void popCansFull(PopCanRack popCanRack) {
 		String popName = mgr.getPopCanRackName(popCanRack);
 		mgr.log(popName + " rack full.");
 	}
-	
+
 	//TODO Document
 	@Override
 	public void popCansEmpty(PopCanRack popCanRack) {
@@ -219,28 +227,28 @@ public class VendingListener implements CoinSlotListener, PushButtonListener,
 	public void coinsLoaded(CoinRack rack, Coin... coins) {}
 	@Override
 	public void coinsUnloaded(CoinRack rack, Coin... coins) {}
-	
+
 	//TODO Document
 	@Override
 	public void coinsFull(CoinRack rack) {
 		int rackVal = mgr.getCoinRackValue(rack);
 		mgr.log("Coin (" + rackVal + ") rack empty.");
 	}
-	
+
 	//TODO Document
 	@Override
 	public void coinsEmpty(CoinRack rack) {
 		int rackVal = mgr.getCoinRackValue(rack);
 		mgr.log("Coin (" + rackVal + ") rack empty.");
 	}
-	
+
 	//TODO Document
 	@Override
 	public void coinAdded(CoinRack rack, Coin coin) {
 		int rackVal = mgr.getCoinRackValue(rack);
 		mgr.log("Coin (" + coin.getValue() + ") added to (" + rackVal + ") rack.");
 	}
-	
+
 	//TODO Document
 	@Override
 	public void coinRemoved(CoinRack rack, Coin coin) {
@@ -250,7 +258,7 @@ public class VendingListener implements CoinSlotListener, PushButtonListener,
 //^^^=======================COIN RACK LISTENER METHODS END=======================^^^
 
 //vvv=======================COIN RECEPTACLE LISTENER METHODS START=======================vvv
-	//TODO Decide whether these events should be logged or handled 
+	//TODO Decide whether these events should be logged or handled
 	@Override
 	public void coinAdded(CoinReceptacle receptacle, Coin coin) {}
 	@Override
@@ -264,7 +272,7 @@ public class VendingListener implements CoinSlotListener, PushButtonListener,
 		mgr.disableSafety();
 		mgr.log("Coins removed from coin receptacle.");
 	}
-	
+
 	//TODO Document
 	@Override
 	public void coinsFull(CoinReceptacle receptacle) {
@@ -286,7 +294,7 @@ public class VendingListener implements CoinSlotListener, PushButtonListener,
 			message = "Unknown light turned on.";
 		mgr.log(message);
 	}
-	
+
 	//TODO Document
 	@Override
 	public void deactivated(IndicatorLight light) {
@@ -297,11 +305,11 @@ public class VendingListener implements CoinSlotListener, PushButtonListener,
 			message = "Out of order (safety) light turned off.";
 		else
 			message = "Unknown light turned off.";
-		mgr.log(message);		
+		mgr.log(message);
 	}
-//^^^=======================INDICATOR LIGHT LISTENER METHODS END=======================^^^	
+//^^^=======================INDICATOR LIGHT LISTENER METHODS END=======================^^^
 
-	
+
 //vvv=======================TEMPLATE LISTENER METHODS START=======================vvv
-//^^^=======================TEMPLATE LISTENER METHODS END=======================^^^	
+//^^^=======================TEMPLATE LISTENER METHODS END=======================^^^
 }

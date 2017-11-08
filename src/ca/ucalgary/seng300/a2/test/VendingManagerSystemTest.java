@@ -43,13 +43,16 @@ public class VendingManagerSystemTest {
 		int receptacleCapacity = 200;
 		int deliveryChuteCapacity = 200;
 		int coinReturnCapacity = 200;
-		
+
 		machine = new VendingMachine(coinKinds, selectionButtonCount, coinRackCapacity, popCanRackCapacity,
 				receptacleCapacity, deliveryChuteCapacity, coinReturnCapacity);
 		machine.configure(popCanNames, popCanCosts);
 
 		VendingManager.initialize(machine);
 		manager = VendingManager.getInstance();
+
+		machine.disableSafety(); //needed due to singleton instance being passed to multiple tests
+								 //that appear to clone the current state of the machine at the time of instantiation
 
 		// Instantiate a testlistener to receive messages with this test class
 		testDisplayListener = new DispListener();
@@ -77,23 +80,23 @@ public class VendingManagerSystemTest {
 		machine.getSelectionButton(1).press();
 
 		PopCan[] delivered = machine.getDeliveryChute().removeItems();
-		
-		String expected = machine.getPopKindName(1);		
+
+		String expected = machine.getPopKindName(1);
 		String dispensed = delivered[0].toString();
-			
+
 		assertEquals(1, delivered.length);
-		assertEquals(dispensed, expected);
+		assertEquals(expected, dispensed);
 		assertEquals(0, manager.getCredit());
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws CapacityExceededException
 	 * @throws EmptyException
 	 * @throws DisabledException
 	 */
-	@Test	
-	public void testCoinReturn() throws CapacityExceededException, EmptyException, DisabledException{		
+	@Test
+	public void testCoinReturn() throws CapacityExceededException, EmptyException, DisabledException{
 		machine.loadCoins(2, 1, 2, 2, 2);
 		Coin coin = new Coin(100);
 		try {
@@ -103,7 +106,7 @@ public class VendingManagerSystemTest {
 		manager.checkExactChangeState();
 		System.out.println("END CHANGE");
 	}
-	
+
 	/**
 	 * Tests that the logic is able to handle the case where the selected pop is not
 	 * available but there were sufficient funds added. Ensures that the credit is
@@ -127,8 +130,8 @@ public class VendingManagerSystemTest {
 
 		PopCan[] delivered = machine.getDeliveryChute().removeItems();
 
-		assertEquals(delivered.length, 0);
-		assertEquals(manager.getCredit(), 300);
+		assertEquals(0, delivered.length);
+		assertEquals(300, manager.getCredit());
 	}
 
 	/**
@@ -153,8 +156,8 @@ public class VendingManagerSystemTest {
 
 		PopCan[] delivered = machine.getDeliveryChute().removeItems();
 
-		assertEquals(delivered.length, 0);
-		assertEquals(manager.getCredit(), 200);
+		assertEquals(0, delivered.length);
+		assertEquals(200, manager.getCredit());
 	}
 
 	/**
@@ -163,7 +166,7 @@ public class VendingManagerSystemTest {
 	 */
 	@Test
 	public void testNoCreditAndPop() {
-		 
+
 		machine.loadPopCans(10, 10, 10, 10, 10, 10);
 		machine.loadCoins(10, 10, 10, 10, 10);
 
@@ -172,8 +175,8 @@ public class VendingManagerSystemTest {
 		PopCan[] delivered = machine.getDeliveryChute().removeItems();
 		//TODO Fix this to account for the added "change return" feature
 		// We want to popCans.length == 0, not just anything from the chute
-		assertEquals(delivered.length, 0);
-		assertEquals(manager.getCredit(), 0);
+		assertEquals(0, delivered.length);
+		assertEquals(0, manager.getCredit());
 	}
 
 	////////////////////////////////////////////////////////////////////////
@@ -198,7 +201,7 @@ public class VendingManagerSystemTest {
 			int dollars = manager.getCredit() / 100;
 			int cents = manager.getCredit() % 100;
 			String testMessage = String.format("Credit: $%3d.%02d", dollars, cents);
-			assertEquals(testMessage, testDisplayListener.getMessageLast());
+			assertEquals(testMessage, testDisplayListener.getMessageCurrent());
 		}
 	}
 
