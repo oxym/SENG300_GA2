@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.lsmr.vending.Coin;
 import org.lsmr.vending.PopCan;
 import org.lsmr.vending.hardware.CapacityExceededException;
+import org.lsmr.vending.hardware.CoinChannel;
 import org.lsmr.vending.hardware.CoinSlot;
 import org.lsmr.vending.hardware.DeliveryChute;
 import org.lsmr.vending.hardware.DisabledException;
