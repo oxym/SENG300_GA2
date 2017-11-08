@@ -15,7 +15,7 @@ import org.lsmr.vending.Coin;
  * no check is performed on the value of each coin, meaning it is an external
  * responsibility to ensure the correct routing of coins.
  */
-public final class CoinRack extends AbstractHardware<CoinRackListener> implements AbstractCoinAcceptor {
+public final class CoinRack extends AbstractHardware<CoinRackListener> implements CoinAcceptor {
     private int maxCapacity;
     private Queue<Coin> queue = new LinkedList<Coin>();
     private CoinChannel sink;

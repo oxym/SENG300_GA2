@@ -7,7 +7,7 @@ import org.lsmr.vending.Coin;
  * between other devices.
  */
 public final class CoinChannel {
-    private AbstractCoinAcceptor sink;
+    private CoinAcceptor sink;
 
     /**
      * Constructs a new coin channel whose output is connected to the indicated
@@ -16,7 +16,7 @@ public final class CoinChannel {
      * @param sink
      *            The device at the output end of the channel.
      */
-    public CoinChannel(AbstractCoinAcceptor sink) {
+    public CoinChannel(CoinAcceptor sink) {
 	this.sink = sink;
     }
 
@@ -49,7 +49,7 @@ public final class CoinChannel {
      * 
      * @return The device at the output end of the device.
      */
-    public AbstractCoinAcceptor getSink() {
+    public CoinAcceptor getSink() {
 	return sink;
     }
 }

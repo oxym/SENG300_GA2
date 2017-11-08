@@ -8,13 +8,14 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.lsmr.vending.Coin;
-import org.lsmr.vending.Deliverable;
+import org.lsmr.vending.PopCan;
 import org.lsmr.vending.hardware.CapacityExceededException;
+import org.lsmr.vending.hardware.CoinChannel;
 import org.lsmr.vending.hardware.CoinSlot;
 import org.lsmr.vending.hardware.DeliveryChute;
 import org.lsmr.vending.hardware.DisabledException;
 import org.lsmr.vending.hardware.EmptyException;
-import org.lsmr.vending.hardware.SelectionButton;
+import org.lsmr.vending.hardware.PushButton;
 import org.lsmr.vending.hardware.VendingMachine;
 
 import ca.ucalgary.seng300.a2.DispListener;
@@ -41,12 +42,18 @@ public class VendingManagerSystemTest {
 		int coinRackCapacity = 15;
 		int popCanRackCapacity = 10;
 		int receptacleCapacity = 200;
+		int deliveryChuteCapacity = 200;
+		int coinReturnCapacity = 200;
+
 		machine = new VendingMachine(coinKinds, selectionButtonCount, coinRackCapacity, popCanRackCapacity,
-				receptacleCapacity);
+				receptacleCapacity, deliveryChuteCapacity, coinReturnCapacity);
 		machine.configure(popCanNames, popCanCosts);
 
 		VendingManager.initialize(machine);
 		manager = VendingManager.getInstance();
+
+		machine.disableSafety(); //needed due to singleton instance being passed to multiple tests
+								 //that appear to clone the current state of the machine at the time of instantiation
 
 		// Instantiate a testlistener to receive messages with this test class
 		testDisplayListener = new DispListener();
@@ -73,31 +80,24 @@ public class VendingManagerSystemTest {
 		}
 		machine.getSelectionButton(1).press();
 
-		Deliverable[] delivered = machine.getDeliveryChute().removeItems();
-		
+		PopCan[] delivered = machine.getDeliveryChute().removeItems();
+
 		String expected = machine.getPopKindName(1);
-		String dispensed = "";
-		
-		int popCount = 0; 
-		for (Deliverable each : delivered){
-			if (each.getClass().getSimpleName().equals("PopCan")){
-				popCount++;
-				dispensed = each.toString(); 
-			}
-		}
-		assertEquals(1, popCount);
-		assertEquals(dispensed, expected);
+		String dispensed = delivered[0].toString();
+
+		assertEquals(1, delivered.length);
+		assertEquals(expected, dispensed);
 		assertEquals(0, manager.getCredit());
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws CapacityExceededException
 	 * @throws EmptyException
 	 * @throws DisabledException
 	 */
-	@Test	
-	public void testCoinReturn() throws CapacityExceededException, EmptyException, DisabledException{		
+	@Test
+	public void testCoinReturn() throws CapacityExceededException, EmptyException, DisabledException{
 		machine.loadCoins(2, 1, 2, 2, 2);
 		Coin coin = new Coin(100);
 		try {
@@ -107,7 +107,7 @@ public class VendingManagerSystemTest {
 		manager.checkExactChangeState();
 		System.out.println("END CHANGE");
 	}
-	
+
 	/**
 	 * Tests that the logic is able to handle the case where the selected pop is not
 	 * available but there were sufficient funds added. Ensures that the credit is
@@ -129,10 +129,10 @@ public class VendingManagerSystemTest {
 
 		machine.getSelectionButton(1).press();
 
-		Deliverable[] delivered = machine.getDeliveryChute().removeItems();
+		PopCan[] delivered = machine.getDeliveryChute().removeItems();
 
-		assertEquals(delivered.length, 0);
-		assertEquals(manager.getCredit(), 300);
+		assertEquals(0, delivered.length);
+		assertEquals(300, manager.getCredit());
 	}
 
 	/**
@@ -155,10 +155,10 @@ public class VendingManagerSystemTest {
 
 		machine.getSelectionButton(1).press();
 
-		Deliverable[] delivered = machine.getDeliveryChute().removeItems();
+		PopCan[] delivered = machine.getDeliveryChute().removeItems();
 
-		assertEquals(delivered.length, 0);
-		assertEquals(manager.getCredit(), 200);
+		assertEquals(0, delivered.length);
+		assertEquals(200, manager.getCredit());
 	}
 
 	/**
@@ -167,17 +167,17 @@ public class VendingManagerSystemTest {
 	 */
 	@Test
 	public void testNoCreditAndPop() {
-		 
+
 		machine.loadPopCans(10, 10, 10, 10, 10, 10);
 		machine.loadCoins(10, 10, 10, 10, 10);
 
 		machine.getSelectionButton(1).press();
 
-		Deliverable[] delivered = machine.getDeliveryChute().removeItems();
+		PopCan[] delivered = machine.getDeliveryChute().removeItems();
 		//TODO Fix this to account for the added "change return" feature
 		// We want to popCans.length == 0, not just anything from the chute
-		assertEquals(delivered.length, 0);
-		assertEquals(manager.getCredit(), 0);
+		assertEquals(0, delivered.length);
+		assertEquals(0, manager.getCredit());
 	}
 
 	////////////////////////////////////////////////////////////////////////
@@ -202,7 +202,7 @@ public class VendingManagerSystemTest {
 			int dollars = manager.getCredit() / 100;
 			int cents = manager.getCredit() % 100;
 			String testMessage = String.format("Credit: $%3d.%02d", dollars, cents);
-			assertEquals(testMessage, testDisplayListener.getMessageLast());
+			assertEquals(testMessage, testDisplayListener.getMessageCurrent());
 		}
 	}
 

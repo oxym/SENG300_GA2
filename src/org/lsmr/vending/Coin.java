@@ -3,7 +3,7 @@ package org.lsmr.vending;
 /**
  * Instances of this class represent individual coins.
  */
-public class Coin implements Deliverable {
+public class Coin {
     private int value;
 
     /**

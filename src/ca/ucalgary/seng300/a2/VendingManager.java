@@ -28,19 +28,19 @@ import java.io.FileNotFoundException;
  * @author Jason De Boer (30034428)
  * @author Khesualdo Condori (30004958)
  * @author Michaela Olsakova (30002591)
- * @author 
- * @author 
+ * @author
+ * @author
  *
  */
 public class VendingManager {
 	private static boolean debug = true;
-	
+
 	private static VendingManager mgr;
 	private static VendingListener listener;
 	private static VendingMachine vm;
 	private static DispListener displayListener;
 	private static DisplayDriver displayDriver;
-	
+
 	private static Logger eventLog;
 	private static String eventLogName = "VendingLog.txt";
 	private int credit = 0;
@@ -72,6 +72,7 @@ public class VendingManager {
 		mgr.registerListeners();
 		displayDriver = new DisplayDriver(mgr.getDisplay());
 		displayDriver.greetingMessage();
+		mgr.checkOutOfOrder();
 	}
 
 	/**
@@ -87,10 +88,9 @@ public class VendingManager {
 	 */
 	private void registerListeners(){
 		getDisplay().register(displayListener);
-		
+
 		getCoinSlot().register(listener);
 		getDeliveryChute().register(listener);
-		getStorageBin().register(listener);
 		getCoinReceptacle().register(listener);
 		getOutOfOrderLight().register(listener);
 		getExactChangeLight().register(listener);
@@ -108,7 +108,7 @@ public class VendingManager {
 	 * registers a single listener with each.
 	 * @param listener The listener that will handle SelectionButtonListener events.
 	 */
-	private void registerButtonListener(SelectionButtonListener listener){
+	private void registerButtonListener(PushButtonListener listener){
 		int buttonCount = getNumberOfSelectionButtons();
 		for (int i = 0; i< buttonCount; i++){
 			getSelectionButton(i).register(listener);;
@@ -137,7 +137,23 @@ public class VendingManager {
 		}
 	}
 
-	
+	/**
+	 * Checks the out of order status and sets machine appropriately
+	 * checks the status of the delivery chute, coin receptacle, and inventory
+	 * puts the machine in an out of order state as required
+	 */
+	private void checkOutOfOrder() {
+		if (
+			!getDeliveryChute().hasSpace() ||
+			!getCoinReceptacle().hasSpace() ||
+			//!getCoinReturn().hasSpace() || //TODO enable once null pointer fixed
+			checkAllProductsEmpty()
+		) {
+			getOutOfOrderLight().activate();
+			enableSafety();
+		}
+	}
+
 	// Accessors used throughout the vending logic classes to get hardware references.
 	// Indirect access to the VM is used to simplify the removal of the
 	// VM class from the build.
@@ -154,7 +170,7 @@ public class VendingManager {
 	int getNumberOfSelectionButtons(){
 		return vm.getNumberOfSelectionButtons();
 	}
-	SelectionButton getSelectionButton(int index){
+	PushButton getSelectionButton(int index){
 		return vm.getSelectionButton(index);
 	}
 	CoinSlot getCoinSlot(){
@@ -163,8 +179,8 @@ public class VendingManager {
 	CoinReceptacle getCoinReceptacle(){
 		return vm.getCoinReceptacle();
 	}
-	CoinReceptacle getStorageBin(){
-		return vm.getStorageBin();
+	CoinReturn getCoinReturn(){
+		return vm.getCoinReturn();
 	}
 	DeliveryChute getDeliveryChute(){
 		return vm.getDeliveryChute();
@@ -207,7 +223,7 @@ public class VendingManager {
 			log("Safety enabled");
 			vm.enableSafety();
 	}
-	
+
 	/**
 	 * Used by calling code to *attempt* to disable the safety.
 	 * The calling code is assumed to be ignorant of system state, so
@@ -220,14 +236,14 @@ public class VendingManager {
 			log("Safety disabled");
 			vm.disableSafety();
 	}
-	
+
 	/**
 	 * Returns the index of the given SelectionButton,
 	 * which implies the index of the associated PopRack.
 	 * @param button The button of interest.
 	 * @return The matching index, or -1 if no match.
 	 */
-	int getButtonIndex(SelectionButton button){
+	int getButtonIndex(PushButton button){
 		int buttonCount = getNumberOfSelectionButtons();
 		for (int i = 0; i < buttonCount; i++){
 			if (getSelectionButton(i) == button){
@@ -259,7 +275,7 @@ public class VendingManager {
 	String getPopCanRackName(PopCanRack popRack){
 		return mgr.getPopKindName(mgr.getPopCanRackIndex(popRack));
 	}
-	
+
 	/**
 	 * Returns the index of the given CoinRack.
 	 * @param coinRack The CoinRack of interest.
@@ -274,7 +290,7 @@ public class VendingManager {
 		}
 		return -1;
 	}
-	
+
 	/**
 	  * Returns the coin value in the given CoinRack.
 	 * @param coinRack The CoinRack to check the value for.
@@ -302,7 +318,7 @@ public class VendingManager {
 		credit += added;
 		log("Credit added:" + added);
 	}
-	
+
 	/**
 	 * Subtracts value to the tracked credit.
 	 * @param added The credit to add, in cents.
@@ -332,7 +348,7 @@ public class VendingManager {
 			getPopCanRack(popIndex).dispensePopCan(); //Will throw EmptyException if pop rack is empty
 			credit -= cost; //Will only be performed if the pop is successfully dispensed.
 			returnChange();
-			
+
 			if (credit > 0) {
 				displayCredit();
 			} else {
@@ -345,7 +361,7 @@ public class VendingManager {
 			throw new InsufficientFundsException("Cannot buy " + popName + ". " + diff + " cents missing.");
 		}
 	}
-	
+
 	/**
 	 * Returns a formatted string to display credit.
 	 * @return The formatted credit string.
@@ -362,7 +378,7 @@ public class VendingManager {
 		else{
 			message = "Credit: " + credit;
 		}
-		
+
 		return message;
 	}
 
@@ -372,12 +388,12 @@ public class VendingManager {
 	void displayCredit() {
 		displayDriver.newMessage(getCreditMessage());
 	}
-	
+
 	/**
 	 * A method for returning change.
-	 * May not return exact change. 
+	 * May not return exact change.
 	 * Dispenses the largest denominations first.
-	 * 
+	 *
 	 * @throws DisabledException Some necessary hardware is disabled
 	 * @throws EmptyException CoinSlot is empty and a coin removal was attempted
 	 * @throws CapacityExceededException DeliveryChute is full
@@ -386,22 +402,22 @@ public class VendingManager {
 		int[] rackValues = getDescendingRackValues();
 		int coinVal = 0;
 		CoinRack rack;
-		
+
 		for (int i=0; i < getNumberOfCoinRacks(); i++){
 			coinVal = rackValues[i];
-			rack = getCoinRackForCoinKind(coinVal); 
-		
+			rack = getCoinRackForCoinKind(coinVal);
+
 			while (getCredit() >= coinVal && rack.size() != 0){
 				rack.releaseCoin();
 				subtractCredit(coinVal);
 			}
-			
+
 			if (getCredit() == 0){
 				break;
 			}
 		}
 	}
-	
+
 	/**
 	 * Takes the coin values inside the machine and sorts them in descending order for the purpose of change return
 	 * @return coins denominations in descending order as an array
@@ -409,11 +425,11 @@ public class VendingManager {
 	int[] getDescendingRackValues() {
 		int rackNumber = getNumberOfCoinRacks();
 		int[] rackAmounts = new int[rackNumber];
-		
+
 		for (int i=0; i < rackNumber; i++){
 			rackAmounts[i] = getCoinKindForCoinRack(i);
 		}
-		
+
 		Arrays.sort(rackAmounts);
 		int[] descending = new int[rackNumber];
 		//Reverse the array
@@ -431,7 +447,7 @@ public class VendingManager {
 	public boolean checkExactChangeState(){
 		boolean exact = true;
 		int rackCount = getNumberOfPopCanRacks();
-		
+
 		int popCost;
 		for (int i = 0; i < rackCount; i++){
 			popCost = getPopKindCost(i);
@@ -439,17 +455,17 @@ public class VendingManager {
 			if (!exact)
 				break;
 		}
-		
+
 		return exact;
 	}
-	
+
 	/**
 	 * Checks if all of the pop racks are empty.
 	 * @return True if all are empty, else false
 	 */
 	boolean checkAllProductsEmpty(){
 		boolean empty = true;
-		
+
 		int popCount = getNumberOfPopCanRacks();
 		for (int i = 0; i < popCount; i++){
 			if (this.getPopCanRack(i).size() != 0){
@@ -457,10 +473,10 @@ public class VendingManager {
 				break;
 			}
 		}
-		
+
 		return empty;
 	}
-	
+
 	/**
 	 * Checks if valid change can be returned, but does not return anything.
 	 * Similar to returnChange, but sets the indicator light instead
@@ -469,10 +485,10 @@ public class VendingManager {
 	 */
 	boolean canReturnExactChange(int cost){
 		boolean exact = true;
-		
+
 		int credit = getCredit();
 		int excess = credit - cost; // i.e. credit after the possible purchase
-		
+
 		int rackCount = getNumberOfCoinRacks();
 		int[] rackValues = getDescendingRackValues();
 
@@ -480,11 +496,11 @@ public class VendingManager {
 		int[] rackAmounts = new int[getNumberOfCoinRacks()];
 		for (int i=0; i < rackCount; i++){
 			rackAmounts[i] = getCoinRackForCoinKind(rackValues[i]).size();
-			if (debug) System.out.println("CoinRack with value: " + rackValues[i] 
+			if (debug) System.out.println("CoinRack with value: " + rackValues[i]
 										+ " has " + rackAmounts[i] + " coins.");
 		}
 		//Try to reduce the excess credit to 0
-		for (int i=0; i < rackCount; i++){		
+		for (int i=0; i < rackCount; i++){
 			while (excess >= rackValues[i] && rackAmounts[i] != 0){
 				excess -= rackValues[i];
 				rackAmounts[i]--;
@@ -495,12 +511,12 @@ public class VendingManager {
 			}
 		}
 
-		//If credit remains, inexact change would need to be be provided 
+		//If credit remains, inexact change would need to be be provided
 		if (excess > 0){
 			exact = false;
 			if (debug) System.out.println("Wrong change");
 		}
-		
+
 		return exact;
 	}
 
@@ -508,16 +524,16 @@ public class VendingManager {
 //^^^======================VENDING LOGIC END=======================^^^
 
 //vvv======================LOGIC INTERNALS START=======================vvv
-	
+
 	/**
 	 * Provides a simplified interface for the Logger.log() methods.
 	 * See details in ca.ucalgary.seng300.a2.Logger.
-	 * 
+	 *
 	 * @param msgs String array of events to log. None can be null or empty.
 	 */
 	void log(String msg){
 		try{
-			eventLog.log(msg);			
+			eventLog.log(msg);
 		}
 		catch(IllegalArgumentException e){
 			if (debug) System.out.println(e);
@@ -526,14 +542,14 @@ public class VendingManager {
 			if (debug) System.out.println(e);
 		}
 	}
-	
+
 	/**
-	 * See log(String). 
+	 * See log(String).
 	 * @param msgs String array of events to log.
 	 */
 	void log(String[] msgs){
 		try{
-			eventLog.log(msgs);			
+			eventLog.log(msgs);
 		}
 		catch(IllegalArgumentException e){
 			if (debug) System.out.println(e);
@@ -542,7 +558,7 @@ public class VendingManager {
 			if (debug) System.out.println(e);
 		}
 	}
-	
+
 	/**
 	 * Convenience method to display a message from other logic classes.
 	 * @param msg The message to be displayed.
@@ -550,7 +566,7 @@ public class VendingManager {
 	void display(String msg){
 		displayDriver.newMessage(msg);
 	}
-	
+
 	/**
 	 * Convenience method to display a timed message from other logic classes.
 	 * @param msg The message to be displayed.
@@ -559,6 +575,6 @@ public class VendingManager {
 	void display(String msg, int duration){
 		displayDriver.newMessage(msg, duration);
 	}
-	
-//^^^======================LOGIC INTERNALS END=======================^^^	
+
+//^^^======================LOGIC INTERNALS END=======================^^^
 }

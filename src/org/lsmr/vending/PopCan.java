@@ -3,7 +3,7 @@ package org.lsmr.vending;
 /**
  * Instances of this class represent cans (or bottles) of pop.
  */
-public class PopCan implements Deliverable {
+public class PopCan {
     private String name;
 
     /**
