@@ -34,13 +34,13 @@ import java.io.FileNotFoundException;
  */
 public class VendingManager {
 	private static boolean debug = true;
-	
+
 	private static VendingManager mgr;
 	private static VendingListener listener;
 	private static VendingMachine vm;
 	private static DispListener displayListener;
 	private static DisplayDriver displayDriver;
-	
+
 	private static Logger eventLog;
 	private static String eventLogName = "VendingLog.txt";
 	private int credit = 0;
@@ -72,6 +72,7 @@ public class VendingManager {
 		mgr.registerListeners();
 		displayDriver = new DisplayDriver(mgr.getDisplay());
 		displayDriver.greetingMessage();
+		mgr.checkOutOfOrder();
 	}
 
 	/**
@@ -87,7 +88,7 @@ public class VendingManager {
 	 */
 	private void registerListeners(){
 		getDisplay().register(displayListener);
-		
+
 		getCoinSlot().register(listener);
 		getDeliveryChute().register(listener);
 		getCoinReceptacle().register(listener);
@@ -136,7 +137,22 @@ public class VendingManager {
 		}
 	}
 
-	
+	/**
+	 * Checks the out of order status and sets machine appropriately
+	 * checks the status of the delivery chute, coin receptacle, and inventory
+	 * puts the machine in an out of order state as required
+	 */
+	private void checkOutOfOrder() {
+		if (
+			!getDeliveryChute().hasSpace() ||
+			!getCoinReceptacle().hasSpace() ||
+			checkAllProductsEmpty()
+		) {
+			getOutOfOrderLight().activate();
+			enableSafety();
+		}
+	}
+
 	// Accessors used throughout the vending logic classes to get hardware references.
 	// Indirect access to the VM is used to simplify the removal of the
 	// VM class from the build.

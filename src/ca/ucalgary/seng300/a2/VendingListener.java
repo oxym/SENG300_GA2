@@ -33,7 +33,7 @@ public class VendingListener implements CoinSlotListener, PushButtonListener,
 	 * Forces the existing singleton instance to be replaced.
 	 * Called by VendingManager during its instantiation.
 	 */
-	static void initialize(VendingManager manager){		
+	static void initialize(VendingManager manager){
 		if (manager != null){
 			mgr = manager;
 			listener = new VendingListener();
@@ -42,7 +42,7 @@ public class VendingListener implements CoinSlotListener, PushButtonListener,
 	
 	/**
 	 * Provides access to the singleton instance for package-internal classes.
-	 * @return The singleton VendingListener instance  
+	 * @return The singleton VendingListener instance
 	 */
 	static VendingListener getInstance(){
 		return listener;
@@ -99,7 +99,7 @@ public class VendingListener implements CoinSlotListener, PushButtonListener,
 	public void coinRejected(CoinSlot slot, Coin coin) {
 		mgr.log("Coin with value: " + coin.getValue() + " rejected by coin slot.");
 	}
-	
+
 	/**
 	 * Responds to "Valid coin inserted" notifications from the registered CoinSlot.
 	 * Adds the value of the coin to the VendingManager's tracked credit.
@@ -139,10 +139,10 @@ public class VendingListener implements CoinSlotListener, PushButtonListener,
 	 */
 	@Override
 	public void unlocked(Lock lock) {
-		mgr.enableSafety();		
+		mgr.enableSafety();
 	}
 //^^^=======================LOCK LISTENER METHODS END=======================^^^
-	
+
 //vvv=======================DELIVERY CHUTE LISTENER METHODS START=======================vvv
 	//TODO Document
 	@Override
@@ -160,7 +160,7 @@ public class VendingListener implements CoinSlotListener, PushButtonListener,
 	@Override
 	public void doorClosed(DeliveryChute chute) {
 		mgr.log("Delivery chute door closed");
-		if (chute.getCapacity() > chute.size())
+		if (chute.hasSpace())
 			mgr.disableSafety();
 	}
 	
@@ -238,7 +238,7 @@ public class VendingListener implements CoinSlotListener, PushButtonListener,
 	@Override
 	public void coinAdded(CoinRack rack, Coin coin) {
 		int rackVal = mgr.getCoinRackValue(rack);
-		mgr.log("Coin (" + coin.getValue() + ") removed from (" + rackVal + ") rack.");
+		mgr.log("Coin (" + coin.getValue() + ") added to (" + rackVal + ") rack.");
 	}
 	
 	//TODO Document
