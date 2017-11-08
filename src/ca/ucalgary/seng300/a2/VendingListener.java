@@ -158,13 +158,19 @@ public class VendingListener implements CoinSlotListener, PushButtonListener,
 		//TODO Decide if an item entering the delivery chute should be logged
 	}
 
-	//TODO Document
+	/*
+	 * Handles the "notifyDoorOpened" event from the registered deliveryChute
+	 */
 	@Override
 	public void doorOpened(DeliveryChute chute) {
 		mgr.log("Delivery chute door opened");
 	}
 
-	//TODO Document
+	/*
+	 * Handles the "notifyDoorClosed" event from the registered deliveryChute
+	 * If there is room in the chute then keep the safety off
+	 * 
+	 */
 	@Override
 	public void doorClosed(DeliveryChute chute) {
 		mgr.log("Delivery chute door closed");
@@ -172,7 +178,11 @@ public class VendingListener implements CoinSlotListener, PushButtonListener,
 			mgr.disableSafety();
 	}
 
-	//TODO Document
+	/*
+	 * Handles the "notifyChuteFull" event from the registered deliveryChute
+	 * In the case that the chute is full, enable the safety of the machine
+	 * 
+	 */
 	@Override
 	public void chuteFull(DeliveryChute chute) {
 		mgr.log("Delivery chute full");
@@ -188,7 +198,12 @@ public class VendingListener implements CoinSlotListener, PushButtonListener,
 	@Override
 	public void popCansUnloaded(PopCanRack rack, PopCan... popCans) {}
 
-	//TODO Document
+	/*
+	 * Disables the machines safety during the loading of the machine
+	 * 
+	 * @param curent pop can rack of interest
+	 * @param curent pop can of interest 
+	 */
 	@Override
 	public void popCanAdded(PopCanRack popCanRack, PopCan popCan) {
 		mgr.disableSafety();
@@ -196,21 +211,36 @@ public class VendingListener implements CoinSlotListener, PushButtonListener,
 		// Should only happen during loading, so maybe we'll just log it there.
 	}
 
-	//TODO Document
+	
+	/*
+	 * Logs that the given pop has been removed from the rack
+	 * 
+	 *@param curent pop can rack of interest
+	 *@param curent pop can of interest  
+	 */
 	@Override
 	public void popCanRemoved(PopCanRack popCanRack, PopCan popCan) {
 		String popName = mgr.getPopCanRackName(popCanRack);
 		mgr.log(popCan.getName() + " removed from " + popName + " rack.");
 	}
 
-	//TODO Document
+	/*
+	 * logs that the given pop can rack is full
+	 * 
+	 * @param curent pop can rack of interest
+	 */
 	@Override
 	public void popCansFull(PopCanRack popCanRack) {
 		String popName = mgr.getPopCanRackName(popCanRack);
 		mgr.log(popName + " rack full.");
 	}
 
-	//TODO Document
+	/*
+	 * logs that the given pop rack is empty. If all pop 
+	 * racks are empty then enable the safety of the machine.
+	 * 
+	 * @param curent pop can rack of interest 
+	 */
 	@Override
 	public void popCansEmpty(PopCanRack popCanRack) {
 		String popName = mgr.getPopCanRackName(popCanRack);
@@ -228,28 +258,48 @@ public class VendingListener implements CoinSlotListener, PushButtonListener,
 	@Override
 	public void coinsUnloaded(CoinRack rack, Coin... coins) {}
 
-	//TODO Document
+	/*
+	 * logs that the given coin value rack is full
+	 * 
+	 * @param the given coin rack of interest
+	 */
 	@Override
 	public void coinsFull(CoinRack rack) {
 		int rackVal = mgr.getCoinRackValue(rack);
 		mgr.log("Coin (" + rackVal + ") rack empty.");
 	}
 
-	//TODO Document
+	/*
+	 * logs that the given coin value rack is empty
+	 * 
+	 * @param the given coin rack of interest
+	 */
 	@Override
 	public void coinsEmpty(CoinRack rack) {
 		int rackVal = mgr.getCoinRackValue(rack);
 		mgr.log("Coin (" + rackVal + ") rack empty.");
 	}
 
-	//TODO Document
+	/*
+	  * logs that the given coin rack has had a coin value
+	  * added to the rack
+	  * 
+	  * @param the given coin rack of interest
+	  * @param any arbritrary coin value
+	  */
 	@Override
 	public void coinAdded(CoinRack rack, Coin coin) {
 		int rackVal = mgr.getCoinRackValue(rack);
 		mgr.log("Coin (" + coin.getValue() + ") added to (" + rackVal + ") rack.");
 	}
 
-	//TODO Document
+	 /*
+	  * logs that the given coin rack has had a coin value
+	  * removed from the rack
+	  * 
+	  * @param the given coin rack of interest
+	  * @param any arbritrary coin value
+	  */
 	@Override
 	public void coinRemoved(CoinRack rack, Coin coin) {
 		int rackVal = mgr.getCoinRackValue(rack);
