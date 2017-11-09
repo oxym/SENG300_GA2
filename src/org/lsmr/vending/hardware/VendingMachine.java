@@ -121,6 +121,9 @@ public final class VendingMachine {
 	coinSlot = new CoinSlot(coinKinds);
 	receptacle = new CoinReceptacle(receptacleCapacity);
 	deliveryChute = new DeliveryChute(receptacleCapacity);
+	//***TO REMOVE; PENDING OFFICIAL CHANGE***
+	coinReturn = new CoinReturn(coinReturnCapacity);
+	//******
 	coinRacks = new CoinRack[coinKinds.length];
 	coinRackChannels = new HashMap<Integer, CoinChannel>();
 	for(int i = 0; i < coinKinds.length; i++) {
