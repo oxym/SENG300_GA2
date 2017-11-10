@@ -33,7 +33,7 @@ import java.util.Date;
 public class Logger {
     private boolean debug = true;
 	
-    private static DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+    private static DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS");
     private static Date date = new Date();
 	
     private String name;
@@ -43,12 +43,15 @@ public class Logger {
      * Initializes a Logger instance for a given log file.
      * @throws  
      */
-    Logger(String filename) throws IllegalArgumentException {
-    	
-    	if (!filename.equals("") && !filename.equals(null))
-    		name = filename;
-    	else
-    		throw new IllegalArgumentException("Filename cannot be empty or null.");
+    Logger(String filename) throws IllegalArgumentException, NullPointerException {
+	    	
+	    	if (filename.equals(null)) {
+	    		throw new NullPointerException("Filename cannot be null.");
+	    	} else if(filename.equals("")) {
+	    		throw new IllegalArgumentException("Filename cannot be empty");
+	    	} else {
+	    		name = filename;
+	    	}
     }
     
     /**
@@ -59,7 +62,7 @@ public class Logger {
      * @throws FileNotFoundException If the file cannot be created or is a directory.
      */
     void log(String msg) throws IllegalArgumentException,
-    								   FileNotFoundException {
+    								   FileNotFoundException, NullPointerException {
     	initializeLog();
         write(msg);
         closeLog();
@@ -73,7 +76,7 @@ public class Logger {
      * @throws FileNotFoundException If the file cannot be created or is a directory.
      */
     void log(String[] msgs) throws IllegalArgumentException,
-    								   FileNotFoundException {
+    								   FileNotFoundException, NullPointerException {
     	initializeLog();
     	for (String msg : msgs){
     		write(msg);
@@ -97,14 +100,17 @@ public class Logger {
      * @throws IllegalArgumentException If the message string is empty or null
      */
     private void write(String msg) throws IllegalArgumentException,
-	   								 FileNotFoundException {
-    	 if (!msg.equals("") && !msg.equals(null)) {
-             if (debug) System.out.println(String.format("%s - %s", dateFormat.format(date), msg));
-             writer.append(String.format("%s - %s\n", dateFormat.format(date), msg));
-             writer.flush();
-         } else {
-             throw new IllegalArgumentException("Message cannot be empty.");
-         }
+	   								 FileNotFoundException, NullPointerException {
+    	 	
+    	 	if (msg.equals(null)) {
+    	 		throw new NullPointerException("Message cannot be null.");
+    	 	} else if(msg.equals("")) {
+    	 		throw new IllegalArgumentException("Message cannot be empty.");
+    	 	} else {
+    	 		if (debug) System.out.println(String.format("%s - %s", dateFormat.format(date), msg));
+                writer.append(String.format("%s - %s\n", dateFormat.format(date), msg));
+                writer.flush();
+    	 	}
     }
     
     /**
