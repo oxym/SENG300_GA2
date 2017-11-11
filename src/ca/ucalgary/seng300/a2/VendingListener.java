@@ -22,7 +22,7 @@ import org.lsmr.vending.hardware.*;
 public class VendingListener implements CoinSlotListener, PushButtonListener,
 										LockListener, DeliveryChuteListener,
 										CoinRackListener, PopCanRackListener,
-										CoinReceptacleListener, IndicatorLightListener
+										CoinReceptacleListener, IndicatorLightListener, CoinReturnListener
 										{
 	private static boolean debug = false;
 	private static VendingListener listener;
@@ -359,6 +359,28 @@ public class VendingListener implements CoinSlotListener, PushButtonListener,
 	}
 //^^^=======================INDICATOR LIGHT LISTENER METHODS END=======================^^^
 
+//^^^=======================COIN RETURN LISTENER METHODS START=======================^^^
+	
+	/*
+	 * logs that each coin, one by one, has been returned to the user
+	 * 
+	 * @param coinreturn object
+	 * @param an array of the coins returned
+	*/
+	@Override
+	public void coinsDelivered(CoinReturn coinReturn, Coin[] coins) {
+		mgr.log("coinReturn button pressed, a coin has been returned");
+		
+	}
+
+	@Override
+	public void returnIsFull(CoinReturn coinReturn) {
+		// TODO Auto-generated method stub
+		
+	}
+//^^^=======================COIN RETURN LISTENER METHODS END=======================^^^	
+
+	
 
 //vvv=======================TEMPLATE LISTENER METHODS START=======================vvv
 //^^^=======================TEMPLATE LISTENER METHODS END=======================^^^
