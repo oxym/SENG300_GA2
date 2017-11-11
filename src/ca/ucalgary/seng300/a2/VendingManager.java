@@ -94,6 +94,7 @@ public class VendingManager {
 		getCoinReceptacle().register(listener);
 		getOutOfOrderLight().register(listener);
 		getExactChangeLight().register(listener);
+		getCoinReturn().register(listener);
 
 		//TODO implement Lock
 		//getLock().register(listener)
@@ -361,6 +362,9 @@ public class VendingManager {
 			throw new InsufficientFundsException("Cannot buy " + popName + ". " + diff + " cents missing.");
 		}
 	}
+	void returnCoin() {
+
+	}
 
 	/**
 	 * Returns a formatted string to display credit.
@@ -416,6 +420,13 @@ public class VendingManager {
 				break;
 			}
 		}
+	}
+
+
+	public void refundButtonPressed() throws CapacityExceededException, DisabledException {
+		mgr.getCoinReceptacle().returnCoins();
+//		listener.coinsDelivered(mgr.getCoinReturn(), coins);
+
 	}
 
 	/**
