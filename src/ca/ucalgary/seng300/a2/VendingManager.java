@@ -29,7 +29,7 @@ import java.io.FileNotFoundException;
  * @author Khesualdo Condori (30004958)
  * @author Michaela Olsakova (30002591)
  * @author Paul Dan (30011349)
- * @author Dan Dunareanu (30002346)
+ * @author
  *
  */
 public class VendingManager {
@@ -425,7 +425,7 @@ public class VendingManager {
 
 	public void refundButtonPressed() throws CapacityExceededException, DisabledException {
 		mgr.getCoinReceptacle().returnCoins();
-//		listener.coinsDelivered(mgr.getCoinReturn(), coins);
+		//System.out.println(mgr.getCoinReceptacle().unload());
 
 	}
 

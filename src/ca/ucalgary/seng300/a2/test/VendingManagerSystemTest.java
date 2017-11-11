@@ -206,6 +206,21 @@ public class VendingManagerSystemTest {
 		}
 	}
 
+	@Test
+	public void testGetRefund() throws CapacityExceededException, DisabledException	{
+		Coin coin = new Coin(100);
+		for (int i = 0; i < 3; i++) { // Adds three dollars to the machine
+			try {
+				machine.getCoinSlot().addCoin(coin);
+			} catch (DisabledException e) {
+			}
+		}
+		int itemsInReceptacle = machine.getCoinReceptacle().size();
+		manager.refundButtonPressed();
+		int coinsDelivered = machine.getCoinReturn().size();
+		assertEquals(itemsInReceptacle, coinsDelivered);
+
+	}
 	////////////////////////////////////////////////////////////////////////
 	// User Actions
 	////////////////////////////////////////////////////////////////////////
