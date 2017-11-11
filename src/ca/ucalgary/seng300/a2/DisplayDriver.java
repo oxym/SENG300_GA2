@@ -18,8 +18,8 @@ public class DisplayDriver {
 	private int greetingCycleTime = 15; // in seconds
 	private int greetingDuration = 5; // in seconds
 	private Timer timer;
-	
-	private VendingManager vm;
+
+	private VendingManager mgr;
 	private Display display;
 
 	/**
@@ -28,7 +28,7 @@ public class DisplayDriver {
 	 */
 	public DisplayDriver(Display display) {
 		this.display = display;
-		vm = VendingManager.getInstance();
+		mgr = VendingManager.getInstance();
 		timer = new Timer();
 	}
 
@@ -49,7 +49,7 @@ public class DisplayDriver {
 	public void newMessage(String message) {
 		cancelCycle();
 		display.display(message);
-		if (vm != null)
+		if (mgr != null)
 			VendingManager.getInstance().log("Displayed message: " + message);
 		if (TESTING)
 			System.out.println(message);
@@ -67,8 +67,8 @@ public class DisplayDriver {
 	 */
 	public void newMessage(String message, int duration) {
 		newMessage(message);
-		
-		if (vm != null)
+
+		if (mgr != null)
 			VendingManager.getInstance().log("Waiting for: " + duration + " seconds.");
 		if (TESTING) {
 			DateTimeFormatter format = DateTimeFormatter.ofPattern("HH:mm:ss.SSSSSS");
@@ -76,9 +76,9 @@ public class DisplayDriver {
 			System.out.println("Waiting for: " + duration + " at: " + time);
 		}
 
-		
-		int delay = duration * 1000;		
-		if (vm != null && VendingManager.getInstance().getCredit() > 0 ){
+
+		int delay = duration * 1000;
+		if (mgr != null && VendingManager.getInstance().getCredit() > 0 ){
 			DisplayMessageTask messageTask = getMessageTask("$CREDIT$");
 			timer.schedule(messageTask, delay);
 		}
@@ -88,9 +88,22 @@ public class DisplayDriver {
 			timer.scheduleAtFixedRate(getClearTask(), delay + greetingDuration * 1000, greetingCycleTime * 1000);
 		}
 	}
+
+	/**
+	 * Creates a new message task
+	 *
+	 * @param message The message to display
+	 * @return message task that displays the message
+	 */
 	DisplayMessageTask getMessageTask(String message){
 		return new DisplayMessageTask(message, display);
 	}
+
+	/**
+	 * Creates a new task that clears the display
+	 *
+	 * @return task to clear the display
+	 */
 	DisplayMessageTask getClearTask(){
 		return new DisplayMessageTask("", display);
 	}
@@ -104,7 +117,7 @@ public class DisplayDriver {
 		timer.scheduleAtFixedRate(messageTask, 0, greetingCycleTime * 1000);
 		timer.scheduleAtFixedRate(getClearTask(), greetingDuration * 1000, greetingCycleTime * 1000);
 	}
-	
+
 	/**
 	 * Clears the display indefinitely.
 	 * @deprecated This method should not be used. The display should never be perma-cleared.
@@ -125,7 +138,7 @@ public class DisplayDriver {
 		greetingDuration = duration;
 		greetingCycleTime = cycleTime;
 	}
-	
+
 	/**
 	 * Gets the greeting message which is displayed when the vending machine is
 	 * idle and has no credit stored.
@@ -173,7 +186,7 @@ public class DisplayDriver {
 			if (TESTING) {
 				DateTimeFormatter format = DateTimeFormatter.ofPattern("HH:mm:ss.SSSSSS");
 				String time = LocalDateTime.now().format(format);
-				String logEntry = message.equals("") ? "<clear display>: " : message + ": "; 
+				String logEntry = message.equals("") ? "<clear display>: " : message + ": ";
 				System.out.println(logEntry + time);
 			}
 		}

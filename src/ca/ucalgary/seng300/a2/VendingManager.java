@@ -95,7 +95,6 @@ public class VendingManager {
 		getOutOfOrderLight().register(listener);
 		getExactChangeLight().register(listener);
 		getCoinReturn().register(listener);
-
 		//TODO implement Lock
 		//getLock().register(listener)
 
