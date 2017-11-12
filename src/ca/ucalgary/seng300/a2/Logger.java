@@ -43,7 +43,7 @@ public class Logger {
      * Initializes a Logger instance for a given log file.
      * @throws  
      */
-    Logger(String filename) throws IllegalArgumentException, NullPointerException {
+    public Logger(String filename) throws IllegalArgumentException, NullPointerException {
 	    	
 	    	if (filename.equals(null)) {
 	    		throw new NullPointerException("Filename cannot be null.");
@@ -61,7 +61,7 @@ public class Logger {
      * @throws IllegalArgumentException If the message string is empty or null
      * @throws FileNotFoundException If the file cannot be created or is a directory.
      */
-    void log(String msg) throws IllegalArgumentException,
+    public void log(String msg) throws IllegalArgumentException,
     								   FileNotFoundException, NullPointerException {
     	initializeLog();
         write(msg);
@@ -75,7 +75,7 @@ public class Logger {
      * @throws IllegalArgumentException If the message string is empty or null
      * @throws FileNotFoundException If the file cannot be created or is a directory.
      */
-    void log(String[] msgs) throws IllegalArgumentException,
+    public void log(String[] msgs) throws IllegalArgumentException,
     								   FileNotFoundException, NullPointerException {
     	initializeLog();
     	for (String msg : msgs){

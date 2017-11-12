@@ -5,13 +5,13 @@ import org.junit.Test;
 
 import java.io.FileNotFoundException;
 
-import ca.ucalgary.seng300.a2.Logger
+import ca.ucalgary.seng300.a2.Logger;
 
 public class TestLogger {
 
 	@Test(expected = NullPointerException.class)
 	public void testConstructorNull() throws IllegalArgumentException, NullPointerException {
-		new Logger(null);
+		Logger log = new Logger(null);
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
