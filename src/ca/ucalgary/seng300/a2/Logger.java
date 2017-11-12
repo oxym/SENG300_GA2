@@ -58,7 +58,8 @@ public class Logger {
      * Adds a single message to the log file, as a single new line. 
      * Date and time are prepended to each message.
      * @param msg The text to be logged
-     * @throws IllegalArgumentException If the message string is empty or null
+     * @throws IllegalArgumentException If the message string is empty
+     * @throws NullPointerException if message string is null
      * @throws FileNotFoundException If the file cannot be created or is a directory.
      */
     public void log(String msg) throws IllegalArgumentException,
@@ -71,8 +72,9 @@ public class Logger {
     /**
      * Adds a series of messages to the log file, as a separate new lines. 
      * Date and time are prepended to each message.
-     * @param msg The texts to be logged. Cannot elements cannot be empty or null.
-     * @throws IllegalArgumentException If the message string is empty or null
+     * @param msg The texts to be logged. Cannot elements cannot be empt
+     * @throws IllegalArgumentException If the message string is empty
+     * @throws NullPointerException if message string is null
      * @throws FileNotFoundException If the file cannot be created or is a directory.
      */
     public void log(String[] msgs) throws IllegalArgumentException,
@@ -97,7 +99,9 @@ public class Logger {
      * Private method to handle log writing.
      * Assumes the byte stream is already open and will be closed
      * by calling code.
-     * @throws IllegalArgumentException If the message string is empty or null
+     * @throws IllegalArgumentException If the message string is empty
+     * @throws NullPointerException if message string is null
+     * @throws FileNotFoundException If the file cannot be created or is a directory. 
      */
     private void write(String msg) throws IllegalArgumentException,
 	   								 FileNotFoundException, NullPointerException {

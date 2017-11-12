@@ -11,7 +11,7 @@ public class TestLogger {
 
 	@Test(expected = NullPointerException.class)
 	public void testConstructorNull() throws IllegalArgumentException, NullPointerException {
-		Logger log = new Logger(null);
+		new Logger(null);
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
