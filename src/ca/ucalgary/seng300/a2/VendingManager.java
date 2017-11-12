@@ -51,28 +51,32 @@ public class VendingManager {
 
 	/**
 	 * Singleton constructor. Initializes and stores the singleton instance
-	 * of VendingListener.
+	 * of VendingListener. Registers the VendingListener(s) with the
+	 * appropriate hardware.
 	 */
 	private VendingManager(){
+		eventLog = new Logger(eventLogName);
+		
 		VendingListener.initialize(this);
 		listener = VendingListener.getInstance();
+		
 		displayListener = new DispListener();
-		eventLog = new Logger(eventLogName);
+		displayDriver = new DisplayDriver(getDisplay());
+		displayDriver.greetingMessage();
+		
+		registerListeners();
+				
+		if (isOutOfOrder()) enableSafety();		
 	}
 
 	/**
 	 * Replaces the existing singleton instances (if any) for the entire
-	 * the Vending logic package. Registers the VendingListener(s) with the
-	 * appropriate hardware.
+	 * the Vending logic package. 
 	 * @param host The VendingMachine which the VendingManager is intended to manage.
 	 */
 	public static void initialize(VendingMachine host){
-		mgr = new VendingManager();
 		vm = host;
-		mgr.registerListeners();
-		displayDriver = new DisplayDriver(mgr.getDisplay());
-		displayDriver.greetingMessage();
-		mgr.checkOutOfOrder();
+		mgr = new VendingManager();
 	}
 
 	/**
@@ -137,22 +141,6 @@ public class VendingManager {
 		}
 	}
 
-	/**
-	 * Checks the out of order status and sets machine appropriately
-	 * checks the status of the delivery chute, coin receptacle, and inventory
-	 * puts the machine in an out of order state as required
-	 */
-	private void checkOutOfOrder() {
-		if (
-			!getDeliveryChute().hasSpace() ||
-			!getCoinReceptacle().hasSpace() ||
-			//!getCoinReturn().hasSpace() || //TODO enable once null pointer fixed
-			checkAllProductsEmpty()
-		) {
-			getOutOfOrderLight().activate();
-			enableSafety();
-		}
-	}
 
 	// Accessors used throughout the vending logic classes to get hardware references.
 	// Indirect access to the VM is used to simplify the removal of the
@@ -219,7 +207,7 @@ public class VendingManager {
 	 * to the hardware.
 	 */
 	void enableSafety(){
-		if (!mgr.isSafetyEnabled())
+		if (!isSafetyEnabled())
 			log("Safety enabled");
 			vm.enableSafety();
 	}
@@ -232,11 +220,24 @@ public class VendingManager {
 	 */
 	void disableSafety(){
 		//TODO Add more conditions; should not disable if something is still wrong
-		if (mgr.isSafetyEnabled())
+		if (isSafetyEnabled() && isSafeToDisableSafety())
 			log("Safety disabled");
 			vm.disableSafety();
 	}
 
+	private boolean isSafeToDisableSafety(){
+		boolean isSafe = false;
+		//Check if pop is all empty
+		boolean popEmpty = true;
+		for (int i = 0; i < getNumberOfPopCanRacks(); i++){
+			if (getPopCanRack(i).size() != 0){
+				popEmpty = false;
+				break;
+			}	
+		}
+		return isSafe;
+	}
+	
 	/**
 	 * Returns the index of the given SelectionButton,
 	 * which implies the index of the associated PopRack.
@@ -273,7 +274,7 @@ public class VendingManager {
 	 * @return The name of the pop.
 	 */
 	String getPopCanRackName(PopCanRack popRack){
-		return mgr.getPopKindName(mgr.getPopCanRackIndex(popRack));
+		return getPopKindName(getPopCanRackIndex(popRack));
 	}
 
 	/**
@@ -361,10 +362,7 @@ public class VendingManager {
 			throw new InsufficientFundsException("Cannot buy " + popName + ". " + diff + " cents missing.");
 		}
 	}
-	void returnCoin() {
-
-	}
-
+	
 	/**
 	 * Returns a formatted string to display credit.
 	 * @return The formatted credit string.
@@ -421,12 +419,20 @@ public class VendingManager {
 		}
 	}
 
-
-	public void refundButtonPressed() throws CapacityExceededException, DisabledException {
-		mgr.getCoinReceptacle().returnCoins();
-		//System.out.println(mgr.getCoinReceptacle().unload());
-
-	}
+	//TODO Finish implementation once coin return button added.
+//	/**
+//	 * **Currently unused**. Provides a method of returning the coins that are stored
+//	 * in the coin receptacle.
+//	 * @throws CapacityExceededException
+//	 * @throws DisabledException
+//	 */
+//	public void returnInsertedCoins() throws CapacityExceededException, DisabledException {
+//		getCoinReceptacle().returnCoins();
+//		//TODO Decide where it would be best to handle credit adjustment
+//		// e.g. in listener method for CoinReturn coinDelivered()?
+//		
+//
+//	}
 
 	/**
 	 * Takes the coin values inside the machine and sorts them in descending order for the purpose of change return
@@ -488,6 +494,23 @@ public class VendingManager {
 	}
 
 	/**
+	 * Checks the machine state to determine whether it is out of order.
+	 * Checks the status of the delivery chute, coin receptacle, and inventory.
+	 */
+	private boolean isOutOfOrder() {
+		boolean response = false;
+		if (
+			!getDeliveryChute().hasSpace() ||
+			!getCoinReceptacle().hasSpace() ||
+			!getCoinReturn().hasSpace() ||
+			checkAllProductsEmpty()
+		) {
+			response = true;
+		}
+		return response;
+	}
+	
+	/**
 	 * Checks if valid change can be returned, but does not return anything.
 	 * Similar to returnChange, but sets the indicator light instead
 	 * @param cost The cost (in cents) of a hypothetical purchase
@@ -506,8 +529,8 @@ public class VendingManager {
 		int[] rackAmounts = new int[getNumberOfCoinRacks()];
 		for (int i=0; i < rackCount; i++){
 			rackAmounts[i] = getCoinRackForCoinKind(rackValues[i]).size();
-			if (debug) System.out.println("CoinRack with value: " + rackValues[i]
-										+ " has " + rackAmounts[i] + " coins.");
+			if (debug) System.out.println("CoinRack (value: " + rackValues[i]
+										+ ") has " + rackAmounts[i] + " coins.");
 		}
 		//Try to reduce the excess credit to 0
 		for (int i=0; i < rackCount; i++){

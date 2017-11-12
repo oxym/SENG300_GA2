@@ -55,7 +55,8 @@ public class VendingManagerSystemTest {
 		machine.disableSafety(); //needed due to singleton instance being passed to multiple tests
 								 //that appear to clone the current state of the machine at the time of instantiation
 
-		// Instantiate a testlistener to receive messages with this test class
+		// Register an additional display listener to receive messages during testing
+		// Note: display listener is unit tested in TestDispListener.java
 		testDisplayListener = new DispListener();
 		machine.getDisplay().register(testDisplayListener);
 	}
@@ -90,6 +91,7 @@ public class VendingManagerSystemTest {
 		assertEquals(0, manager.getCredit());
 	}
 
+	//TODO Document
 	/**
 	 *
 	 * @throws CapacityExceededException
@@ -105,7 +107,6 @@ public class VendingManagerSystemTest {
 		} catch (DisabledException e) {
 		}
 		manager.checkExactChangeState();
-		System.out.println("END CHANGE");
 	}
 
 	/**
@@ -206,21 +207,22 @@ public class VendingManagerSystemTest {
 		}
 	}
 
-	@Test
-	public void testGetRefund() throws CapacityExceededException, DisabledException	{
-		Coin coin = new Coin(100);
-		for (int i = 0; i < 3; i++) { // Adds three dollars to the machine
-			try {
-				machine.getCoinSlot().addCoin(coin);
-			} catch (DisabledException e) {
-			}
-		}
-		int itemsInReceptacle = machine.getCoinReceptacle().size();
-		manager.refundButtonPressed();
-		int coinsDelivered = machine.getCoinReturn().size();
-		assertEquals(itemsInReceptacle, coinsDelivered);
+//	@Test
+//	public void testGetRefund() throws CapacityExceededException, DisabledException	{
+//		Coin coin = new Coin(100);
+//		for (int i = 0; i < 3; i++) { // Adds three dollars to the machine
+//			try {
+//				machine.getCoinSlot().addCoin(coin);
+//			} catch (DisabledException e) {
+//			}
+//		}
+//		int itemsInReceptacle = machine.getCoinReceptacle().size();
+//		manager.refundButtonPressed();
+//		int coinsDelivered = machine.getCoinReturn().size();
+//		assertEquals(itemsInReceptacle, coinsDelivered);
+//
+//	}
 
-	}
 	////////////////////////////////////////////////////////////////////////
 	// User Actions
 	////////////////////////////////////////////////////////////////////////
