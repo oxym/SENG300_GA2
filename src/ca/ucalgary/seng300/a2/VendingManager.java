@@ -390,7 +390,7 @@ public class VendingManager {
 	 * Displays the current credit on the hardware display
 	 */
 	void displayCredit() {
-		displayDriver.newMessage(getCreditMessage());
+		display(getCreditMessage());
 	}
 	
 //^^^======================HARDWARE LOGIC END=======================^^^
