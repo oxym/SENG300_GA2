@@ -29,39 +29,83 @@ import java.util.Date;
  *	Log a series of messages:
  *  	log(String[] msg)
  *  
+ *  Ensure a new log is created each time a Logger is created
+ *  	limitFileSize(boolean state)
+ *  
  */
 public class Logger {
-    private boolean debug = true;
-	
+    private static boolean debug = true;
+    
+    private static boolean limitSize = false;
     private static DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS");
     private static Date date = new Date();
 	
     private String name;
     private PrintWriter writer;
+       
     
     /**
      * Initializes a Logger instance for a given log file.
      * @throws  
      */
-    Logger(String filename) throws IllegalArgumentException, NullPointerException {
+    public Logger(String filename) throws IllegalArgumentException, NullPointerException {
 	    	
 	    	if (filename.equals(null)) {
 	    		throw new NullPointerException("Filename cannot be null.");
 	    	} else if(filename.equals("")) {
 	    		throw new IllegalArgumentException("Filename cannot be empty");
-	    	} else {
-	    		name = filename;
-	    	}
+	    	} 
+	    	
+	    	name = (limitSize) 
+	    			? timestampFileName(filename) 
+	    			: filename;
+    }
+    
+    /**
+     * When limitSize is set, the given filename is modified to change each time the machine
+     * is started. Uses the format: <filename>_<date>.txt
+     * 
+     * This method preserves whatever file extension is provided and defaults to "txt" if
+     * none was provided.
+     *  
+     * @param name The filename, including a possible file extension
+     * 
+     * 
+     */
+    private String timestampFileName(String filename){
+        String dateString = new SimpleDateFormat("dd-MM-yyyy_HH-mm-ss").format(new Date());
+        
+        String fileExt;
+        int dotIndex = filename.lastIndexOf(".");
+    	if (dotIndex != -1){ //In this case, no file extension was provided
+    		fileExt = filename.substring(dotIndex);
+    		filename = filename.substring(0, dotIndex);
+    	}
+    	else{
+    		fileExt = "txt";
+    	}
+    		    	
+    	return filename + "_" + dateString + "." + fileExt;
+    }
+    
+    /**
+     * Used to set whether a new log will be created each time the logger is constructed.
+     * When true, each name file will have the date appended.
+     * @param state Whether the logger should limit file size
+     */
+    public static void limitFileSize(boolean state){
+    	limitSize = state;
     }
     
     /**
      * Adds a single message to the log file, as a single new line. 
      * Date and time are prepended to each message.
      * @param msg The text to be logged
-     * @throws IllegalArgumentException If the message string is empty or null
+     * @throws IllegalArgumentException If the message string is empty
+     * @throws NullPointerException if message string is null
      * @throws FileNotFoundException If the file cannot be created or is a directory.
      */
-    void log(String msg) throws IllegalArgumentException,
+    public void log(String msg) throws IllegalArgumentException,
     								   FileNotFoundException, NullPointerException {
     	initializeLog();
         write(msg);
@@ -71,11 +115,12 @@ public class Logger {
     /**
      * Adds a series of messages to the log file, as a separate new lines. 
      * Date and time are prepended to each message.
-     * @param msg The texts to be logged. Cannot elements cannot be empty or null.
-     * @throws IllegalArgumentException If the message string is empty or null
+     * @param msg The texts to be logged. Cannot elements cannot be empt
+     * @throws IllegalArgumentException If the message string is empty
+     * @throws NullPointerException if message string is null
      * @throws FileNotFoundException If the file cannot be created or is a directory.
      */
-    void log(String[] msgs) throws IllegalArgumentException,
+    public void log(String[] msgs) throws IllegalArgumentException,
     								   FileNotFoundException, NullPointerException {
     	initializeLog();
     	for (String msg : msgs){
@@ -97,7 +142,9 @@ public class Logger {
      * Private method to handle log writing.
      * Assumes the byte stream is already open and will be closed
      * by calling code.
-     * @throws IllegalArgumentException If the message string is empty or null
+     * @throws IllegalArgumentException If the message string is empty
+     * @throws NullPointerException if message string is null
+     * @throws FileNotFoundException If the file cannot be created or is a directory. 
      */
     private void write(String msg) throws IllegalArgumentException,
 	   								 FileNotFoundException, NullPointerException {

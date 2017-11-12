@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import java.io.FileNotFoundException;
 
-import ca.ucalgary.seng300.a2.Logger
+import ca.ucalgary.seng300.a2.Logger;
 
 public class TestLogger {
 

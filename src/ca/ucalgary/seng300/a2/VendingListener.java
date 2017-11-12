@@ -92,7 +92,6 @@ public class VendingListener implements CoinSlotListener, PushButtonListener,
 			} catch(DisabledException e){
 				mgr.display("Vending machine disabled", 5);
 			} catch (EmptyException e){
-
 				mgr.display(popName + " is out of stock.", 5);
 			} catch (CapacityExceededException e){
 				mgr.display("Delivery chute full", 5);
@@ -102,10 +101,12 @@ public class VendingListener implements CoinSlotListener, PushButtonListener,
 //^^^=======================BUTTON LISTENER METHODS END=======================^^^
 
 //vvv=======================COIN SLOT LISTENER METHODS START=======================vvv
-	//TODO: Document
+	/**
+	 * Logs that a coin was added to the CoinSlot, but was rejected 
+	 */
 	@Override
 	public void coinRejected(CoinSlot slot, Coin coin) {
-		mgr.log("Coin with value: " + coin.getValue() + " rejected by coin slot.");
+		mgr.log("Coin (" + coin.getValue() + ") rejected by coin slot.");
 	}
 
 	/**
@@ -155,7 +156,7 @@ public class VendingListener implements CoinSlotListener, PushButtonListener,
 	//TODO Document
 	@Override
 	public void itemDelivered(DeliveryChute chute) {
-		//TODO Decide if an item entering the delivery chute should be logged
+		mgr.log("PopCan delivered to the Delivery Chute");
 	}
 
 	/*
@@ -192,7 +193,6 @@ public class VendingListener implements CoinSlotListener, PushButtonListener,
 
 //vvv=======================POP CAN RACK LISTENER METHODS START=======================vvv
 	//TODO Decide whether these events should be logged or handled
-
 	@Override
 	public void popCansLoaded(PopCanRack rack, PopCan... popCans) {}
 	@Override
@@ -298,7 +298,7 @@ public class VendingListener implements CoinSlotListener, PushButtonListener,
 	  * removed from the rack
 	  * 
 	  * @param the given coin rack of interest
-	  * @param any arbritrary coin value
+	  * @param any arbitrary coin value
 	  */
 	@Override
 	public void coinRemoved(CoinRack rack, Coin coin) {
@@ -359,28 +359,35 @@ public class VendingListener implements CoinSlotListener, PushButtonListener,
 	}
 //^^^=======================INDICATOR LIGHT LISTENER METHODS END=======================^^^
 
-//^^^=======================COIN RETURN LISTENER METHODS START=======================^^^
+//vvv=======================COIN RETURN LISTENER METHODS START=======================vvv
 	
 	/*
-	 * logs that each coin, one by one, has been returned to the user
+	 * Logs the coins that, one by one, has been returned to the user
 	 * 
 	 * @param coinreturn object
 	 * @param an array of the coins returned
 	*/
 	@Override
 	public void coinsDelivered(CoinReturn coinReturn, Coin[] coins) {
-		mgr.log("coinReturn button pressed, a coin has been returned");
-		
+		String coinStr = "";
+		for (int i = 0; i < coins.length; i++){
+			coinStr += coins[i].getValue();
+			if (i != coins.length - 1){
+				coinStr += " ";
+			}
+		}
+		mgr.log("Coin(s) + (" + coinStr + ") delivered to coin return.");
 	}
 
 	@Override
 	public void returnIsFull(CoinReturn coinReturn) {
-		// TODO Auto-generated method stub
-		
+		mgr.log("Coin return full");
+		mgr.enableSafety();
 	}
-//^^^=======================COIN RETURN LISTENER METHODS END=======================^^^	
-
 	
+	//TODO Request coinsUnloaded() listener event from Mr. Client
+	
+//^^^=======================COIN RETURN LISTENER METHODS END=======================^^^	
 
 //vvv=======================TEMPLATE LISTENER METHODS START=======================vvv
 //^^^=======================TEMPLATE LISTENER METHODS END=======================^^^
