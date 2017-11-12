@@ -44,13 +44,18 @@ public class VendingManager {
 	private static VendingManager mgr;
 	private static VendingListener listener;
 	private static VendingMachine vm;
-	private static DispListener displayListener;
 	private static DisplayDriver displayDriver;
-
+	
+	private static DispListener displayListener;
+	private static PopListener popListener;
+	private static ButtonListener buttonListener;
+	private static CoinListener coinListener;
+	private static LightListener lightListener;
+	
 	private static Logger eventLog;
 	private static String eventLogName = "VendingLog.txt";
+	
 	private int credit = 0;
-
 	private static String currency = "CAD";
 
 
@@ -63,15 +68,27 @@ public class VendingManager {
 	private VendingManager(){
 		eventLog = new Logger(eventLogName);
 		
-		VendingListener.initialize(this);
-		listener = VendingListener.getInstance();
-		
 		displayListener = new DispListener();
 		displayDriver = new DisplayDriver(getDisplay());
 		displayDriver.greetingMessage();
+				
+		ButtonListener.initialize(this);
+		buttonListener = ButtonListener.getInstance();
+		
+		PopListener.initialize(this);
+		popListener = PopListener.getInstance();
+		
+		LightListener.initialize(this);
+		lightListener = LightListener.getInstance();
+		
+		CoinListener.initialize(this);
+		coinListener = CoinListener.getInstance();
+		
+		popListener = PopListener.getInstance(); 
+		buttonListener = new ButtonListener();
 		
 		registerListeners();
-				
+
 		if (isOutOfOrder()) enableSafety();		
 	}
 
@@ -98,19 +115,24 @@ public class VendingManager {
 	 */
 	private void registerListeners(){
 		getDisplay().register(displayListener);
+		
+		registerPopCanRackListener(popListener);
+		getDeliveryChute().register(popListener);
+		
+		getCoinSlot().register(coinListener);
+		getCoinReceptacle().register(coinListener);
+		registerCoinRackListener(coinListener);
+		getCoinReturn().register(coinListener);		
+		
+		getOutOfOrderLight().register(lightListener);
+		getExactChangeLight().register(lightListener);
+		
+		registerButtonListener(buttonListener);
+		
+		
 
-		getCoinSlot().register(listener);
-		getDeliveryChute().register(listener);
-		getCoinReceptacle().register(listener);
-		getOutOfOrderLight().register(listener);
-		getExactChangeLight().register(listener);
-		getCoinReturn().register(listener);
 		//TODO implement Lock
-		//getLock().register(listener)
-
-		registerCoinRackListener(listener);
-		registerPopCanRackListener(listener);
-		registerButtonListener(listener);
+		//getLock().register(listener)		
 	}
 
 	/**
