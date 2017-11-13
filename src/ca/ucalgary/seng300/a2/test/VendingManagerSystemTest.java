@@ -16,6 +16,7 @@ import org.lsmr.vending.hardware.DeliveryChute;
 import org.lsmr.vending.hardware.DisabledException;
 import org.lsmr.vending.hardware.EmptyException;
 import org.lsmr.vending.hardware.PushButton;
+import org.lsmr.vending.hardware.SimulationException;
 import org.lsmr.vending.hardware.VendingMachine;
 
 import ca.ucalgary.seng300.a2.DispListener;
@@ -178,6 +179,107 @@ public class VendingManagerSystemTest {
 		assertEquals(0, delivered.length);
 		assertEquals(0, manager.getCredit());
 	}
+	
+	/**
+	 * tests that safety is enabled when machine runs out of pop
+	 */
+	@Test
+	public void testNoPopLeftEnableSafety() {
+		
+		machine.loadPopCans(1, 0, 0, 0, 0, 0);
+		machine.loadCoins(10, 10, 10, 10, 10);
+		
+		Coin coin = new Coin(100);
+		for (int i = 0; i < 3; i++) { // Adds three dollars to the machine
+			try {
+				machine.getCoinSlot().addCoin(coin);
+			} catch (DisabledException e) {
+			}
+		}
+		
+		machine.getSelectionButton(0).press();
+		
+		assertTrue(machine.isSafetyEnabled());
+		assertTrue(machine.getOutOfOrderLight().isActive());
+		assertEquals(machine.getDeliveryChute().size(), 1);
+		
+	}
+	
+	/**
+	 * tests that safety does not enable if only one pop type is empty
+	 */
+	@Test
+	public void testOutOfOnePopType() {
+		
+		machine.loadPopCans(0, 10, 10, 10, 10, 10);
+		machine.loadCoins(10, 10, 10, 10, 10);
+		
+		Coin coin = new Coin(100);
+		for (int i = 0; i < 3; i++) { // Adds three dollars to the machine
+			try {
+				machine.getCoinSlot().addCoin(coin);
+			} catch (DisabledException e) {
+			}
+		}
+		
+		machine.getSelectionButton(0).press();
+		
+		assertFalse(machine.isSafetyEnabled());
+		assertFalse(machine.getOutOfOrderLight().isActive());
+		
+	}
+	
+	/**
+	 * test that disabledException is thrown when a coin is inserted and safety is enabled
+	 * 
+	 * @throws DisabledException
+	 */
+	@Test (expected = DisabledException.class)
+	public void testAddCoinSafetyEnabled() throws DisabledException {
+		
+		machine.enableSafety();
+		
+		assertTrue(machine.getOutOfOrderLight().isActive());
+		
+		Coin coin = new Coin(100);
+		machine.getCoinSlot().addCoin(coin);
+		
+	}
+	
+	/**
+	 * tests that safety is enabled when coinReceptacle reaches capacity
+	 * should throw a disabled exception when the final coin is added, since safety will be enabled
+	 * 
+	 * @throws DisabledException
+	 */
+	@Test (expected = DisabledException.class)
+	public void testValidCoinInsertCoinReceptaclesFull() throws DisabledException {
+		Coin quarter = new Coin(25);
+		for (int i = 0; i < machine.getCoinReceptacle().getCapacity(); i++)
+		{
+			machine.getCoinSlot().addCoin(quarter);
+		}
+
+		
+		machine.getCoinSlot().addCoin(quarter);
+		
+	}
+	
+	/**
+	 * tests that pop is not delivered to the chute when a button is pressed if machine is disabled
+	 * 
+	 * @throws EmptyException
+	 */
+	@Test
+	public void testPopRequestWhenDisabled() throws EmptyException {
+		
+		machine.loadPopCans(0, 10, 10, 10, 10, 10);
+		machine.enableSafety();
+		
+		machine.getSelectionButton(0).press();
+		assertEquals(machine.getDeliveryChute().size(), 0);
+	}
+
 
 	////////////////////////////////////////////////////////////////////////
 	// Test Display
@@ -204,7 +306,8 @@ public class VendingManagerSystemTest {
 			assertEquals(testMessage, testDisplayListener.getCurrentMessage());
 		}
 	}
-
+	
+	
 //	@Test
 //	public void testGetRefund() throws CapacityExceededException, DisabledException	{
 //		Coin coin = new Coin(100);
