@@ -3,6 +3,9 @@ package ca.ucalgary.seng300.a2;
 import org.lsmr.vending.Coin;
 import org.lsmr.vending.hardware.*;
 
+/**
+ * Event-handling listener class for CoinSlot, CoinReceptacle, CoinRack and CoinReturn.
+ */
 public class CoinListener extends VendingListener implements 
 							CoinSlotListener, CoinReceptacleListener, 
 							CoinRackListener, CoinReturnListener {
@@ -73,7 +76,7 @@ public class CoinListener extends VendingListener implements
 	//TODO Document
 	@Override
 	public void coinsRemoved(CoinReceptacle receptacle) {
-		mgr.disableSafety();
+		mgr.disableSafety(); //Safety may not be on and may not turn off
 		mgr.log("Coins removed from coin receptacle.");
 	}
 

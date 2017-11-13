@@ -2,6 +2,9 @@ package ca.ucalgary.seng300.a2;
 
 import org.lsmr.vending.hardware.*;
 
+/**
+ * Event-handling listener class for PushButton.
+ */
 public class ButtonListener extends VendingListener implements PushButtonListener{
 
 	protected static ButtonListener listener;

@@ -38,7 +38,7 @@ public class VendingManagerSystemTest {
 		List<String> popCanNames = Arrays.asList("Coke", "Sprite", "Crush", "Ale", "Pepsi", "Diet");
 		List<Integer> popCanCosts = Arrays.asList(250, 250, 250, 250, 250, 250);
 
-		int selectionButtonCount = 6;
+		int selectionButtonCount = popCanNames.size();
 		int coinRackCapacity = 15;
 		int popCanRackCapacity = 10;
 		int receptacleCapacity = 200;
@@ -49,8 +49,7 @@ public class VendingManagerSystemTest {
 				receptacleCapacity, deliveryChuteCapacity, coinReturnCapacity);
 		machine.configure(popCanNames, popCanCosts);
 
-		VendingManager.initialize(machine);
-		manager = VendingManager.getInstance();
+		manager = VendingManager.initialize(machine);
 
 		machine.disableSafety(); //needed due to singleton instance being passed to multiple tests
 								 //that appear to clone the current state of the machine at the time of instantiation

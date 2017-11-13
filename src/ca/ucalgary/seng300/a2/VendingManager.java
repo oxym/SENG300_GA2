@@ -8,21 +8,15 @@ import java.io.FileNotFoundException;
 
 /**
  * VendingManager is the primary access-point for the logic controlling the
- * VendingMachine hardware. It is associated with VendingListener, which listens
- * for event notifications from the hardware classes.
+ * VendingMachine hardware. 
  *
- * USAGE: Pass VendingMachine to static method initialize(), then use getInstance()
- * to get the singleton VendingManager object. Listeners are registered automatically.
+ * USAGE: Pass VendingMachine to static method initialize(), which returns the singleton instance
+ * Later, you can use getInstance() to get the existing instance. Listeners are registered automatically.
  *
- * DESIGN: All logic classes are designed as singletons. Currently, the only public-access methods are for initialization
- * and to get a VendingManager instance. All other functionality is restricted
- * to package access.
- *
- * TESTING: Due to the near-total encapsulation, VendingManager and VendingListener
- * must be tested along with a VendingMachine. Although a "stub" VendingMachine
- * *could* be created, doing so would be extremely inefficient.
- * We have been instructed that the VendingMachine and other hardware classes
- * are known-good, so integration testing will be sufficient.
+ * DESIGN: All listeners except DispListiner are designed as singletons. 
+ * Currently, the only public-access methods are for initialization. This was done to enforce
+ * strong encapsulation of the logic classes in an attempt to prevent misuse. 
+ * 
  *
  * LAYOUT:
  * 	SETUP: Sets up the VendingManager and related classes
@@ -86,10 +80,10 @@ public class VendingManager {
 	 * the Vending logic package. 
 	 * @param host The VendingMachine which the VendingManager is intended to manage.
 	 */
-	public static void initialize(VendingMachine host){
+	public static VendingManager initialize(VendingMachine host){
 		vm = host;
 		mgr = new VendingManager();
-
+		return getInstance();
 	}
 
 	/**

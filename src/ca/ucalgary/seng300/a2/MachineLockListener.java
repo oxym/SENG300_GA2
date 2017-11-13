@@ -2,6 +2,9 @@ package ca.ucalgary.seng300.a2;
 
 import org.lsmr.vending.hardware.*;
 
+/**
+ * Event-handling listener class for Lock.
+ */
 public class MachineLockListener extends VendingListener implements LockListener{
 
 	protected static MachineLockListener listener;

@@ -2,6 +2,9 @@ package ca.ucalgary.seng300.a2;
 
 import org.lsmr.vending.hardware.*;
 
+/**
+ * Event-handling listener class for IndicatorLight.
+ */
 public class LightListener extends VendingListener implements IndicatorLightListener{
 
 	protected static LightListener listener;

@@ -3,6 +3,9 @@ package ca.ucalgary.seng300.a2;
 import org.lsmr.vending.PopCan;
 import org.lsmr.vending.hardware.*;
 
+/**
+ * Event-handling listener class for PopCanRack and DeliveryChute.
+ */
 public class PopListener extends VendingListener implements PopCanRackListener, DeliveryChuteListener {
 
 	protected static PopListener listener;

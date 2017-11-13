@@ -4,10 +4,8 @@ import org.lsmr.vending.hardware.*;
 
 /**
  * Acts as the superclass for the various listener classes.
- * Handles the  
+ * Handles the enabled and disabled methods common to all AbstractHardwareListeners.  
  *
- * ACCESS: Only listener methods are public access.
- *TODO Revamp class documentation
  */
 public class VendingListener implements AbstractHardwareListener {
 	private static boolean debug = false;

@@ -4,14 +4,12 @@ import org.lsmr.vending.hardware.*;
 
 /**
  * This class is registered by VendingManager with hardware classes to listen
- * for display events and return various messages and the status.
+ * for display events.
+ * The current and last message are stored and can be obtained by the public accessors.
  *
- * ACCESS: Only listener methods are public access.
+ * HANDLED EVENTS: messageChange
  *
- * HANDLED EVENTS: messageChange, enabled, disabled
- *
- *
- * NOTES: In the messageChange, the the display that had the message changed is
+ * NOTES: In the messageChange, the display that had the message changed is
  * ignored for now.
  *
  */
