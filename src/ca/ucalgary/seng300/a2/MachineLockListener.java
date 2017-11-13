@@ -13,11 +13,10 @@ public class MachineLockListener extends VendingListener implements LockListener
 	 * Forces the existing singleton instance to be replaced.
 	 * Called by VendingManager during its instantiation.
 	 */
-	static void initialize(VendingManager manager){
-		if (manager != null){
-			mgr = manager;
-			listener = new MachineLockListener();
-		}
+	static MachineLockListener initialize(VendingManager manager){
+		mgr = manager;
+		listener = new MachineLockListener();
+		return getInstance();
 	}
 
 	/**

@@ -24,7 +24,7 @@ public class TestDispListener {
 	public void setup() throws Exception {
 
 		// Instantiate a testlistener to receive messages with this test class
-		testDisplayListener = new DispListener();
+		testDisplayListener = new DispListener(null);
 		dummyDisplay = new Display();
 
 	}
@@ -32,26 +32,6 @@ public class TestDispListener {
 	////////////////////////////////////////////////////////////////////////
 	// Test Display
 	////////////////////////////////////////////////////////////////////////
-
-	/**
-	 * Tests enabled status
-	 *
-	 * Note: This test should be disabled if shorter test times are desired
-	 */
-	@Test
-	public void testEnable() {
-		testDisplayListener.enabled(dummyDisplay);
-		assertEquals("enabled", testDisplayListener.getStatus());
-	}
-
-	/**
-	 * Tests Disabled Status
-	 */
-	@Test
-	public void testDisable() {
-		testDisplayListener.disabled(dummyDisplay);
-		assertEquals("disabled", testDisplayListener.getStatus());
-	}
 
 	/**
 	 * Tests message log
@@ -66,8 +46,8 @@ public class TestDispListener {
 		for (int i = 0; i< 10; i++) {
 			String message = "Test " + i;
 			testDisplayListener.messageChange(dummyDisplay, messageOld, message);
-			assertEquals(message, testDisplayListener.getMessageCurrent());
-			assertEquals(messageOld, testDisplayListener.getMessageLast());
+			assertEquals(message, testDisplayListener.getCurrentMessage());
+			assertEquals(messageOld, testDisplayListener.getLastMessage());
 
 		}
 	}
@@ -78,6 +58,6 @@ public class TestDispListener {
 	 */
 	@Test
 	public void testMessageLogEmpty() {
-			assertEquals("", testDisplayListener.getMessageLast());
+			assertEquals("", testDisplayListener.getLastMessage());
 	}
 }

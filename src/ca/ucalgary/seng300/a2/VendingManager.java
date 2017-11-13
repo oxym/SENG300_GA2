@@ -42,7 +42,6 @@ public class VendingManager {
 	private static boolean debug = true;
 
 	private static VendingManager mgr;
-	private static VendingListener listener;
 	private static VendingMachine vm;
 	private static DisplayDriver displayDriver;
 	
@@ -61,35 +60,25 @@ public class VendingManager {
 
 //vvv=======================SETUP START=======================vvv
 	/**
-	 * Singleton constructor. Initializes and stores the singleton instance
-	 * of VendingListener. Registers the VendingListener(s) with the
-	 * appropriate hardware.
+	 * Singleton constructor. Initializes and stores the singleton instances
+	 * of hardware listeners. Registers the listeners with the appropriate hardware.
+	 * Sets up the event log and display driver.
 	 */
 	private VendingManager(){
 		eventLog = new Logger(eventLogName);
 		
-		displayListener = new DispListener();
-		displayDriver = new DisplayDriver(getDisplay());
-		displayDriver.greetingMessage();
-				
-		ButtonListener.initialize(this);
-		buttonListener = ButtonListener.getInstance();
-		
-		PopListener.initialize(this);
-		popListener = PopListener.getInstance();
-		
-		LightListener.initialize(this);
-		lightListener = LightListener.getInstance();
-		
-		CoinListener.initialize(this);
-		coinListener = CoinListener.getInstance();
-		
-		popListener = PopListener.getInstance(); 
-		buttonListener = new ButtonListener();
+		displayListener = new DispListener(this);
+		buttonListener = ButtonListener.initialize(this);
+		popListener = PopListener.initialize(this);
+		lightListener = LightListener.initialize(this);
+		coinListener = CoinListener.initialize(this);
 		
 		registerListeners();
-
-		if (isOutOfOrder()) enableSafety();		
+		
+		displayDriver = new DisplayDriver(getDisplay());
+		displayDriver.greetingMessage();
+		
+		if (isOutOfOrder()) enableSafety();
 	}
 
 	/**
@@ -100,6 +89,7 @@ public class VendingManager {
 	public static void initialize(VendingMachine host){
 		vm = host;
 		mgr = new VendingManager();
+
 	}
 
 	/**
@@ -111,7 +101,7 @@ public class VendingManager {
 	}
 
 	/**
-	 * Registers the previously instantiated listener(s) with the appropriate hardware.
+	 * Registers the previously instantiated listeners with the appropriate hardware.
 	 */
 	private void registerListeners(){
 		getDisplay().register(displayListener);
@@ -128,8 +118,6 @@ public class VendingManager {
 		getExactChangeLight().register(lightListener);
 		
 		registerButtonListener(buttonListener);
-		
-		
 
 		//TODO implement Lock
 		//getLock().register(listener)		

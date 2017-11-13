@@ -15,44 +15,16 @@ import org.lsmr.vending.hardware.*;
  * ignored for now.
  *
  */
-public class DispListener implements DisplayListener {
+public class DispListener extends VendingListener implements DisplayListener {
 
-	private String status;
 	private String messageLast = "";
 	private String messageCurrent = "";
-	private VendingManager vm;
+	private VendingManager mgr;
 	
-	public DispListener() {
-		status = "Initializing...";
-		vm = VendingManager.getInstance();
+	public DispListener(VendingManager manager) {
+		mgr = manager;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.lsmr.vending.hardware.AbstractHardwareListener#enabled(org.lsmr.vending.
-	 * hardware.AbstractHardware)
-	 */
-	@Override
-	public void enabled(AbstractHardware<? extends AbstractHardwareListener> hardware) {
-		status = "enabled";
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.lsmr.vending.hardware.AbstractHardwareListener#disabled(org.lsmr.vending.
-	 * hardware.AbstractHardware)
-	 */
-	@Override
-	public void disabled(AbstractHardware<? extends AbstractHardwareListener> hardware) {
-		status = "disabled";
-
-	}
-
+	
 	/*
 	 * (non-Javadoc)
 	 *
@@ -66,24 +38,16 @@ public class DispListener implements DisplayListener {
 		messageCurrent = newMessage;
 		String greeting = DisplayDriver.getGreeetingMessage();
 		if (newMessage != (null) && !newMessage.equals("") && !newMessage.equals(greeting)) 
-			if (vm != null) vm.log("Message displayed: " + newMessage);
+			if (mgr != null) mgr.log("Message displayed: " + newMessage);
 	}
 
-	/**
-	 * Returns the status of the display
-	 *
-	 * @return status
-	 */
-	public String getStatus() {
-		return status;
-	}
 
 	/**
 	 * Returns the last message displayed
 	 *
 	 * @return lastMessage
 	 */
-	public String getMessageLast() {
+	public String getLastMessage() {
 		return messageLast;
 	}
 
@@ -92,7 +56,7 @@ public class DispListener implements DisplayListener {
 	 *
 	 * @return Current Message
 	 */
-	public String getMessageCurrent() {
+	public String getCurrentMessage() {
 		return messageCurrent;
 	}
 }

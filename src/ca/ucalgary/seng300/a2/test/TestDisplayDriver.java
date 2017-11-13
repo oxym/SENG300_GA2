@@ -20,7 +20,7 @@ public class TestDisplayDriver {
 	@Before
 	public void setup() throws Exception {
 		dummyDisplay = new Display();
-		testDisplayListener = new DispListener();
+		testDisplayListener = new DispListener(null);
 		dummyDisplay.register(testDisplayListener);
 		displayDriver = new DisplayDriver(dummyDisplay);
 	}
@@ -47,9 +47,9 @@ public class TestDisplayDriver {
 		displayDriver.greetingMessage();
 		Thread.sleep(2000); // initial delay
 		for (int i = 0; i < 3; i++) { // Loops 3 times
-			assertEquals("Hi there!", testDisplayListener.getMessageCurrent());
+			assertEquals("Hi there!", testDisplayListener.getCurrentMessage());
 			Thread.sleep(5000);
-			assertEquals("", testDisplayListener.getMessageCurrent());
+			assertEquals("", testDisplayListener.getCurrentMessage());
 			Thread.sleep(10000);
 		}
 	}
@@ -69,7 +69,7 @@ public class TestDisplayDriver {
 		Thread.sleep(8000); // let the default message be displayed for 8 seconds
 		displayDriver.newMessage("Credit: $  1.00");
 		Thread.sleep(15000);
-		assertEquals("Credit: $  1.00", testDisplayListener.getMessageCurrent()); // ensure thread has not been replaced by
+		assertEquals("Credit: $  1.00", testDisplayListener.getCurrentMessage()); // ensure thread has not been replaced by
 																				// default greeting
 	}
 
@@ -86,6 +86,6 @@ public class TestDisplayDriver {
 		// display is updated.
 		displayDriver.newMessage("Greeting After Message", 5);
 		Thread.sleep(6000);
-		assertEquals("Hi there!", testDisplayListener.getMessageCurrent());
+		assertEquals("Hi there!", testDisplayListener.getCurrentMessage());
 	}
 }

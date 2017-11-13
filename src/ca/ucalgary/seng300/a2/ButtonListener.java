@@ -13,11 +13,10 @@ public class ButtonListener extends VendingListener implements PushButtonListene
 	 * Forces the existing singleton instance to be replaced.
 	 * Called by VendingManager during its instantiation.
 	 */
-	static void initialize(VendingManager manager){
-		if (manager != null){
-			mgr = manager;
-			listener = new ButtonListener();
-		}
+	static ButtonListener initialize(VendingManager manager){
+		mgr = manager;
+		listener = new ButtonListener();
+		return getInstance();
 	}
 
 	/**

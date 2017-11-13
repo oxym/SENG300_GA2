@@ -13,11 +13,10 @@ public class LightListener extends VendingListener implements IndicatorLightList
 	 * Forces the existing singleton instance to be replaced.
 	 * Called by VendingManager during its instantiation.
 	 */
-	static void initialize(VendingManager manager){
-		if (manager != null){
-			mgr = manager;
-			listener = new LightListener();
-		}
+	static LightListener initialize(VendingManager manager){
+		mgr = manager;
+		listener = new LightListener();
+		return getInstance();
 	}
 
 	/**

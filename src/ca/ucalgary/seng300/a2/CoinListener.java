@@ -16,11 +16,10 @@ public class CoinListener extends VendingListener implements
 	 * Forces the existing singleton instance to be replaced.
 	 * Called by VendingManager during its instantiation.
 	 */
-	static void initialize(VendingManager manager){
-		if (manager != null){
-			mgr = manager;
-			listener = new CoinListener();
-		}
+	static CoinListener initialize(VendingManager manager){
+		mgr = manager;
+		listener = new CoinListener();
+		return getInstance();
 	}
 
 	/**

@@ -57,7 +57,7 @@ public class VendingManagerSystemTest {
 
 		// Register an additional display listener to receive messages during testing
 		// Note: display listener is unit tested in TestDispListener.java
-		testDisplayListener = new DispListener();
+		testDisplayListener = new DispListener(manager);
 		machine.getDisplay().register(testDisplayListener);
 	}
 
@@ -175,8 +175,7 @@ public class VendingManagerSystemTest {
 		machine.getSelectionButton(1).press();
 
 		PopCan[] delivered = machine.getDeliveryChute().removeItems();
-		//TODO Fix this to account for the added "change return" feature
-		// We want to popCans.length == 0, not just anything from the chute
+
 		assertEquals(0, delivered.length);
 		assertEquals(0, manager.getCredit());
 	}
@@ -203,7 +202,7 @@ public class VendingManagerSystemTest {
 			int dollars = manager.getCredit() / 100;
 			int cents = manager.getCredit() % 100;
 			String testMessage = String.format("Credit: $%3d.%02d", dollars, cents);
-			assertEquals(testMessage, testDisplayListener.getMessageCurrent());
+			assertEquals(testMessage, testDisplayListener.getCurrentMessage());
 		}
 	}
 
