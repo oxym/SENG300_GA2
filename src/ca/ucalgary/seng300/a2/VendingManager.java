@@ -29,7 +29,7 @@ import java.io.FileNotFoundException;
  * @author Khesualdo Condori (30004958)
  * @author Michaela Olsakova (30002591)
  * @author Paul Dan (30011349)
- * @author Dan Dunareanu ()
+ * @author Dan Dunareanu (30002346)
  *
  */
 public class VendingManager {
