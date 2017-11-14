@@ -6,13 +6,13 @@ import org.lsmr.vending.hardware.*;
 /**
  * Event-handling listener class for CoinSlot, CoinReceptacle, CoinRack and CoinReturn.
  */
-public class CoinListener extends VendingListener implements 
-							CoinSlotListener, CoinReceptacleListener, 
+public class CoinListener extends VendingListener implements
+							CoinSlotListener, CoinReceptacleListener,
 							CoinRackListener, CoinReturnListener {
 
 	protected static CoinListener listener;
 	protected static VendingManager mgr;
-	
+
 	private CoinListener (){}
 
 	/**
@@ -32,10 +32,10 @@ public class CoinListener extends VendingListener implements
 	static CoinListener getInstance(){
 		return listener;
 	}
-	
+
 //vvv=======================COIN SLOT LISTENER METHODS START=======================vvv
 	/**
-	 * Logs that a coin was added to the CoinSlot, but was rejected 
+	 * Logs that a coin was added to the CoinSlot, but was rejected
 	 */
 	@Override
 	public void coinRejected(CoinSlot slot, Coin coin) {
@@ -73,14 +73,19 @@ public class CoinListener extends VendingListener implements
 	@Override
 	public void coinsUnloaded(CoinReceptacle receptacle, Coin... coins) {}
 
-	//TODO Document
+
+	/* (non-Javadoc)
+	 * @see org.lsmr.vending.hardware.CoinReceptacleListener#coinsRemoved(org.lsmr.vending.hardware.CoinReceptacle)
+	 */
 	@Override
 	public void coinsRemoved(CoinReceptacle receptacle) {
 		mgr.disableSafety(); //Safety may not be on and may not turn off
 		mgr.log("Coins removed from coin receptacle.");
 	}
 
-	//TODO Document
+	/* (non-Javadoc)
+	 * @see org.lsmr.vending.hardware.CoinReceptacleListener#coinsFull(org.lsmr.vending.hardware.CoinReceptacle)
+	 */
 	@Override
 	public void coinsFull(CoinReceptacle receptacle) {
 		mgr.enableSafety();
@@ -88,7 +93,7 @@ public class CoinListener extends VendingListener implements
 	}
 //^^^=======================COIN RECEPTACLE LISTENER METHODS END=======================^^^
 
-	
+
 //vvv=======================COIN RACK LISTENER METHODS START=======================vvv
 	//TODO: Decide if these events should be logged or handled.
 	@Override
@@ -98,7 +103,7 @@ public class CoinListener extends VendingListener implements
 
 	/*
 	 * logs that the given coin value rack is full
-	 * 
+	 *
 	 * @param the given coin rack of interest
 	 */
 	@Override
@@ -109,7 +114,7 @@ public class CoinListener extends VendingListener implements
 
 	/*
 	 * logs that the given coin value rack is empty
-	 * 
+	 *
 	 * @param the given coin rack of interest
 	 */
 	@Override
@@ -121,7 +126,7 @@ public class CoinListener extends VendingListener implements
 	/*
 	  * logs that the given coin rack has had a coin value
 	  * added to the rack
-	  * 
+	  *
 	  * @param the given coin rack of interest
 	  * @param any arbritrary coin value
 	  */
@@ -134,7 +139,7 @@ public class CoinListener extends VendingListener implements
 	 /*
 	  * logs that the given coin rack has had a coin value
 	  * removed from the rack
-	  * 
+	  *
 	  * @param the given coin rack of interest
 	  * @param any arbitrary coin value
 	  */
@@ -149,7 +154,7 @@ public class CoinListener extends VendingListener implements
 
 	/*
 	 * Logs the coins that, one by one, has been returned to the user
-	 * 
+	 *
 	 * @param coinreturn object
 	 * @param an array of the coins returned
 	*/
@@ -170,8 +175,8 @@ public class CoinListener extends VendingListener implements
 		mgr.log("Coin return full");
 		mgr.enableSafety();
 	}
-	
+
 	//TODO Request coinsUnloaded() listener event from Mr. Client
-	
-//^^^=======================COIN RETURN LISTENER METHODS END=======================^^^		
+
+//^^^=======================COIN RETURN LISTENER METHODS END=======================^^^
 }

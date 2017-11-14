@@ -10,7 +10,7 @@ public class PopListener extends VendingListener implements PopCanRackListener, 
 
 	protected static PopListener listener;
 	protected static VendingManager mgr;
-	
+
 	protected PopListener(){}
 
 	/**
@@ -30,7 +30,7 @@ public class PopListener extends VendingListener implements PopCanRackListener, 
 	static PopListener getInstance(){
 		return listener;
 	}
-	
+
 //vvv=======================POP CAN RACK LISTENER METHODS START=======================vvv
 	//TODO Decide whether these events should be logged or handled
 	@Override
@@ -40,9 +40,9 @@ public class PopListener extends VendingListener implements PopCanRackListener, 
 
 	/*
 	 * Disables the machines safety during the loading of the machine
-	 * 
+	 *
 	 * @param curent pop can rack of interest
-	 * @param curent pop can of interest 
+	 * @param curent pop can of interest
 	 */
 	@Override
 	public void popCanAdded(PopCanRack popCanRack, PopCan popCan) {
@@ -51,12 +51,12 @@ public class PopListener extends VendingListener implements PopCanRackListener, 
 		// Should only happen during loading, so maybe we'll just log it there.
 	}
 
-	
+
 	/*
 	 * Logs that the given pop has been removed from the rack
-	 * 
+	 *
 	 *@param curent pop can rack of interest
-	 *@param curent pop can of interest  
+	 *@param curent pop can of interest
 	 */
 	@Override
 	public void popCanRemoved(PopCanRack popCanRack, PopCan popCan) {
@@ -66,7 +66,7 @@ public class PopListener extends VendingListener implements PopCanRackListener, 
 
 	/*
 	 * logs that the given pop can rack is full
-	 * 
+	 *
 	 * @param curent pop can rack of interest
 	 */
 	@Override
@@ -76,10 +76,10 @@ public class PopListener extends VendingListener implements PopCanRackListener, 
 	}
 
 	/*
-	 * logs that the given pop rack is empty. If all pop 
+	 * logs that the given pop rack is empty. If all pop
 	 * racks are empty then enable the safety of the machine.
-	 * 
-	 * @param curent pop can rack of interest 
+	 *
+	 * @param curent pop can rack of interest
 	 */
 	@Override
 	public void popCansEmpty(PopCanRack popCanRack) {
@@ -92,7 +92,10 @@ public class PopListener extends VendingListener implements PopCanRackListener, 
 //^^^=======================POP CAN RACK LISTENER METHODS END=======================^^^
 
 //vvv=======================DELIVERY CHUTE LISTENER METHODS START=======================vvv
-	//TODO Document
+
+	/* (non-Javadoc)
+	 * @see org.lsmr.vending.hardware.DeliveryChuteListener#itemDelivered(org.lsmr.vending.hardware.DeliveryChute)
+	 */
 	@Override
 	public void itemDelivered(DeliveryChute chute) {
 		mgr.log("PopCan delivered to the Delivery Chute");
@@ -109,7 +112,7 @@ public class PopListener extends VendingListener implements PopCanRackListener, 
 	/*
 	 * Handles the "notifyDoorClosed" event from the registered deliveryChute
 	 * If there is room in the chute then keep the safety off
-	 * 
+	 *
 	 */
 	@Override
 	public void doorClosed(DeliveryChute chute) {
@@ -121,12 +124,12 @@ public class PopListener extends VendingListener implements PopCanRackListener, 
 	/*
 	 * Handles the "notifyChuteFull" event from the registered deliveryChute
 	 * In the case that the chute is full, enable the safety of the machine
-	 * 
+	 *
 	 */
 	@Override
 	public void chuteFull(DeliveryChute chute) {
 		mgr.log("Delivery chute full");
 		mgr.enableSafety();
 	}
-//^^^=======================DELIVERY CHUTE LISTENER METHODS END=======================^^^		
+//^^^=======================DELIVERY CHUTE LISTENER METHODS END=======================^^^
 }

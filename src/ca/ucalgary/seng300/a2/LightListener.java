@@ -9,7 +9,7 @@ public class LightListener extends VendingListener implements IndicatorLightList
 
 	protected static LightListener listener;
 	protected static VendingManager mgr;
-	
+
 	protected LightListener(){}
 
 	/**
@@ -29,9 +29,12 @@ public class LightListener extends VendingListener implements IndicatorLightList
 	static LightListener getInstance(){
 		return listener;
 	}
-	
+
 //vvv=======================INDICATOR LIGHT LISTENER METHODS START=======================vvv
-	//TODO Document
+
+	/* (non-Javadoc)
+	 * @see org.lsmr.vending.hardware.IndicatorLightListener#activated(org.lsmr.vending.hardware.IndicatorLight)
+	 */
 	@Override
 	public void activated(IndicatorLight light) {
 		String message;
@@ -44,7 +47,9 @@ public class LightListener extends VendingListener implements IndicatorLightList
 		mgr.log(message);
 	}
 
-	//TODO Document
+	/* (non-Javadoc)
+	 * @see org.lsmr.vending.hardware.IndicatorLightListener#deactivated(org.lsmr.vending.hardware.IndicatorLight)
+	 */
 	@Override
 	public void deactivated(IndicatorLight light) {
 		String message;
