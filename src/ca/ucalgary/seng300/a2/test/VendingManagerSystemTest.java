@@ -281,6 +281,7 @@ public class VendingManagerSystemTest {
 	}
 
 	/*
+	 * 
 	 * tests that if there is no change added to the machine
 	 * exact change state returns false
 	 *
@@ -302,10 +303,9 @@ public class VendingManagerSystemTest {
 	}
 
 	/*
-	 * TODO figure out why its not returning false as it should be
 	 *
-	 *
-	 * test low credit that can return exact change on a purchase
+	 * Test that with a low amount of coins
+	 * in the coin rack we can return exact change on a purchase
 	 * then cannot return exact change on the next purchase
 	 */
 	@Test
