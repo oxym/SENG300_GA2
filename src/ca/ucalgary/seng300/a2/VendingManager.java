@@ -44,12 +44,15 @@ public class VendingManager {
 	private static ButtonListener buttonListener;
 	private static CoinListener coinListener;
 	private static LightListener lightListener;
+	private static MachineLockListener lockListener;
 
 	private static Logger eventLog;
 	private static String eventLogName = "VendingLog.txt";
 
 	private int credit = 0;
 	private static String currency = "CAD";
+
+	private static Lock lock;
 
 
 //vvv=======================SETUP START=======================vvv
@@ -61,11 +64,15 @@ public class VendingManager {
 	private VendingManager(){
 		eventLog = new Logger(eventLogName);
 
+		//setup lock
+		lock = new Lock();
+
 		displayListener = new DispListener(this);
 		buttonListener = ButtonListener.initialize(this);
 		popListener = PopListener.initialize(this);
 		lightListener = LightListener.initialize(this);
 		coinListener = CoinListener.initialize(this);
+		lockListener = MachineLockListener.initialize(this);
 
 		registerListeners();
 
@@ -112,9 +119,7 @@ public class VendingManager {
 		getExactChangeLight().register(lightListener);
 
 		registerButtonListener(buttonListener);
-
-		//TODO implement Lock
-		//getLock().register(listener)
+		registerLockListener(lockListener);
 	}
 
 	/**
@@ -151,6 +156,14 @@ public class VendingManager {
 		for (int i = 0; i< rackCount; i++){
 			getPopCanRack(i).register(listener);;
 		}
+	}
+
+	/**
+	 * Registers the lock listener
+	 * @param lockListener the listener corresponding to the lock
+	 */
+	private void registerLockListener(MachineLockListener lockListener) {
+		getLock().register(lockListener);
 	}
 //^^^=======================SETUP END=======================^^^
 
@@ -211,6 +224,9 @@ public class VendingManager {
 	}
 	Display getDisplay(){
 		return vm.getDisplay();
+	}
+	Lock getLock() {
+		return lock;
 	}
 
 	/**
@@ -308,8 +324,7 @@ public class VendingManager {
 	 * not be relayed to the hardware.
 	 */
 	void disableSafety(){
-		//TODO Add more conditions; should not disable if something is still wrong
-		if (isSafetyEnabled())
+		if (isSafetyEnabled() && !isOutOfOrder() && !lockListener.isLocked())
 			log("Safety disabled");
 			vm.disableSafety();
 	}

@@ -7,9 +7,11 @@ import org.lsmr.vending.hardware.*;
  */
 public class MachineLockListener extends VendingListener implements LockListener{
 
+	private boolean isLocked;
+
 	protected static MachineLockListener listener;
 	protected static VendingManager mgr;
-	
+
 	protected MachineLockListener(){}
 
 	/**
@@ -29,7 +31,7 @@ public class MachineLockListener extends VendingListener implements LockListener
 	static MachineLockListener getInstance(){
 		return listener;
 	}
-	
+
 //vvv=======================LOCK LISTENER METHODS START=======================vvv
 	/**
 	 * Handles the "locked" event from the registered Lock.
@@ -38,6 +40,7 @@ public class MachineLockListener extends VendingListener implements LockListener
 	@Override
 	public void locked(Lock lock) {
 		mgr.disableSafety();
+		isLocked = true;
 	}
 
 	/**
@@ -47,6 +50,16 @@ public class MachineLockListener extends VendingListener implements LockListener
 	@Override
 	public void unlocked(Lock lock) {
 		mgr.enableSafety();
+		isLocked = false;
+	}
+
+	/**
+	 * Returns the status of the lock
+	 *
+	 * @return status if hardware lock is locked
+	 */
+	public boolean isLocked() {
+		return isLocked;
 	}
 //^^^=======================LOCK LISTENER METHODS END=======================^^^
 }
