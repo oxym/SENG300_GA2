@@ -132,7 +132,7 @@ public class DisplayDriver {
 	/**
 	 * Set the cycle timer on the
 	 *
-	 * @param seconds
+	 * @param duration
 	 */
 	public void setGreetingCycleTime(int duration, int cycleTime) {
 		greetingDuration = duration;

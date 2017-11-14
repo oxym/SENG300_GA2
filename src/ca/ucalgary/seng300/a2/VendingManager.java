@@ -8,19 +8,19 @@ import java.io.FileNotFoundException;
 
 /**
  * VendingManager is the primary access-point for the logic controlling the
- * VendingMachine hardware. 
+ * VendingMachine hardware.
  *
  * USAGE: Pass VendingMachine to static method initialize(), which returns the singleton instance
  * Later, you can use getInstance() to get the existing instance. Listeners are registered automatically.
  *
- * DESIGN: All listeners except DispListiner are designed as singletons. 
+ * DESIGN: All listeners except DispListiner are designed as singletons.
  * Currently, the only public-access methods are for initialization. This was done to enforce
- * strong encapsulation of the logic classes in an attempt to prevent misuse. 
- * 
+ * strong encapsulation of the logic classes in an attempt to prevent misuse.
+ *
  *
  * LAYOUT:
  * 	SETUP: Sets up the VendingManager and related classes
- * 	HARDWARE ACCESSORS: Methods to get hardware instances or information about them 
+ * 	HARDWARE ACCESSORS: Methods to get hardware instances or information about them
  * 	HARDWARE ACTIONS: Methods to interact with the hardware in some way
  * 	LOGIC INTERNALS: Methods that do not modify the hardware directly
  *
@@ -38,16 +38,16 @@ public class VendingManager {
 	private static VendingManager mgr;
 	private static VendingMachine vm;
 	private static DisplayDriver displayDriver;
-	
+
 	private static DispListener displayListener;
 	private static PopListener popListener;
 	private static ButtonListener buttonListener;
 	private static CoinListener coinListener;
 	private static LightListener lightListener;
-	
+
 	private static Logger eventLog;
 	private static String eventLogName = "VendingLog.txt";
-	
+
 	private int credit = 0;
 	private static String currency = "CAD";
 
@@ -60,24 +60,24 @@ public class VendingManager {
 	 */
 	private VendingManager(){
 		eventLog = new Logger(eventLogName);
-		
+
 		displayListener = new DispListener(this);
 		buttonListener = ButtonListener.initialize(this);
 		popListener = PopListener.initialize(this);
 		lightListener = LightListener.initialize(this);
 		coinListener = CoinListener.initialize(this);
-		
+
 		registerListeners();
-		
+
 		displayDriver = new DisplayDriver(getDisplay());
 		displayDriver.greetingMessage();
-		
+
 		if (isOutOfOrder()) enableSafety();
 	}
 
 	/**
 	 * Replaces the existing singleton instances (if any) for the entire
-	 * the Vending logic package. 
+	 * the Vending logic package.
 	 * @param host The VendingMachine which the VendingManager is intended to manage.
 	 */
 	public static VendingManager initialize(VendingMachine host){
@@ -99,22 +99,22 @@ public class VendingManager {
 	 */
 	private void registerListeners(){
 		getDisplay().register(displayListener);
-		
+
 		registerPopCanRackListener(popListener);
 		getDeliveryChute().register(popListener);
-		
+
 		getCoinSlot().register(coinListener);
 		getCoinReceptacle().register(coinListener);
 		registerCoinRackListener(coinListener);
-		getCoinReturn().register(coinListener);		
-		
+		getCoinReturn().register(coinListener);
+
 		getOutOfOrderLight().register(lightListener);
 		getExactChangeLight().register(lightListener);
-		
+
 		registerButtonListener(buttonListener);
 
 		//TODO implement Lock
-		//getLock().register(listener)		
+		//getLock().register(listener)
 	}
 
 	/**
@@ -128,7 +128,7 @@ public class VendingManager {
 			getSelectionButton(i).register(listener);;
 		}
 	}
-	
+
 	/**
 	 * Iterates through all coin racks in the VendingMachine and
 	 * registers a single listener with each.
@@ -140,7 +140,7 @@ public class VendingManager {
 			getCoinRack(i).register(listener);;
 		}
 	}
-	
+
 	/**
 	 * Iterates through all pop can racks in the VendingMachine and
 	 * registers a single listener with each.
@@ -212,7 +212,7 @@ public class VendingManager {
 	Display getDisplay(){
 		return vm.getDisplay();
 	}
-	
+
 	/**
 	 * Returns the index of the given SelectionButton,
 	 * which implies the index of the associated PopRack.
@@ -231,7 +231,7 @@ public class VendingManager {
 
 	/**
 	 * Returns the index of the given PopCanRack.
-	 * @param poprack The PopCanRack of interest.
+	 * @param popRack The PopCanRack of interest.
 	 * @return The matching index, or -1 if no match.
 	 */
 	int getPopCanRackIndex(PopCanRack popRack){
@@ -243,7 +243,7 @@ public class VendingManager {
 		}
 		return -1;
 	}
-	
+
 	/**
 	  * Returns the name pop in the given PopCanRack.
 	 * @param popRack The PopCanRack to check the name for.
@@ -313,7 +313,7 @@ public class VendingManager {
 			log("Safety disabled");
 			vm.disableSafety();
 	}
-	
+
 	/**
 	 * Handles a pop purchase. Checks if the pop rack has pop, confirms funds available,
 	 *  dispenses the pop, reduces available funds and deposits the added coins into storage.
@@ -372,7 +372,7 @@ public class VendingManager {
 			}
 		}
 	}
-	
+
 	/**
 	 * Convenience method to display a message from other logic classes.
 	 * @param msg The message to be displayed.
@@ -396,7 +396,7 @@ public class VendingManager {
 	void displayCredit() {
 		display(getCreditMessage());
 	}
-	
+
 //^^^======================HARDWARE LOGIC END=======================^^^
 
 //vvv======================LOGIC INTERNALS START=======================vvv
@@ -411,13 +411,13 @@ public class VendingManager {
 
 	/**
 	 * Subtracts value to the tracked credit.
-	 * @param added The credit to add, in cents.
+	 * @param subtracted The credit to add, in cents.
 	 */
 	void subtractCredit(int subtracted){
 		credit -= subtracted;
 		log("Credit removed:" + subtracted);
 	}
-	
+
 	/**
 	 * Returns a formatted string to display credit.
 	 * @return The formatted credit string.
@@ -437,10 +437,10 @@ public class VendingManager {
 
 		return message;
 	}
-	
+
 
 	/**
-	 * Takes the coin values inside the machine and sorts them in 
+	 * Takes the coin values inside the machine and sorts them in
 	 * descending order for the purpose of change return
 	 * @return coins denominations in descending order as an array
 	 */
@@ -523,7 +523,7 @@ public class VendingManager {
 
 		return exact;
 	}
-	
+
 	/**
 	 * Checks if all of the pop racks are empty.
 	 * @return True if all are empty, else false
@@ -541,7 +541,7 @@ public class VendingManager {
 
 		return empty;
 	}
-	
+
 	/**
 	 * Checks the machine state to determine whether it is out of order.
 	 * Checks the status of the delivery chute, coin receptacle, and inventory.
@@ -558,12 +558,12 @@ public class VendingManager {
 		}
 		return response;
 	}
-	
+
 	/**
 	 * Provides a simplified interface for the Logger.log() methods.
 	 * See details in ca.ucalgary.seng300.a2.Logger.
 	 *
-	 * @param msgs String array of events to log. None can be null or empty.
+	 * @param msg String of event to log. None can be null or empty.
 	 */
 	void log(String msg){
 		try{
@@ -604,7 +604,7 @@ public class VendingManager {
 //		getCoinReceptacle().returnCoins();
 //		//TODO Decide where it would be best to handle credit adjustment
 //		// e.g. in listener method for CoinReturn coinDelivered()?
-//		
+//
 //
 //	}
 //^^^======================LOGIC INTERNALS END=======================^^^
