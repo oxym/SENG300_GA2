@@ -328,6 +328,13 @@ public class VendingManagerSystemTest {
 
 		assertEquals(1, machine.getDeliveryChute().size());
 
+		//insert 3 dollars more and check
+		for (int i = 0; i < 3; i++) { // Adds three dollars to the machine
+			try {
+				machine.getCoinSlot().addCoin(coin);
+			} catch (DisabledException e) {
+			}
+		}
 
 		assertEquals(false, manager.checkExactChangeState());
 
