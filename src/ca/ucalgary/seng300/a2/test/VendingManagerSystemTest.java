@@ -179,16 +179,16 @@ public class VendingManagerSystemTest {
 		assertEquals(0, delivered.length);
 		assertEquals(0, manager.getCredit());
 	}
-	
+
 	/**
 	 * tests that safety is enabled when machine runs out of pop
 	 */
 	@Test
 	public void testNoPopLeftEnableSafety() {
-		
+
 		machine.loadPopCans(1, 0, 0, 0, 0, 0);
 		machine.loadCoins(10, 10, 10, 10, 10);
-		
+
 		Coin coin = new Coin(100);
 		for (int i = 0; i < 3; i++) { // Adds three dollars to the machine
 			try {
@@ -196,24 +196,24 @@ public class VendingManagerSystemTest {
 			} catch (DisabledException e) {
 			}
 		}
-		
+
 		machine.getSelectionButton(0).press();
-		
+
 		assertTrue(machine.isSafetyEnabled());
 		assertTrue(machine.getOutOfOrderLight().isActive());
 		assertEquals(machine.getDeliveryChute().size(), 1);
-		
+
 	}
-	
+
 	/**
 	 * tests that safety does not enable if only one pop type is empty
 	 */
 	@Test
 	public void testOutOfOnePopType() {
-		
+
 		machine.loadPopCans(0, 10, 10, 10, 10, 10);
 		machine.loadCoins(10, 10, 10, 10, 10);
-		
+
 		Coin coin = new Coin(100);
 		for (int i = 0; i < 3; i++) { // Adds three dollars to the machine
 			try {
@@ -221,35 +221,35 @@ public class VendingManagerSystemTest {
 			} catch (DisabledException e) {
 			}
 		}
-		
+
 		machine.getSelectionButton(0).press();
-		
+
 		assertFalse(machine.isSafetyEnabled());
 		assertFalse(machine.getOutOfOrderLight().isActive());
-		
+
 	}
-	
+
 	/**
 	 * test that disabledException is thrown when a coin is inserted and safety is enabled
-	 * 
+	 *
 	 * @throws DisabledException
 	 */
 	@Test (expected = DisabledException.class)
 	public void testAddCoinSafetyEnabled() throws DisabledException {
-		
+
 		machine.enableSafety();
-		
+
 		assertTrue(machine.getOutOfOrderLight().isActive());
-		
+
 		Coin coin = new Coin(100);
 		machine.getCoinSlot().addCoin(coin);
-		
+
 	}
-	
+
 	/**
 	 * tests that safety is enabled when coinReceptacle reaches capacity
 	 * should throw a disabled exception when the final coin is added, since safety will be enabled
-	 * 
+	 *
 	 * @throws DisabledException
 	 */
 	@Test (expected = DisabledException.class)
@@ -260,25 +260,80 @@ public class VendingManagerSystemTest {
 			machine.getCoinSlot().addCoin(quarter);
 		}
 
-		
+
 		machine.getCoinSlot().addCoin(quarter);
-		
+
 	}
-	
+
 	/**
 	 * tests that pop is not delivered to the chute when a button is pressed if machine is disabled
-	 * 
+	 *
 	 * @throws EmptyException
 	 */
 	@Test
 	public void testPopRequestWhenDisabled() throws EmptyException {
-		
+
 		machine.loadPopCans(0, 10, 10, 10, 10, 10);
 		machine.enableSafety();
-		
+
 		machine.getSelectionButton(0).press();
 		assertEquals(machine.getDeliveryChute().size(), 0);
 	}
+
+	/*
+	 * tests that if there is no change added to the machine
+	 * exact change state returns false
+	 *
+	 */
+	@Test
+	public void testExactChangeForPurchase() {
+
+		machine.loadCoins(0, 0, 0, 0, 0);
+
+		Coin coin = new Coin(100);
+		for (int i = 0; i < 3; i++) { // Adds three dollars to the machine
+			try {
+				machine.getCoinSlot().addCoin(coin);
+			} catch (DisabledException e) {
+			}
+		}
+
+		assertEquals(false, manager.checkExactChangeState());
+	}
+
+	/*
+	 * TODO figure out why its not returning false as it should be
+	 *
+	 *
+	 * test low credit that can return exact change on a purchase
+	 * then cannot return exact change on the next purchase
+	 */
+	@Test
+	public void testLowChangeThenNotEnoughForExact() throws CapacityExceededException, EmptyException, DisabledException {
+		machine.loadPopCans(10, 10, 10, 10, 10, 10);
+		machine.loadCoins(0, 0, 2, 0, 0);
+
+		Coin coin = new Coin(100);
+		for (int i = 0; i < 3; i++) { // Adds three dollars to the machine
+			try {
+				machine.getCoinSlot().addCoin(coin);
+			} catch (DisabledException e) {
+			}
+		}
+
+		assertEquals(true, manager.checkExactChangeState());
+
+
+		machine.getSelectionButton(0).press();
+
+		assertEquals(1, machine.getDeliveryChute().size());
+
+
+		assertEquals(false, manager.checkExactChangeState());
+
+
+	}
+
 
 
 	////////////////////////////////////////////////////////////////////////
@@ -306,8 +361,8 @@ public class VendingManagerSystemTest {
 			assertEquals(testMessage, testDisplayListener.getCurrentMessage());
 		}
 	}
-	
-	
+
+
 //	@Test
 //	public void testGetRefund() throws CapacityExceededException, DisabledException	{
 //		Coin coin = new Coin(100);
