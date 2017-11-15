@@ -118,8 +118,9 @@ public class VendingManager {
 		getOutOfOrderLight().register(lightListener);
 		getExactChangeLight().register(lightListener);
 
-		registerButtonListener(buttonListener);
-		registerLockListener(lockListener);
+		getLock().register(lockListener);
+		
+		registerButtonListener(buttonListener);		
 	}
 
 	/**
@@ -158,13 +159,6 @@ public class VendingManager {
 		}
 	}
 
-	/**
-	 * Registers the lock listener
-	 * @param lockListener the listener corresponding to the lock
-	 */
-	private void registerLockListener(MachineLockListener lockListener) {
-		getLock().register(lockListener);
-	}
 //^^^=======================SETUP END=======================^^^
 
 	// Accessors used throughout the vending logic classes to get hardware references.
