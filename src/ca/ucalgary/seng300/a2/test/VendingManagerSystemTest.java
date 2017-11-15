@@ -302,9 +302,6 @@ public class VendingManagerSystemTest {
 	}
 
 	/*
-	 * TODO figure out why its not returning false as it should be
-	 *
-	 *
 	 * test low credit that can return exact change on a purchase
 	 * then cannot return exact change on the next purchase
 	 */
@@ -341,7 +338,32 @@ public class VendingManagerSystemTest {
 
 	}
 
+	////////////////////////////////////////////////////////////////////////
+	// Test Delivery Chute
+	////////////////////////////////////////////////////////////////////////
 
+
+	@Test
+	public void testDeliveryChuteOverflow() throws DisabledException {
+
+		//Initialize a new
+		List<String> popCanNames = Arrays.asList("Coke", "Sprite", "Crush", "Ale", "Pepsi", "Diet");
+		List<Integer> popCanCosts = Arrays.asList(250, 250, 250, 250, 250, 250);
+
+		machine = new VendingMachine(coinKinds, 5, 10, 10,	10, 1, 10);
+		machine.configure(popCanNames, popCanCosts);
+
+		manager = VendingManager.initialize(machine);
+
+		machine.loadPopCans(10, 10, 10, 10, 10, 10);
+
+
+		assertFalse(machine.getOutOfOrderLight().isActive());		//check safety enabled
+
+		buyPopExactChange(1);
+
+
+	}
 
 	////////////////////////////////////////////////////////////////////////
 	// Test Display
@@ -397,6 +419,18 @@ public class VendingManagerSystemTest {
 
 	public void userPressButton(int index) throws DisabledException {
 		machine.getSelectionButton(index).press();
+	}
+
+	public void buyPopExactChange(int index) throws DisabledException {
+		Coin coin = new Coin(100);
+		for (int i = 0; i < 3; i++) { // Adds three dollars to the machine
+			try {
+				machine.getCoinSlot().addCoin(coin);
+			} catch (DisabledException e) {
+			}
+		}
+
+		userPressButton(index);
 	}
 
 }
