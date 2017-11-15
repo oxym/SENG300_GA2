@@ -91,23 +91,8 @@ public class VendingManagerSystemTest {
 		assertEquals(0, manager.getCredit());
 	}
 
-	//TODO Document
-	/**
-	 *
-	 * @throws CapacityExceededException
-	 * @throws EmptyException
-	 * @throws DisabledException
-	 */
-	@Test
-	public void testCoinReturn() throws CapacityExceededException, EmptyException, DisabledException{
-		machine.loadCoins(2, 1, 2, 2, 2);
-		Coin coin = new Coin(100);
-		try {
-			machine.getCoinSlot().addCoin(coin);
-		} catch (DisabledException e) {
-		}
-		manager.checkExactChangeState();
-	}
+	
+
 
 	/**
 	 * Tests that the logic is able to handle the case where the selected pop is not
@@ -280,8 +265,7 @@ public class VendingManagerSystemTest {
 		assertEquals(machine.getDeliveryChute().size(), 0);
 	}
 
-	/*
-	 * 
+	/**
 	 * tests that if there is no change added to the machine
 	 * exact change state returns false
 	 *
@@ -302,11 +286,15 @@ public class VendingManagerSystemTest {
 		assertEquals(false, manager.checkExactChangeState());
 	}
 
-	/*
+	/**
 	 *
 	 * Test that with a low amount of coins
 	 * in the coin rack we can return exact change on a purchase
 	 * then cannot return exact change on the next purchase
+	 * 
+	 * @throws CapacityExceededException
+	 * @throws EmptyException
+	 * @throws DisabledException
 	 */
 	@Test
 	public void testLowChangeThenNotEnoughForExact() throws CapacityExceededException, EmptyException, DisabledException {
