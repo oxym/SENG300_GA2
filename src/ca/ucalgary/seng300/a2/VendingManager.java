@@ -64,9 +64,7 @@ public class VendingManager {
 	private VendingManager(){
 		eventLog = new Logger(eventLogName);
 
-		//setup lock
 		lock = new Lock();
-
 		displayListener = new DispListener(this);
 		buttonListener = ButtonListener.initialize(this);
 		popListener = PopListener.initialize(this);

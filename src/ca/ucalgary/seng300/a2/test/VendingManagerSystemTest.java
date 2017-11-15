@@ -232,15 +232,17 @@ public class VendingManagerSystemTest {
 		int[] coinKinds = new int[] { 5, 10, 25, 100, 200 };
 		int coinReturnCapacity = 1;
 		
-		machine = new VendingMachine(coinKinds, popCanNames.size(), 10, 1, 1, 1, coinReturnCapacity);
+		machine = new VendingMachine(coinKinds, popCanNames.size(), 10, 5, 5, 5, coinReturnCapacity);
 		machine.configure(popCanNames, popCanCosts);
+		machine.loadPopCans(1, 1, 1, 1, 1, 1);
+		machine.loadCoins(5, 5, 5, 5, 5);
+		
+		manager = VendingManager.initialize(machine);
 		
 		Coin coin = new Coin(1);
-		
 		machine.getCoinSlot().addCoin(coin);
 		
-		assertEquals(machine.getCoinReturn().isDisabled(),true);
-		
+		assertEquals(true,machine.getCoinSlot().isDisabled());
 	}
 
 	/**
@@ -476,8 +478,6 @@ public class VendingManagerSystemTest {
 			} catch (DisabledException e) {
 			}
 		}
-
 		userPressButton(index);
 	}
-
 }
