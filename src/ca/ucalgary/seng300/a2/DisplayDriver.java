@@ -13,7 +13,7 @@ import java.util.TimerTask;
  */
 public class DisplayDriver {
 
-	private final static boolean TESTING = true;
+	private final static boolean TESTING = false;
 	private final static String MSG_DEFAULT = "Hi there!";
 	private int greetingCycleTime = 15; // in seconds
 	private int greetingDuration = 5; // in seconds
@@ -49,10 +49,7 @@ public class DisplayDriver {
 	public void newMessage(String message) {
 		cancelCycle();
 		display.display(message);
-		if (mgr != null)
-			VendingManager.getInstance().log("Displayed message: " + message);
-		if (TESTING)
-			System.out.println(message);
+		if (TESTING) System.out.println(message);
 	}
 
 	/**

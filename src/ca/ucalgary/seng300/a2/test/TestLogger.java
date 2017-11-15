@@ -7,6 +7,10 @@ import java.io.FileNotFoundException;
 
 import ca.ucalgary.seng300.a2.Logger;
 
+/**
+ * Test suite to test the setup of the Logger class. 
+ *
+ */
 public class TestLogger {
 	
 	/**

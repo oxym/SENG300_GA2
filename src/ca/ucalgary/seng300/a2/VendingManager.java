@@ -33,7 +33,7 @@ import java.io.FileNotFoundException;
  *
  */
 public class VendingManager {
-	private static boolean debug = true;
+	private static boolean debug = false;
 
 	private static VendingManager mgr;
 	private static VendingMachine vm;
