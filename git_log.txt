@@ -1,0 +1,1013 @@
+commit cf5221a77ee8aeda799379b096c5c505e3447e9a
+Author: jasondb <jason@teamdeboer.ca>
+Date:   Tue Nov 14 22:39:16 2017 -0700
+
+    Updated Structural Diagram.
+
+commit a93bc25e4bec8973753402db47e56d7ccc8b1da2
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Tue Nov 14 22:23:12 2017 -0700
+
+    Fixed testOverflowCoinReturn
+
+commit 5e2d61109132862006087f6fe3b778561323cba5
+Author: pauldan24 <32079319+pauldan24@users.noreply.github.com>
+Date:   Tue Nov 14 22:02:24 2017 -0700
+
+    Tests.
+
+commit 32177b337f62336fa6aa3b90898cab9afe2cd546
+Merge: 6c36378 3cdb43a
+Author: jasondb <jason@teamdeboer.ca>
+Date:   Tue Nov 14 20:20:06 2017 -0700
+
+    Merge branch 'active' of https://github.com/Mondaynity/SENG300_GA2.git into active
+
+commit 6c3637856a0a8a7a32b975027b586492d29b638d
+Merge: dec0c9e 45f9486
+Author: jasondb <jason@teamdeboer.ca>
+Date:   Tue Nov 14 20:19:55 2017 -0700
+
+    Merge branch 'Additional_Tests' into active
+
+commit 45f9486ede19a34707cd3b721ccc8b5881af64ef
+Author: jasondb <jason@teamdeboer.ca>
+Date:   Tue Nov 14 20:19:40 2017 -0700
+
+    Update Structural Diagram
+
+commit 3cdb43a921e8b48ab77e92ee254e25db5d914e64
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Tue Nov 14 20:17:51 2017 -0700
+
+    Removed registerLockListener
+
+commit dec0c9e8781c7fd287fbfa081b67350a24d76797
+Merge: f54bf93 9393855
+Author: jasondb <jason@teamdeboer.ca>
+Date:   Tue Nov 14 20:09:46 2017 -0700
+
+    Merge branch 'active' of https://github.com/Mondaynity/SENG300_GA2.git
+    into active
+    
+    Added Delivery Chute Test
+    
+    Conflicts:
+    	src/ca/ucalgary/seng300/a2/test/VendingManagerSystemTest.java
+
+commit f54bf93a480a592bc3c7a18818b8ce01d17faf62
+Author: jasondb <jason@teamdeboer.ca>
+Date:   Tue Nov 14 20:04:54 2017 -0700
+
+    Update Delivery Chute overflow Test.
+
+commit 41bdca10cdb098ac082941d8e6cefe867c6c550d
+Author: olsakova <mikimika@gmail.com>
+Date:   Tue Nov 14 19:48:39 2017 -0700
+
+    Add files via upload
+    
+    Working on abstraction of the UML diagram
+
+commit b80b4ed8f8e55e29d8e7711740a8fd9c322c8522
+Author: jasondb <jason@teamdeboer.ca>
+Date:   Tue Nov 14 19:33:54 2017 -0700
+
+    Update Structural, started DeliveryChute Test
+
+commit 9393855073638f68affaecf2d381c037ff22613e
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Tue Nov 14 19:04:26 2017 -0700
+
+    Disabled debug flags; misc tweaks
+
+commit 8c73ac8345e4293958047e4614c27734c77d9c55
+Author: jasondb <jason@teamdeboer.ca>
+Date:   Tue Nov 14 18:57:34 2017 -0700
+
+    additional test added to TestDisplayDriver to test setGreetingCycle.
+
+commit 5000789d05aad84e89e2540ace11f1187138c9fe
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Tue Nov 14 18:38:28 2017 -0700
+
+    Minor fixes and doc updates
+
+commit 01cfbe92e95c9477086b0f8b622df22b8c7472fa
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Tue Nov 14 18:10:25 2017 -0700
+
+    Minor adjustment to buy()
+
+commit 2be98d0b087a110de513dfd8520b45aff031af24
+Author: pauldan24 <32079319+pauldan24@users.noreply.github.com>
+Date:   Tue Nov 14 17:37:02 2017 -0700
+
+    Removed testCoinReturn() method, comments
+    
+    There is already a test method already for this so I chose to remove it.
+
+commit 6b6750063ff9fc45b2751248ce068003ee63a152
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Tue Nov 14 17:07:06 2017 -0700
+
+    Updated hardware (VendingMachine) to v2.1
+
+commit 5b1b3ac0e370332470198d73e3c1871d75881b39
+Author: pauldan24 <32079319+pauldan24@users.noreply.github.com>
+Date:   Tue Nov 14 16:19:28 2017 -0700
+
+    Fixed a problem with a expected result
+
+commit 48bc9f5b0886429f3fc5c98eb4a4f8be35d7f935
+Author: jasondb <jason@teamdeboer.ca>
+Date:   Tue Nov 14 15:10:56 2017 -0700
+
+    Fixed testLocChangeThenNotEnoughForExact()
+
+commit 7f56eea47f091898f9b4a7f00a82409a39d8c251
+Author: jasondb <jason@teamdeboer.ca>
+Date:   Tue Nov 14 14:54:09 2017 -0700
+
+    updated some TODO's and documentation
+
+commit 0e85c7a0b5dbe4c2935580daf006fea2d58b793e
+Author: jasondb <jason@teamdeboer.ca>
+Date:   Tue Nov 14 14:46:43 2017 -0700
+
+    Coded and implemented the lock. Added conditions to the disable the
+    safety.
+
+commit 26fc2ddee88731734a15380de8890b9abb763e5a
+Author: jasondb <jason@teamdeboer.ca>
+Date:   Tue Nov 14 14:22:53 2017 -0700
+
+    updated structural diagram, javadoc.
+
+commit afa58d8e0ac3d75299a34f9b517bae5518d2128a
+Author: pauldan24 <32079319+pauldan24@users.noreply.github.com>
+Date:   Mon Nov 13 19:40:13 2017 -0700
+
+    Added two test cases
+
+commit 1656cddbf8d1bfcf72bea4a07a551cf49349d279
+Author: Dan <demisangdan@gmail.com>
+Date:   Mon Nov 13 11:30:23 2017 -0700
+
+    added 5 test cases, and comments
+
+commit 95f6c7284c9bfb0eda882251b8dc9483e7116d67
+Author: Dan <demisangdan@gmail.com>
+Date:   Mon Nov 13 01:15:43 2017 -0700
+
+    Added myself as contributor
+
+commit e23cc439cf5c74f4196e553a864241f3aff6659f
+Author: Khesualdo Condori <medvegalapa@gmail.com>
+Date:   Sun Nov 12 21:44:26 2017 -0700
+
+    Added comments to TestLogger.java
+
+commit ca6d24b7e817e24e14c169af4c427e94f7db62a0
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Sun Nov 12 19:35:26 2017 -0700
+
+    Added author
+
+commit 78bb7550b1f448242168f524cd380db8465418ed
+Merge: 02295e5 dc6e1d9
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Sun Nov 12 18:51:01 2017 -0700
+
+    Merge branch 'active' of https://github.com/Mondaynity/SENG300_GA2 into active
+
+commit 02295e57e22c9453e61a49ab9c61ff15ce17b7fd
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Sun Nov 12 18:49:54 2017 -0700
+
+    Resynchronizing
+
+commit c5c2ebe8df7475a5512d2ede541fd6180b2ba959
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Sun Nov 12 18:30:22 2017 -0700
+
+    Last round of adjustments
+
+commit cc4e2c9c7d5adb8d120d54e7a3492b18df8137b7
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Sun Nov 12 17:27:32 2017 -0700
+
+    Listener adjustments
+    
+    Modified DispListener to be more similar to the other listeners. Removed
+    its state field, since the hardware itself should be checked instead.
+
+commit 9598bf5c168c235a562e1ad3318b13b798bd4472
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Sun Nov 12 16:55:52 2017 -0700
+
+    [Major] Refactored VendingListener
+    
+    New listener classes: PopListener, CoinListener, ButtonListener,
+    MachineLockListener, LightListener.
+    
+    VendingListener is a superclass for all of the new classes.
+
+commit dc6e1d91f1d1f60828dc9a05798ccf654d4f0d4e
+Merge: b8b798f 010b91e
+Author: jasondb <jason@teamdeboer.ca>
+Date:   Sun Nov 12 16:10:05 2017 -0700
+
+    Merge branch 'active' of https://github.com/Mondaynity/SENG300_GA2 into active
+
+commit b8b798f429721b1a85324013f5fe79f0bc5e8814
+Author: jasondb <jason@teamdeboer.ca>
+Date:   Sun Nov 12 16:09:39 2017 -0700
+
+    Updated state_diagram
+
+commit 010b91ee0faf5b0dc3a325695d910ab5532b8620
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Sun Nov 12 16:08:07 2017 -0700
+
+    Modified displayCredit()
+
+commit af4a3df60acc68eb53efaca09d995aeba59a5165
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Sun Nov 12 16:06:51 2017 -0700
+
+    Reorganization of methods
+    
+    See class doc for information on layout.
+
+commit bb40d2a7cb03a144a487facc86557d3cd55a1817
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Sun Nov 12 15:02:38 2017 -0700
+
+    Misc. adjustments
+    
+    [Removed] Stub method returnCoin()
+
+commit be753cfca88841e8c5b8f3cf1f20ca063bf8012d
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Sun Nov 12 12:19:45 2017 -0700
+
+    [Added] File size limiting
+    
+    Currently unused. Use limitFileSize(boolean) to enable. When enabled,
+    when a Logger instance is created its filename will have the date and
+    time added before the file extension, if present.
+
+commit 322d6eaac5c7aa8f50f189225e6709f0bd3e0784
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Sun Nov 12 11:48:45 2017 -0700
+
+    Doc fixes
+
+commit dead5b4dd7938d6151a689a7b168c31a95ea879f
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Sun Nov 12 11:33:44 2017 -0700
+
+    Made Logger constructor and log() public
+
+commit 0fde736aa5ab4a6771d7f719bc216a7f404b6e08
+Merge: 7a18974 cae3e8b
+Author: jasondb <jason@teamdeboer.ca>
+Date:   Sat Nov 11 16:53:06 2017 -0700
+
+    Merge branch 'diagrams' into active
+
+commit cae3e8b78b9ae4c5de3b3f84380657f44c7ebd79
+Author: jasondb <jason@teamdeboer.ca>
+Date:   Sat Nov 11 16:52:11 2017 -0700
+
+    Added Structural uml, some documentation added to VendingManager,
+    Documentation added to DisplayDriver, and changed vm to mgr to be
+    consistent with package.
+
+commit 7a1897472b10fb368192a41507c3c6b851ec81f8
+Author: Dan <demisangdan@gmail.com>
+Date:   Sat Nov 11 16:16:27 2017 -0700
+
+    logging added to coin return listener, added comments
+
+commit 28c7120f8026d620dbdfdd0515b77b11b2d68814
+Author: pauldan24 <32079319+pauldan24@users.noreply.github.com>
+Date:   Sat Nov 11 16:08:19 2017 -0700
+
+    Test on refund button presses/finished refund button pressed
+
+commit df284947d39687fcae30ba9cad1630a72e1e39e1
+Author: jasondb <jason@teamdeboer.ca>
+Date:   Sat Nov 11 15:42:08 2017 -0700
+
+    Structural Diagram Rough
+
+commit 624c9f5f3ac2f5b414c8409aa022ab43372c72bb
+Author: pauldan24 <32079319+pauldan24@users.noreply.github.com>
+Date:   Sat Nov 11 09:06:39 2017 -0700
+
+    Added part of Refund Button Pressed
+
+commit 5cd0a8f8edc3b206c4b7ccfd218efd04468bb4d0
+Author: Dan <demisangdan@gmail.com>
+Date:   Fri Nov 10 16:02:27 2017 -0700
+
+    added myself as author
+
+commit 191cd4625b133e34e9a383b297ee2444e089ad08
+Author: Dan <demisangdan@gmail.com>
+Date:   Fri Nov 10 15:55:11 2017 -0700
+
+    Add files via upload
+
+commit 6ce60d705fb63f08af63c84cc001861b286c160e
+Author: Khesualdo Condori <medvegalapa@gmail.com>
+Date:   Fri Nov 10 15:38:48 2017 -0700
+
+    Rename TestLogger to TestLogger.java
+
+commit 8a613e237c882addbf47ebfc184107d3d7ea7ea5
+Author: Khesualdo Condori <medvegalapa@gmail.com>
+Date:   Fri Nov 10 15:38:29 2017 -0700
+
+    Added tester for Logger
+
+commit 3ab39b522d9d57436198c3b8c859e8759e737464
+Author: Khesualdo Condori <medvegalapa@gmail.com>
+Date:   Fri Nov 10 15:37:38 2017 -0700
+
+    Changes to if-else block logic
+
+commit f8812bda17e4bf6c042fdcf2a072f21e6f835a7e
+Author: pauldan24 <32079319+pauldan24@users.noreply.github.com>
+Date:   Thu Nov 9 17:38:26 2017 -0700
+
+    Added myself as a contributor
+
+commit 95ddc88f5f1e44358fd8524cc27a314025741a9e
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Thu Nov 9 09:57:56 2017 -0700
+
+    [Temporary change] initialized coinReturn in VendingMachine
+
+commit bee4fbe306c6570e09015657dec0aaac5b2055c6
+Merge: 0b5b1d0 82207d4
+Author: pauldan24 <32079319+pauldan24@users.noreply.github.com>
+Date:   Tue Nov 7 21:38:19 2017 -0700
+
+    Merge pull request #8 from Mondaynity/paul2
+    
+    Paul2
+
+commit 82207d4f6e7fb6b04d300e07f1d3943da15c03c0
+Author: pauldan24 <32079319+pauldan24@users.noreply.github.com>
+Date:   Tue Nov 7 21:35:54 2017 -0700
+
+    Retrying to push comments from earlier.
+
+commit 69e8e73913401c291b51fe98a50bf1efdae24e31
+Merge: f754706 0b5b1d0
+Author: pauldan24 <32079319+pauldan24@users.noreply.github.com>
+Date:   Tue Nov 7 21:27:46 2017 -0700
+
+    Merge pull request #7 from Mondaynity/active
+    
+    Active
+
+commit 0b5b1d0dd0a151a137ca303289d7a469b434d6e5
+Author: jasondb <jason@teamdeboer.ca>
+Date:   Tue Nov 7 19:37:34 2017 -0700
+
+    New hardware
+
+commit 9826f5ac2454f2cf568e6a251c74347a81a965e6
+Author: jasondb <jason@teamdeboer.ca>
+Date:   Tue Nov 7 17:35:40 2017 -0700
+
+    fixed most of the broken tests in VendingMnagerSystemTest
+
+commit 87d5ea3607b14d6c9df66fac3bdf8f646742b974
+Merge: bea48c6 ebe6afd
+Author: jasondb <jason@teamdeboer.ca>
+Date:   Tue Nov 7 17:02:19 2017 -0700
+
+    Merge branch 'jason' into active,
+    fixed bugs in TestDispDriver
+    
+    Conflicts:
+    	src/ca/ucalgary/seng300/a2/VendingListener.java
+    	src/ca/ucalgary/seng300/a2/VendingManager.java
+
+commit ebe6afdb36d383ec0c8817b2d40576a94c668c4d
+Author: jasondb <jason@teamdeboer.ca>
+Date:   Tue Nov 7 16:41:58 2017 -0700
+
+    Added, state diagram, added initial out of order checking to
+    VendingManager, minor updates to listener and manager
+
+commit bea48c62707c8aca6a2155fa1df7139775a9bdb7
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Tue Nov 7 15:50:23 2017 -0700
+
+    Fixed syntax issues. Everything compiles but tests may fail.
+
+commit 9c2b7a10341011d3c57be5ea1928656511245d8d
+Merge: f754706 1534b9e
+Author: T Co <mondayne@outlook.com>
+Date:   Tue Nov 7 15:39:48 2017 -0700
+
+    Merge pull request #6 from Mondaynity/thomas
+    
+    [Major] Adding hardware changes
+
+commit 1534b9e343bd17dec51d309c6f472a6824fcd216
+Merge: 3daecaf 2137adf
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Tue Nov 7 15:36:59 2017 -0700
+
+    Merge branch 'active' into thomas
+
+commit 2137adf4abca0d2b09efd0d17ee199fadaa20863
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Tue Nov 7 15:36:03 2017 -0700
+
+    Addition of changed hardware
+
+commit f75470602a37acfda537bf64477b3105a64552af
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Sat Nov 4 21:07:50 2017 -0600
+
+    Removed unneeded dependencies
+
+commit d185fd3ce836eeee29107a296796e67b99f7f6dc
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Sat Nov 4 21:05:21 2017 -0600
+
+    Removed TODO
+
+commit b180f10c1570f85e279d5f788c5055f4bb68f5ce
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Sat Nov 4 21:02:57 2017 -0600
+
+    Obliterated 2 misplaced tabs
+
+commit eb1b53e23828100016e049018e13a132b31c9406
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Sat Nov 4 21:00:16 2017 -0600
+
+    Implemented popCanAdded(...)
+
+commit 460c12df2d032429df6dd879f39cb9605d35223a
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Sat Nov 4 20:51:47 2017 -0600
+
+    Finalizing work and making sure tests don't fail.
+
+commit f5e1e8d9c3f0c742369fc7bcadfda44604749f71
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Sat Nov 4 20:10:41 2017 -0600
+
+    Changed how DisplayMessageTasks are created and used
+
+commit 07cbadce26f922fb35c7c05e615336cb567bdce3
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Sat Nov 4 19:50:57 2017 -0600
+
+    Mostly related to logging and implementing more listeners.
+
+commit 61db56f30d541a08753ac8b96e4e19cb37ac3fe0
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Sat Nov 4 18:54:31 2017 -0600
+
+    Added some calls to the eventLogger
+
+commit 1866b48b0f1f7d15ee1296fd4ced9bd2f92e209c
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Sat Nov 4 18:37:53 2017 -0600
+
+    Made tasks in system test to adjust for change return
+
+commit 71d7feb4efb88ce349be4a08b9ca791794175157
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Sat Nov 4 18:35:33 2017 -0600
+
+    Major overhaul of DisplayDriver to ensure a message is always displayed.
+    
+    Removed inner class dedicated to "clear" messages.
+    
+    Removed test: testNewMessageDurationNoGreeting() since the intended
+    behaviour should never have a permanently blanked screen. The idle state
+    should be "greeting" or "show credit".
+    
+    Several other changes but I wasn't prudent enough to write them down as
+    they happened. Sorry!
+
+commit 881254225c70cbc46e9de89cf98a0aedfc0172bd
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Sat Nov 4 16:57:08 2017 -0600
+
+    Small adjustments
+
+commit 66e89420698df66856d71c413b6927cec425b527
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Sat Nov 4 16:56:20 2017 -0600
+
+    Integrated change return code
+    
+    Two main features have been added: change is returned by
+    VendingManager.buy() and, each time a valid coin is added, we evaluate
+    whether exact change could be returned for each possible purchase. The
+    latter is completed in VendingListener.validCoinInserted().
+
+commit 6c680187739e4465f643e780e63bd90cf7f2915e
+Author: T Co <mondayne@outlook.com>
+Date:   Sat Nov 4 15:43:29 2017 -0600
+
+    Update .gitignore
+
+commit 0d8376b5efce62f782bb928df4f22661ccadaecf
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Sat Nov 4 15:43:04 2017 -0600
+
+    Change: Console spam conditional on debug flag
+
+commit 1ad47e9a4c43f448bdfb961542f13b797e37dc1d
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Sat Nov 4 15:39:48 2017 -0600
+
+    Bugfix: addCredit() logging
+
+commit 09684cc692ff0aa65d7a6f3d2207976fd212dba7
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Sat Nov 4 15:37:39 2017 -0600
+
+    Stray curly bracket destroyed.
+
+commit 3f90539ada519f09907fce2ee14db22c9f8c82f4
+Merge: bba071c 2c0d13d
+Author: Michaela <mikimika@gmail.com>
+Date:   Sat Nov 4 15:33:10 2017 -0600
+
+    Merge branch 'michaela' into active
+    
+    Conflicts:
+    	src/ca/ucalgary/seng300/a2/VendingManager.java
+
+commit bba071ca4d9fe38a46c282af910ff6627e2c8507
+Author: Khesualdo Condori <medvegalapa@gmail.com>
+Date:   Sat Nov 4 15:00:53 2017 -0600
+
+    Added myself to @authors
+
+commit 2c0d13dde1c1bf89cf916120fee7d817b81a49e3
+Author: Michaela <mikimika@gmail.com>
+Date:   Sat Nov 4 14:46:52 2017 -0600
+
+    indicator light
+
+commit 59f7e42fb6563b10ab7d93080eadbed9571aba73
+Author: Michaela <mikimika@gmail.com>
+Date:   Sat Nov 4 14:45:50 2017 -0600
+
+    Minor edits and including the activation of an indicator light.
+
+commit 0227ef58d485dc24e035505fe40e263ca6e74bed
+Author: Michaela <mikimika@gmail.com>
+Date:   Sat Nov 4 14:39:04 2017 -0600
+
+    Adding a returnChange function that gives back change and a
+    canReturnChange that checks if returning change is possible (but doesnt
+    update the state). TODO: Include turning on of indicator light, and
+    comparing change to purchase prices
+
+commit 17f660a4c5f804dd46d9da6b536a57b8e5395509
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Sat Nov 4 13:33:40 2017 -0600
+
+    Misc. refinements
+
+commit 7de709cc726e26b065379f064d95c33b0985884a
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Sat Nov 4 13:27:40 2017 -0600
+
+    Adjusted log(String[]) and safety toggle methods.
+
+commit 7f26dab5a607f2bc89d5b7ab48d384bf5d525bd0
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Sat Nov 4 13:12:57 2017 -0600
+
+    Fixed bad logic for locked/unlocked event handling.
+
+commit e705d60d8a625564f10b1d4d962a85d250b8b009
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Sat Nov 4 13:11:46 2017 -0600
+
+    Added locked() and unlocked() event handling
+
+commit 5cdceef08cf04ce5869903b2d1dc706cdfdd8ddf
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Sat Nov 4 12:50:33 2017 -0600
+
+    Added log(String) and log(String[]).
+
+commit e83166e5d4d483a11069b013c0a43c6c0038cf26
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Sat Nov 4 12:43:18 2017 -0600
+
+    Doc fixes.
+
+commit a7937f6849ba7e41bfaf2e446c9a9d7c5c3746ae
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Sat Nov 4 12:34:20 2017 -0600
+
+    Log methods are now package access. Trust nothing.
+
+commit a75fccb650b0e26fabc1c77bf9cc249c0ed43a74
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Sat Nov 4 12:32:44 2017 -0600
+
+    Removed debugging param from constructor. That was a bad idea.
+
+commit b01bf8c92813da7623e1c45d4ec941ac1f67b6f6
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Sat Nov 4 12:28:00 2017 -0600
+
+    Reordered code for readability. Doc fixes.
+
+commit b0572ea0d99799c4b361948939cf500a30c9ebde
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Sat Nov 4 12:25:43 2017 -0600
+
+    Logger use is no longer static. Added log(String[]).
+
+commit 95b164ec57d19abf6e7bb1465f047fdeff85aba2
+Author: Khesualdo Condori <medvegalapa@gmail.com>
+Date:   Fri Nov 3 20:25:50 2017 -0600
+
+    Added Logger.java
+
+commit 7cfd6003321528d5b6c79060906ad376ad00710c
+Author: Khesualdo Condori <medvegalapa@gmail.com>
+Date:   Fri Nov 3 20:25:23 2017 -0600
+
+    Delete Logger.java
+
+commit ad1e2836aa6ce388f690828f3d844188a5289d16
+Author: Khesualdo Condori <medvegalapa@gmail.com>
+Date:   Fri Nov 3 20:25:09 2017 -0600
+
+    Added Logger.java
+
+commit f5739a47ecae7107c52978dda583997cc4006c7f
+Author: jasondb <jason@teamdeboer.ca>
+Date:   Thu Nov 2 21:10:25 2017 -0600
+
+    update DisplayDriver. Created a separate TestDisplayDriver. Moved 2 of
+    the tests from VendingManagerSystemTest to DisplayDriver test.
+
+commit f8046040ce6ce54b38ed93c6ff34bf58d9f7ce76
+Merge: 6ca1361 e5b3329
+Author: jasondb <jason@teamdeboer.ca>
+Date:   Thu Nov 2 17:36:42 2017 -0600
+
+    Merge branch 'active' of https://github.com/Mondaynity/SENG300_GA2.git into active
+
+commit 6ca13616b85efef6592f866ff281b76342443614
+Author: jasondb <jason@teamdeboer.ca>
+Date:   Thu Nov 2 17:34:02 2017 -0600
+
+    update DisplayDriver
+
+commit 3daecafa946d940422b5ace36072fd40f0e2a7bf
+Merge: 12843e8 e5b3329
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Thu Nov 2 16:31:13 2017 -0600
+
+    Merge remote-tracking branch 'origin/active' into thomas
+
+commit e5b332991352ae1ff5364658fde49c98ced42078
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Thu Nov 2 16:11:54 2017 -0600
+
+    displayCredit() can easily extend to other currencies.
+
+commit aebc02bcef1573a46e96cdab97cfc3220dd0e16c
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Thu Nov 2 16:07:41 2017 -0600
+
+    Minor changes
+
+commit 1079e72b59a9a2af1cfb85d71f7c0bc623bfde23
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Thu Nov 2 16:05:35 2017 -0600
+
+    Field name change: display > displayDriver
+
+commit d67f8a2beed113882a17bfcdf614452c5d7aa0dc
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Thu Nov 2 15:48:01 2017 -0600
+
+    Minor changes
+
+commit e73062433cd6b6685ff68398cc5df66113604dc8
+Merge: 0e99d04 bb0f16b
+Author: jasondb <jason@teamdeboer.ca>
+Date:   Thu Nov 2 15:00:44 2017 -0600
+
+    Merge branch 'jason' into active
+    
+    Conflicts:
+    	src/ca/ucalgary/seng300/a2/VendingManager.java
+    	src/ca/ucalgary/seng300/a2/test/VendingManagerSystemTest.java
+
+commit bb0f16b8ea87c56dc43b0e6f2be74574ce46e0bb
+Author: jasondb <jason@teamdeboer.ca>
+Date:   Thu Nov 2 14:51:24 2017 -0600
+
+    Display, DispListener, TestDispListener added. Added display to
+    VendingManager class. Updated tests in VendingManagerSystemTest.
+
+commit 3da8325d4e67e17be4d0119b958b69cb34816d43
+Author: jasondb <jason@teamdeboer.ca>
+Date:   Tue Oct 31 13:58:37 2017 -0600
+
+    Display Driver implemented, but not the listener.
+
+commit 0e99d04a267540f3cece454e5e08cd366748414a
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Thu Oct 26 18:41:50 2017 -0600
+
+    Renamed packages from *.a1.* to *.a2.*
+
+commit 12843e885d7c7404a0faeb30f8a5bf9f50a76134
+Merge: 729aa61 4dfee4e
+Author: T Co <mondayne@outlook.com>
+Date:   Thu Oct 26 18:15:46 2017 -0600
+
+    Merge pull request #1 from Mondaynity/active
+    
+    Active
+
+commit 4dfee4eb81b211e7150dfce7edce81946ff96134
+Merge: dcdb2ad 729aa61
+Author: T Co <mondayne@outlook.com>
+Date:   Thu Oct 26 18:15:14 2017 -0600
+
+    Merge branch 'master' into active
+
+commit dcdb2ad53d14b62dfdbd6b374a555e1481687ab6
+Author: Michaela <mikimika@gmail.com>
+Date:   Thu Oct 26 16:48:02 2017 -0600
+
+    Test2
+
+commit 729aa61554eb1e9e8f63ebab44571c032cd94cd0
+Author: Michaela <mikimika@gmail.com>
+Date:   Thu Oct 26 16:39:49 2017 -0600
+
+    Test
+
+commit 20c085db0301b026bb25beb8dbf37157adaa963b
+Author: jasondb <jason@teamdeboer.ca>
+Date:   Thu Oct 26 12:41:42 2017 -0600
+
+    added git_workflow.txt and assign2_notes.txt
+
+commit 66ea9780c566f021ed48cdf07ed8161b9363b4f2
+Author: jasondb <jason@teamdeboer.ca>
+Date:   Thu Oct 26 12:27:11 2017 -0600
+
+    Added git_workflow.txt to working_documents
+
+commit 57e62407b2f8cb208bc997ae988dfb4209408462
+Author: T Co <mondayne@outlook.com>
+Date:   Thu Oct 26 11:44:53 2017 -0600
+
+    Create Assign1 Notes
+
+commit d153eb265ce3462297b08931030412bf2bbd8d3f
+Author: T Co <mondayne@outlook.com>
+Date:   Thu Oct 26 11:44:34 2017 -0600
+
+    Updated for assgn 2
+
+commit 6f9fe4610fc0643a9e4fd58a594fc8688d6c4b49
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Thu Oct 26 11:43:09 2017 -0600
+
+    initial commit
+
+commit e18a688d6be086dfd6e0f324277e27cec8002c16
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Sun Oct 22 18:03:58 2017 -0600
+
+    Doc updates, access control changes
+
+commit 8b1129dd4727c6614ef15e399590a5af8e1502c5
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Sun Oct 22 17:40:49 2017 -0600
+
+    Merged test suites
+
+commit 270e0632aa28c0b390098931568638fc7d7530e2
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Sat Oct 21 21:03:11 2017 -0600
+
+    Prettified test cases and added "insufficient funds" case
+
+commit 4fc04ae0a0d85ecd69521fab4e974913f0937bcf
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Sat Oct 21 20:16:58 2017 -0600
+
+    Changed PopCanRack capacity to 10
+
+commit 23d40e42ddd3ee02f026666b3661f6cb50fa88d8
+Author: neilchul <thobthai@gmail.com>
+Date:   Sat Oct 21 19:59:38 2017 -0600
+
+    Add files via upload
+
+commit 34dd4eedc0461ad21183ccad0461fedd51f64419
+Author: raylazor <raylazor@raylazor-Reks>
+Date:   Sat Oct 21 17:30:42 2017 -0600
+
+    Ray's completed copy of Assn1 System Tests.
+
+commit 7301a029db1827c93f5e6cc114ebc5195732327f
+Author: raylazor <raylazor@raylazor-Reks>
+Date:   Sat Oct 21 16:38:10 2017 -0600
+
+    Added two tests. Both for purchasing with invalid amounts.
+
+commit c565b128501849a531a207d13f2282618a6c22af
+Author: raylazor <raylazor@raylazor-Reks>
+Date:   Sat Oct 21 16:34:59 2017 -0600
+
+    Added two tests:
+
+commit 7a9fb0b601dc93af2f2798248e5101c031c944ae
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Sat Oct 21 16:24:28 2017 -0600
+
+    Fixed the inequality that broke everything
+
+commit 1b4bf1c6eade3dbccdba7851ad029f0bd8469aaf
+Merge: 609d8d6 df2436b
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Sat Oct 21 16:16:34 2017 -0600
+
+    Merge branch 'active' of https://github.com/Mondaynity/SENG300 into active
+
+commit 609d8d662649d066df1f5b22b01581db5ac872a0
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Sat Oct 21 16:14:49 2017 -0600
+
+    Fixed getCoinKindForCoinRack call to VendingMachine
+
+commit df2436b21d3487343bdae7276b5034a2bed5b32e
+Author: raylazor <raylazor@raylazor-Reks>
+Date:   Sat Oct 21 15:02:55 2017 -0600
+
+    purposefully made a spelling error
+
+commit 9bcf7070e0c6de0d6b154642d6322dd13f5cfd59
+Author: raylazor <raylazor@raylazor-Reks>
+Date:   Sat Oct 21 14:59:50 2017 -0600
+
+    Trying to push my test into the CLOUD.
+
+commit b49af830b38586af3d868b2cc5be85471944b2c3
+Author: T Co <mondayne@outlook.com>
+Date:   Sat Oct 21 14:44:17 2017 -0600
+
+    Update VendingListener.java
+    
+    docs
+
+commit 1a73d845705e8c18ea205a2a4cbe5af25a022e4f
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Sat Oct 21 14:24:12 2017 -0600
+
+    Access control changes
+
+commit bdfe49c1cb4e955e271784cf5fe800e708323591
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Sat Oct 21 10:57:30 2017 -0600
+
+    Documentation.
+
+commit 5e1d91d35b37506f534d0a46b25c6a67fe696a11
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Fri Oct 20 17:20:43 2017 -0600
+
+    Further adjustments and documentation
+
+commit d632d8cc2f5f5b8742bce4b65c595ef01c5b3e4c
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Fri Oct 20 16:58:25 2017 -0600
+
+    Updated singleton pattern for both logic classes
+
+commit 485860d0e6266aa2449db46938db2f2c81aab074
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Fri Oct 20 16:56:28 2017 -0600
+
+    Proposed pattern for Vending logic
+
+commit 63b46eb3cfcfbd7ff373c8ad09808233c4aa8810
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Fri Oct 20 13:07:16 2017 -0600
+
+    Converted VendingManager to singleton design.
+
+commit 2b2258dc7cfb8abdac4b76ed72ea530495f389c0
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Fri Oct 20 12:43:58 2017 -0600
+
+    Initial implementation of the Vending logic classes.
+
+commit b4295d90b3dd27e8fb48e9b08fd8da7cb588562c
+Author: T Co <mondayne@outlook.com>
+Date:   Wed Oct 18 19:17:44 2017 -0600
+
+    Update README.md
+
+commit 41214a7c8a278099999308c0be06c23838d91400
+Merge: c78ae2f 3cf5815
+Author: traymondbiz <32681933+traymondbiz@users.noreply.github.com>
+Date:   Tue Oct 17 22:44:36 2017 -0600
+
+    Merge pull request #1 from Mondaynity/traymond
+    
+    Update README.md
+
+commit 3cf58158cc4f939f85ca93e60304c6374d74a0be
+Author: traymondbiz <32681933+traymondbiz@users.noreply.github.com>
+Date:   Tue Oct 17 22:42:44 2017 -0600
+
+    Update README.md
+
+commit c78ae2fc118855bea7fe4ef099e9bc8b4cc8927b
+Author: T Co <mondayne@outlook.com>
+Date:   Tue Oct 17 21:40:28 2017 -0600
+
+    UML with overview of listener characteristics
+    
+    Nothing fancy - doesn't conform to all conventions but it gets the key points across
+
+commit 36514bf875d127f97eb44e067d61a4fdb7e05eb9
+Author: T Co <mondayne@outlook.com>
+Date:   Tue Oct 17 21:27:41 2017 -0600
+
+    Fixed indentation and added new comments
+
+commit d43299a2f4db7aa73c5cc15f461f316d7bdf1020
+Author: T Co <mondayne@outlook.com>
+Date:   Tue Oct 17 15:50:47 2017 -0600
+
+    Added answers to questions
+
+commit be9cfdfb6fcf4818cf3fb06166058e0f267bac9d
+Author: T Co <mondayne@outlook.com>
+Date:   Tue Oct 17 15:14:19 2017 -0600
+
+    Add assignment requirements
+    
+    Added a summary of the assignment requirements as a formatted list
+
+commit bbcd441eeb75265c32823349334ae715cf675866
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Tue Oct 17 15:03:24 2017 -0600
+
+    Renamed and organized project
+
+commit 62b9998e96fbca01d685f7ea52d6d140977d12c1
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Sun Oct 15 12:56:42 2017 -0600
+
+    Added JUnit 4 to classpath
+
+commit 6defcd5818df3e7403f38e0e65066aa06aeb0799
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Sun Oct 15 12:51:33 2017 -0600
+
+    Test commit
+
+commit 9b80da8ec4a9cdb7a461465442792c7821a280a5
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Sun Oct 15 12:46:41 2017 -0600
+
+    Test commit
+
+commit 76d4b43dbaa30adc2b689c14b6ae9852884bf8c1
+Author: T Co <thomas.coderre@ucalgary.ca>
+Date:   Sun Oct 15 12:25:30 2017 -0600
+
+    Initial project commit
+
+commit 46277881e4000247b05f7c8df4e64fa48252afc3
+Author: T Co <mondayne@outlook.com>
+Date:   Sun Oct 15 10:21:19 2017 -0600
+
+    Initial commit
