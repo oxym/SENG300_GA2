@@ -34,7 +34,7 @@ import java.util.Date;
  *
  */
 public class Logger {
-    private static boolean debug = true;
+    private static boolean debug = false;
 
     private static boolean limitSize = false;
     private static DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS");

@@ -55,11 +55,9 @@ public class CoinListener extends VendingListener implements
 
 		if (mgr.checkExactChangeState()){
 			mgr.getExactChangeLight().deactivate();
-			mgr.log("ExactChange light off");
 		}
 		else{
 			mgr.getExactChangeLight().activate();
-			mgr.log("ExactChange light on");
 		}
 	}
 //^^^=======================COIN SlOT LISTENER METHODS END=======================^^^

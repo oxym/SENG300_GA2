@@ -6,7 +6,7 @@ import org.lsmr.vending.hardware.*;
  * Event-handling listener class for IndicatorLight.
  */
 public class LightListener extends VendingListener implements IndicatorLightListener{
-
+	
 	protected static LightListener listener;
 	protected static VendingManager mgr;
 
