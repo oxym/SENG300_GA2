@@ -350,18 +350,20 @@ public class VendingManagerSystemTest {
 		List<String> popCanNames = Arrays.asList("Coke", "Sprite", "Crush", "Ale", "Pepsi", "Diet");
 		List<Integer> popCanCosts = Arrays.asList(250, 250, 250, 250, 250, 250);
 
-		machine = new VendingMachine(coinKinds, 5, 10, 10,	10, 1, 10);
+		//note bug in code, delivery chute is initialized with receptacle capacity in VendingMachine.Java
+		machine = new VendingMachine(coinKinds, popCanNames.size(), 10, 10,	1, 1, 10);
 		machine.configure(popCanNames, popCanCosts);
 
 		manager = VendingManager.initialize(machine);
 
 		machine.loadPopCans(10, 10, 10, 10, 10, 10);
-
+		machine.disableSafety();
 
 		assertFalse(machine.getOutOfOrderLight().isActive());		//check safety enabled
 
-		buyPopExactChange(1);
-
+		System.out.println(machine.getDeliveryChute().size());
+		buyPop(1);
+		assertTrue(machine.getOutOfOrderLight().isActive());
 
 	}
 
@@ -421,7 +423,7 @@ public class VendingManagerSystemTest {
 		machine.getSelectionButton(index).press();
 	}
 
-	public void buyPopExactChange(int index) throws DisabledException {
+	public void buyPop(int index) throws DisabledException {
 		Coin coin = new Coin(100);
 		for (int i = 0; i < 3; i++) { // Adds three dollars to the machine
 			try {
