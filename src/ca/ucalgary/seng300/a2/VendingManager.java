@@ -345,15 +345,19 @@ public class VendingManager {
 		if (getCredit() >= cost){
 			getPopCanRack(popIndex).dispensePopCan(); //Will throw EmptyException if pop rack is empty
 			credit -= cost; //Will only be performed if the pop is successfully dispensed.
+			
+			//These coin-related actions may need to be nested in a conditional once additional
+			//Payment methods are supported. It depends on whether change is returned automatically.
+			getCoinReceptacle().storeCoins();
 			returnChange();
 
 			if (credit > 0) {
 				displayCredit();
 			} else {
-				display("Transaction Complete", 3);
+				display("Thank you for your purchase!", 3); 
 			}
-			getCoinReceptacle().storeCoins();
-		} else {
+			
+		} else { //Not enough credit
 			int diff = cost - credit;
 			String popName = getPopKindName(popIndex);
 			throw new InsufficientFundsException("Cannot buy " + popName + ". " + diff + " cents missing.");
