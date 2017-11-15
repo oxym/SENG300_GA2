@@ -370,6 +370,7 @@ public class VendingManagerSystemTest {
 	}
 
 
+
 //	@Test
 //	public void testGetRefund() throws CapacityExceededException, DisabledException	{
 //		Coin coin = new Coin(100);

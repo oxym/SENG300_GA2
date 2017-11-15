@@ -55,6 +55,27 @@ public class TestDisplayDriver {
 	}
 
 	/**
+	 * Tests the setting of the greeting cycle timer
+	 *
+	 * @throws DisabledException
+	 * @throws InterruptedException
+	 */
+	@Test
+	public void testSetGreetingCycleTime() throws DisabledException, InterruptedException {
+
+				displayDriver.setGreetingCycleTime(8, 20);
+				// ensure the default greeting is displaying correctly.
+				displayDriver.greetingMessage();
+				Thread.sleep(2000); // initial delay
+				for (int i = 0; i < 2; i++) { // Loops 3 times
+					assertEquals("Hi there!", testDisplayListener.getCurrentMessage());
+					Thread.sleep(8000);
+					assertEquals("", testDisplayListener.getCurrentMessage());
+					Thread.sleep(12000);
+				}
+	}
+
+	/**
 	 * Test to make sure greeting message is not still displaying after display is
 	 * updated with new message
 	 *
@@ -88,4 +109,5 @@ public class TestDisplayDriver {
 		Thread.sleep(6000);
 		assertEquals("Hi there!", testDisplayListener.getCurrentMessage());
 	}
+
 }
