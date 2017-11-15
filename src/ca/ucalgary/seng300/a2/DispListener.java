@@ -36,7 +36,8 @@ public class DispListener extends VendingListener implements DisplayListener {
 		messageCurrent = newMessage;
 		String greeting = DisplayDriver.getGreeetingMessage();
 		if (newMessage != (null) && !newMessage.equals("") && !newMessage.equals(greeting)) 
-			if (mgr != null) mgr.log("Message displayed: " + newMessage);
+			if (mgr != null) 
+				mgr.log("Message displayed: " + newMessage);
 	}
 
 

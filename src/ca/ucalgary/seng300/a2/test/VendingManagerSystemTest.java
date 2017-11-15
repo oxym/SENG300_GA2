@@ -7,30 +7,30 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.lsmr.vending.Coin;
-import org.lsmr.vending.PopCan;
-import org.lsmr.vending.hardware.CapacityExceededException;
-import org.lsmr.vending.hardware.CoinChannel;
-import org.lsmr.vending.hardware.CoinSlot;
-import org.lsmr.vending.hardware.DeliveryChute;
-import org.lsmr.vending.hardware.DisabledException;
-import org.lsmr.vending.hardware.EmptyException;
-import org.lsmr.vending.hardware.PushButton;
-import org.lsmr.vending.hardware.SimulationException;
-import org.lsmr.vending.hardware.VendingMachine;
 
-import ca.ucalgary.seng300.a2.DispListener;
-import ca.ucalgary.seng300.a2.InsufficientFundsException;
-import ca.ucalgary.seng300.a2.VendingListener;
-import ca.ucalgary.seng300.a2.VendingManager;
+import org.lsmr.vending.*;
+import org.lsmr.vending.hardware.*;
+import ca.ucalgary.seng300.a2.*;
 
+
+/**
+ * Test suite to system test the logic that manages the Vending Machine hardware.
+ * 
+ * NOTE: The suite is regarded as a "system test" since it assumes the logic classes
+ * are coupled to all of their "default" hardware classes, and to each other.
+ * >> The emphasis on system / integration testing follows from the fact that
+ * >> the operation of each logic class (e.g. the listeners / manager) depends heavily
+ * >> on one another. Unit testing each exhaustively would be very time consuming and
+ * >> not very informative.
+ *
+ */
 public class VendingManagerSystemTest {
 
 	private VendingMachine machine = null;
 	private VendingManager manager = null;
 	private int[] coinKinds = new int[] { 5, 10, 25, 100, 200 };
 
-	// test listeners to ensure test accuracy due to multithreading
+	// Stored as a field due to bugs with JUnit and multi-threading 
 	private DispListener testDisplayListener;
 
 	@Before
@@ -91,23 +91,8 @@ public class VendingManagerSystemTest {
 		assertEquals(0, manager.getCredit());
 	}
 
-	//TODO Document
-	/**
-	 *
-	 * @throws CapacityExceededException
-	 * @throws EmptyException
-	 * @throws DisabledException
-	 */
-	@Test
-	public void testCoinReturn() throws CapacityExceededException, EmptyException, DisabledException{
-		machine.loadCoins(2, 1, 2, 2, 2);
-		Coin coin = new Coin(100);
-		try {
-			machine.getCoinSlot().addCoin(coin);
-		} catch (DisabledException e) {
-		}
-		manager.checkExactChangeState();
-	}
+	
+
 
 	/**
 	 * Tests that the logic is able to handle the case where the selected pop is not
@@ -280,7 +265,7 @@ public class VendingManagerSystemTest {
 		assertEquals(machine.getDeliveryChute().size(), 0);
 	}
 
-	/*
+	/**
 	 * tests that if there is no change added to the machine
 	 * exact change state returns false
 	 *
@@ -301,9 +286,15 @@ public class VendingManagerSystemTest {
 		assertEquals(false, manager.checkExactChangeState());
 	}
 
-	/*
-	 * test low credit that can return exact change on a purchase
+/**
+	 *
+	 * Test that with a low amount of coins
+	 * in the coin rack we can return exact change on a purchase
 	 * then cannot return exact change on the next purchase
+	 * 
+	 * @throws CapacityExceededException
+	 * @throws EmptyException
+	 * @throws DisabledException
 	 */
 	@Test
 	public void testLowChangeThenNotEnoughForExact() throws CapacityExceededException, EmptyException, DisabledException {
