@@ -189,6 +189,59 @@ public class VendingManagerSystemTest {
 		assertEquals(machine.getDeliveryChute().size(), 1);
 
 	}
+	
+	/**
+	 * Test overflowing a coin rack
+	 * overflow should end up in coin return
+	 */
+	@Test
+	public void testOverflowCoinRack() {
+		List<String> popCanNames = Arrays.asList("Coke", "Sprite", "Crush", "Ale", "Pepsi", "Diet");
+		List<Integer> popCanCosts = Arrays.asList(250, 250, 250, 250, 250, 250);
+
+		int[] coinKinds = new int[] { 5, 10, 25, 100, 200 };
+		int coinRackCapacity = 10;
+
+		machine = new VendingMachine(coinKinds, popCanNames.size(), coinRackCapacity, 1, 1, 1, 10);
+		machine.configure(popCanNames, popCanCosts);
+		
+		Coin coin = new Coin(100);
+		for (int i = 0; i < 2; i++) { // Adds three dollars to the machine
+			try {
+				machine.getCoinSlot().addCoin(coin);
+			} catch (DisabledException e) {
+			}
+		}
+		
+		
+		assertEquals(machine.getCoinReturn().size(), 1);
+	
+		
+	}
+	
+	/**
+	 * Test that overflowing coin return enables the safety
+	 * @throws DisabledException 
+	 * 
+	 */
+	@Test
+	public void testOverflowCoinReturn() throws DisabledException {
+		List<String> popCanNames = Arrays.asList("Coke", "Sprite", "Crush", "Ale", "Pepsi", "Diet");
+		List<Integer> popCanCosts = Arrays.asList(250, 250, 250, 250, 250, 250);
+
+		int[] coinKinds = new int[] { 5, 10, 25, 100, 200 };
+		int coinReturnCapacity = 1;
+		
+		machine = new VendingMachine(coinKinds, popCanNames.size(), 10, 1, 1, 1, coinReturnCapacity);
+		machine.configure(popCanNames, popCanCosts);
+		
+		Coin coin = new Coin(1);
+		
+		machine.getCoinSlot().addCoin(coin);
+		
+		assertEquals(machine.getCoinReturn().isDisabled(),true);
+		
+	}
 
 	/**
 	 * tests that safety does not enable if only one pop type is empty
@@ -214,7 +267,7 @@ public class VendingManagerSystemTest {
 
 	}
 
-	/**
+	/**coinKinds
 	 * test that disabledException is thrown when a coin is inserted and safety is enabled
 	 *
 	 * @throws DisabledException
@@ -268,6 +321,7 @@ public class VendingManagerSystemTest {
 	/**
 	 * tests that if there is no change added to the machine
 	 * exact change state returns false
+	 * 
 	 *
 	 */
 	@Test
@@ -284,7 +338,7 @@ public class VendingManagerSystemTest {
 		}
 
 		assertEquals(false, manager.checkExactChangeState());
-	}
+		assertNotEquals(manager.checkExactChangeState(),("Thank you for your purchase!"));	}
 
 /**
 	 *
