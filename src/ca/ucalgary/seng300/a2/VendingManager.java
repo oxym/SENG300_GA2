@@ -3,6 +3,9 @@ package ca.ucalgary.seng300.a2;
 import java.util.Arrays;
 
 import org.lsmr.vending.hardware.*;
+
+import ca.ucalgary.seng300.a2.gui.GUIMain;
+
 import java.io.FileNotFoundException;
 
 
@@ -34,6 +37,7 @@ import java.io.FileNotFoundException;
  */
 public class VendingManager {
 	private static boolean debug = false;
+	private static boolean ENABLE_GUI = true;
 
 	private static VendingManager mgr;
 	private static VendingMachine vm;
@@ -117,8 +121,8 @@ public class VendingManager {
 		getExactChangeLight().register(lightListener);
 
 		getLock().register(lockListener);
-		
-		registerButtonListener(buttonListener);		
+
+		registerButtonListener(buttonListener);
 	}
 
 	/**
@@ -337,7 +341,7 @@ public class VendingManager {
 		if (getCredit() >= cost){
 			getPopCanRack(popIndex).dispensePopCan(); //Will throw EmptyException if pop rack is empty
 			credit -= cost; //Will only be performed if the pop is successfully dispensed.
-			
+
 			//These coin-related actions may need to be nested in a conditional once additional
 			//Payment methods are supported. It depends on whether change is returned automatically.
 			getCoinReceptacle().storeCoins();
@@ -346,9 +350,9 @@ public class VendingManager {
 			if (credit > 0) {
 				displayCredit();
 			} else {
-				display("Thank you for your purchase!", 3); 
+				display("Thank you for your purchase!", 3);
 			}
-			
+
 		} else { //Not enough credit
 			int diff = cost - credit;
 			String popName = getPopKindName(popIndex);
@@ -619,4 +623,16 @@ public class VendingManager {
 //
 //	}
 //^^^======================LOGIC INTERNALS END=======================^^^
+
+	/**
+	 * Main method
+	 * @param args Command line arguments
+	 */
+	public static void main(String[] args) {
+		mgr = VendingManager.getInstance();
+		if (ENABLE_GUI) {
+			GUIMain gui = new GUIMain(vm);
+			gui.init();
+		}
+	}
 }
