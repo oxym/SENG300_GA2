@@ -78,8 +78,8 @@ public class GUIMain extends JFrame {
 		deliveryChutePanel.init();
 
 		// for debugging to assist with layout of the panels
-		if (DEBUG)
-			sidePanel.setBackground(Color.WHITE);
+		//if (DEBUG)
+		//	sidePanel.setBackground(Color.WHITE);
 
 		pane.add(sidePanel, BorderLayout.EAST);
 		pane.add(titlePanel, BorderLayout.NORTH);

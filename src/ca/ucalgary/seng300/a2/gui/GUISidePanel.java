@@ -23,6 +23,9 @@ public class GUISidePanel extends GUIPanel {
 	 */
 	@Override
 	void init() {
+
+		//setup panel
+		setBackground(COLOR_BACKGROUND);
 		GridBagConstraints constraints = new GridBagConstraints();
 		GridBagLayout gridbag = new GridBagLayout();
 		setLayout(gridbag);

@@ -38,8 +38,8 @@ public class GUIDeliveryChute extends GUIPanel {
 		setBackground(COLOR_BACKGROUND);
 
 		//instantiate components
-		ImageIcon icon = new ImageIcon("images/dispenser_empty.png");
-		chute = new JLabel(icon);
+		ImageIcon dispenser_icon = new ImageIcon("images/dispenser_empty.png");
+		chute = new JLabel(dispenser_icon);
 		MouseListener mouseListener = new MouseListener();
 		chute.addMouseListener(mouseListener);
 
