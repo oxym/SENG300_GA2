@@ -49,6 +49,7 @@ public class VendingManager {
 	private static CoinListener coinListener;
 	private static LightListener lightListener;
 	private static MachineLockListener lockListener;
+	private static int[] acceptedCoins;
 
 	private static Logger eventLog;
 	private static String eventLogName = "VendingLog.txt";
@@ -89,9 +90,11 @@ public class VendingManager {
 	 * the Vending logic package.
 	 * @param host The VendingMachine which the VendingManager is intended to manage.
 	 */
-	public static VendingManager initialize(VendingMachine host){
+	public static VendingManager initialize(VendingMachine host, int[] coinValues){
 		vm = host;
+		acceptedCoins = coinValues;
 		mgr = new VendingManager();
+
 		return getInstance();
 	}
 
@@ -631,7 +634,7 @@ public class VendingManager {
 	public static void main(String[] args) {
 		mgr = VendingManager.getInstance();
 		if (ENABLE_GUI) {
-			GUIMain gui = new GUIMain(vm);
+			GUIMain gui = new GUIMain(vm, acceptedCoins);
 			gui.init();
 		}
 	}

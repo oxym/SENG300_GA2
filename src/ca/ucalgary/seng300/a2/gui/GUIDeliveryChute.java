@@ -11,7 +11,7 @@ public class GUIDeliveryChute extends GUIPanel {
 	@Override
 	void init() {
 		setBackground(COLOR_BACKGROUND);
-		title = new JLabel("Selection Buttons Here");
+		title = new JLabel("Delivery Chute Here");
 
 		add(title);
 		setVisible(true);

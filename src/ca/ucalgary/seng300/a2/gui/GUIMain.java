@@ -27,9 +27,9 @@ public class GUIMain extends JFrame {
 	private static final long serialVersionUID = 8968054066670899143L;
 
 	public static final boolean DEBUG = true;
-	public static final int X_SIZE = 1024;
-	public static final int Y_SIZE = 768;
-	public static final double V_SPLIT = 0.3;
+	public static final int X_SIZE = 768;
+	public static final int Y_SIZE = 1024;
+	public static final double V_SPLIT = 0.35;
 	public static final String TITLE = "Vending Machine";
 
 	// The right panel holds the JPanels for the
@@ -40,12 +40,15 @@ public class GUIMain extends JFrame {
 	private GUIPanel deliveryChutePanel;
 
 	private VendingMachine vm;
+	private int[] acceptedCoins;
 
 	/**
 	 * @param vm
+	 * @param acceptedCoins
 	 */
-	public GUIMain(VendingMachine vm) {
+	public GUIMain(VendingMachine vm, int[] acceptedCoins) {
 		this.vm = vm;
+		this.acceptedCoins = acceptedCoins;
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setSize(X_SIZE, Y_SIZE);
 		setTitle(TITLE);
@@ -57,6 +60,7 @@ public class GUIMain extends JFrame {
 	 *
 	 */
 	public void init() {
+		setLayout(new BorderLayout());
 		Container pane = getContentPane();
 
 		Dimension panelSize = new Dimension((int) (X_SIZE * V_SPLIT), Y_SIZE);
@@ -66,6 +70,7 @@ public class GUIMain extends JFrame {
 		deliveryChutePanel = new GUIDeliveryChute();
 
 		sidePanel.setPreferredSize(panelSize);
+		sidePanel.setMinimumSize(panelSize);
 
 		titlePanel.init();
 		sidePanel.init();

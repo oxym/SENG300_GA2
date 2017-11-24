@@ -15,7 +15,7 @@ import ca.ucalgary.seng300.a2.*;
 
 /**
  * Test suite to system test the logic that manages the Vending Machine hardware.
- * 
+ *
  * NOTE: The suite is regarded as a "system test" since it assumes the logic classes
  * are coupled to all of their "default" hardware classes, and to each other.
  * >> The emphasis on system / integration testing follows from the fact that
@@ -30,7 +30,7 @@ public class VendingManagerSystemTest {
 	private VendingManager manager = null;
 	private int[] coinKinds = new int[] { 5, 10, 25, 100, 200 };
 
-	// Stored as a field due to bugs with JUnit and multi-threading 
+	// Stored as a field due to bugs with JUnit and multi-threading
 	private DispListener testDisplayListener;
 
 	@Before
@@ -50,7 +50,7 @@ public class VendingManagerSystemTest {
 				receptacleCapacity, deliveryChuteCapacity, coinReturnCapacity);
 		machine.configure(popCanNames, popCanCosts);
 
-		manager = VendingManager.initialize(machine);
+		manager = VendingManager.initialize(machine, coinKinds);
 
 		machine.disableSafety(); //needed due to singleton instance being passed to multiple tests
 								 //that appear to clone the current state of the machine at the time of instantiation
@@ -91,7 +91,7 @@ public class VendingManagerSystemTest {
 		assertEquals(0, manager.getCredit());
 	}
 
-	
+
 
 
 	/**
@@ -189,7 +189,7 @@ public class VendingManagerSystemTest {
 		assertEquals(machine.getDeliveryChute().size(), 1);
 
 	}
-	
+
 	/**
 	 * Test overflowing a coin rack
 	 * overflow should end up in coin return
@@ -204,7 +204,7 @@ public class VendingManagerSystemTest {
 
 		machine = new VendingMachine(coinKinds, popCanNames.size(), coinRackCapacity, 1, 1, 1, 10);
 		machine.configure(popCanNames, popCanCosts);
-		
+
 		Coin coin = new Coin(100);
 		for (int i = 0; i < 2; i++) { // Adds three dollars to the machine
 			try {
@@ -212,17 +212,17 @@ public class VendingManagerSystemTest {
 			} catch (DisabledException e) {
 			}
 		}
-		
-		
+
+
 		assertEquals(machine.getCoinReturn().size(), 1);
-	
-		
+
+
 	}
-	
+
 	/**
 	 * Test that overflowing coin return enables the safety
-	 * @throws DisabledException 
-	 * 
+	 * @throws DisabledException
+	 *
 	 */
 	@Test
 	public void testOverflowCoinReturn() throws DisabledException {
@@ -231,17 +231,17 @@ public class VendingManagerSystemTest {
 
 		int[] coinKinds = new int[] { 5, 10, 25, 100, 200 };
 		int coinReturnCapacity = 1;
-		
+
 		machine = new VendingMachine(coinKinds, popCanNames.size(), 10, 5, 5, 5, coinReturnCapacity);
 		machine.configure(popCanNames, popCanCosts);
 		machine.loadPopCans(1, 1, 1, 1, 1, 1);
 		machine.loadCoins(5, 5, 5, 5, 5);
-		
-		manager = VendingManager.initialize(machine);
-		
+
+		manager = VendingManager.initialize(machine, coinKinds);
+
 		Coin coin = new Coin(1);
 		machine.getCoinSlot().addCoin(coin);
-		
+
 		assertEquals(true,machine.getCoinSlot().isDisabled());
 	}
 
@@ -323,7 +323,7 @@ public class VendingManagerSystemTest {
 	/**
 	 * tests that if there is no change added to the machine
 	 * exact change state returns false
-	 * 
+	 *
 	 *
 	 */
 	@Test
@@ -347,7 +347,7 @@ public class VendingManagerSystemTest {
 	 * Test that with a low amount of coins
 	 * in the coin rack we can return exact change on a purchase
 	 * then cannot return exact change on the next purchase
-	 * 
+	 *
 	 * @throws CapacityExceededException
 	 * @throws EmptyException
 	 * @throws DisabledException
@@ -401,7 +401,7 @@ public class VendingManagerSystemTest {
 		machine = new VendingMachine(coinKinds, popCanNames.size(), 10, 10,	1, 1, 10);
 		machine.configure(popCanNames, popCanCosts);
 
-		manager = VendingManager.initialize(machine);
+		manager = VendingManager.initialize(machine, coinKinds);
 
 		machine.loadPopCans(10, 10, 10, 10, 10, 10);
 		machine.disableSafety();
