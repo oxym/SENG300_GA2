@@ -34,7 +34,7 @@ public class GUIMain extends JFrame {
 
 	// The right panel holds the JPanels for the
 	// display, coinslot, cardslot, and coinreturn
-	private GUIPanel sidePanel;
+	private GUISidePanel sidePanel;
 	private GUIPanel titlePanel;
 	private GUIPanel selectionButtonPanel;
 	private GUIPanel deliveryChutePanel;
@@ -97,6 +97,14 @@ public class GUIMain extends JFrame {
 	public void updatePanel() {
 		revalidate();
 		repaint();
+	}
+
+	/**
+	 * Returns the side panel
+	 * @return the side panel object
+	 */
+	public GUISidePanel getSidePanel() {
+		return sidePanel;
 	}
 
 }

@@ -1,0 +1,16 @@
+package ca.ucalgary.seng300.a2.gui;
+
+/**
+ *This class ensures that any GUI display that implements it will have the methods contained in this interface
+ *
+ */
+public interface GuiDisplayInterface {
+
+	/**
+	 * The message to update the display with
+	 *
+	 * @param message The message to display
+	 */
+	void updateMessage(String message);
+
+}

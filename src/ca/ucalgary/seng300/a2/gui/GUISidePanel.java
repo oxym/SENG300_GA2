@@ -3,6 +3,8 @@ package ca.ucalgary.seng300.a2.gui;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
+import javax.swing.JPanel;
+
 /**
  * This panel holds all of the panels that are on the right hand side of the vending machine
  * display, coinslot, cardslot, and coinreturns.
@@ -59,6 +61,14 @@ public class GUISidePanel extends GUIPanel {
 		add(coinReturnPanel, constraints);
 
 		setVisible(true);
+	}
+
+	/**
+	 * Returns the main display panel
+	 * @return the display panel object
+	 */
+	public GuiDisplayInterface getDisplayPanel() {
+		return displayPanel;
 	}
 
 }

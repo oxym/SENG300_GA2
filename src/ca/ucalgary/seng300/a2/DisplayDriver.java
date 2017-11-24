@@ -2,6 +2,9 @@ package ca.ucalgary.seng300.a2;
 
 import org.lsmr.vending.hardware.Display;
 
+import ca.ucalgary.seng300.a2.gui.GUIMain;
+import ca.ucalgary.seng300.a2.gui.GuiDisplayInterface;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Timer;
@@ -22,6 +25,11 @@ public class DisplayDriver {
 	private VendingManager mgr;
 	private Display display;
 
+	private GuiDisplayInterface guiDisplay;
+	private boolean guiDisplayPresent;
+
+	private GUIMain gui;
+
 	/**
 	 * @param display
 	 *            the display object that is driven/controlled by this class
@@ -30,6 +38,21 @@ public class DisplayDriver {
 		this.display = display;
 		mgr = VendingManager.getInstance();
 		timer = new Timer();
+		guiDisplayPresent = false;
+	}
+
+	/**
+	 * Instantiates the object with a guiDisplay
+	 *
+	 * @param display
+	 *            the display object that is driven/controlled by this class
+	 * @param guiDisplay
+	 *            the object representing the guiDisplay that has access methods
+	 */
+	public DisplayDriver(Display display, GuiDisplayInterface guiDisplay) {
+		this(display);
+		this.guiDisplay = guiDisplay;
+		guiDisplayPresent = true;
 	}
 
 	/**
@@ -49,13 +72,16 @@ public class DisplayDriver {
 	public void newMessage(String message) {
 		cancelCycle();
 		display.display(message);
-		if (TESTING) System.out.println(message);
+		if (guiDisplayPresent)
+			guiDisplay.updateMessage(message);
+		if (TESTING)
+			System.out.println(message);
 	}
 
 	/**
-	 * Displays a new message for some arbitrary duration on the display.
-	 * After the given duration, either the then-current credit will be shown,
-	 * or the flashing greeting screen will be shown.
+	 * Displays a new message for some arbitrary duration on the display. After the
+	 * given duration, either the then-current credit will be shown, or the flashing
+	 * greeting screen will be shown.
 	 *
 	 * @param message
 	 *            The message to display
@@ -73,13 +99,11 @@ public class DisplayDriver {
 			System.out.println("Waiting for: " + duration + " at: " + time);
 		}
 
-
 		int delay = duration * 1000;
-		if (mgr != null && VendingManager.getInstance().getCredit() > 0 ){
+		if (mgr != null && VendingManager.getInstance().getCredit() > 0) {
 			DisplayMessageTask messageTask = getMessageTask("$CREDIT$");
 			timer.schedule(messageTask, delay);
-		}
-		else { //Restore greeting message
+		} else { // Restore greeting message
 			DisplayMessageTask messageTask = getMessageTask(MSG_DEFAULT);
 			timer.scheduleAtFixedRate(messageTask, delay, greetingCycleTime * 1000);
 			timer.scheduleAtFixedRate(getClearTask(), delay + greetingDuration * 1000, greetingCycleTime * 1000);
@@ -89,10 +113,11 @@ public class DisplayDriver {
 	/**
 	 * Creates a new message task
 	 *
-	 * @param message The message to display
+	 * @param message
+	 *            The message to display
 	 * @return message task that displays the message
 	 */
-	DisplayMessageTask getMessageTask(String message){
+	DisplayMessageTask getMessageTask(String message) {
 		return new DisplayMessageTask(message, display);
 	}
 
@@ -101,9 +126,10 @@ public class DisplayDriver {
 	 *
 	 * @return task to clear the display
 	 */
-	DisplayMessageTask getClearTask(){
+	DisplayMessageTask getClearTask() {
 		return new DisplayMessageTask("", display);
 	}
+
 	/**
 	 * Displays the default message The default message is displayed for set time
 	 * and is then blank for the remainder of the cycle time
@@ -117,7 +143,9 @@ public class DisplayDriver {
 
 	/**
 	 * Clears the display indefinitely.
-	 * @deprecated This method should not be used. The display should never be perma-cleared.
+	 *
+	 * @deprecated This method should not be used. The display should never be
+	 *             perma-cleared.
 	 */
 	public void clearMessage() {
 		cancelCycle();
@@ -137,12 +165,35 @@ public class DisplayDriver {
 	}
 
 	/**
-	 * Gets the greeting message which is displayed when the vending machine is
-	 * idle and has no credit stored.
+	 * Gets the greeting message which is displayed when the vending machine is idle
+	 * and has no credit stored.
+	 *
 	 * @return The default (greeting) message.
 	 */
-	public static String getGreeetingMessage(){
+	public static String getGreeetingMessage() {
 		return MSG_DEFAULT;
+	}
+
+	/**
+	 * Attaches a gui Display object
+	 *
+	 * @param guiDisplay
+	 *            gui display object
+	 */
+	public void attachGuiDisplay(GuiDisplayInterface guiDisplay) {
+		this.guiDisplay = guiDisplay;
+		guiDisplayPresent = true;
+	}
+
+	/**
+	 * Attaches a gui Display object
+	 *
+	 * @param guiDisplay
+	 *            gui display object
+	 */
+	public void attachGui(GUIMain gui) {
+		this.gui = gui;
+		guiDisplayPresent = true;
 	}
 
 	/**
@@ -174,11 +225,14 @@ public class DisplayDriver {
 		 */
 		@Override
 		public void run() {
-			if (message.equals("$CREDIT$")){
+			if (message.equals("$CREDIT$")) {
 				display.display(VendingManager.getInstance().getCreditMessage());
-			}
-			else{
+				if (guiDisplayPresent)
+					guiDisplay.updateMessage(VendingManager.getInstance().getCreditMessage());
+			} else {
 				display.display(message);
+				if (guiDisplayPresent)
+					guiDisplay.updateMessage(message);
 			}
 			if (TESTING) {
 				DateTimeFormatter format = DateTimeFormatter.ofPattern("HH:mm:ss.SSSSSS");

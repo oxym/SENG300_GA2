@@ -13,7 +13,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 
-public class GUIDisplayMain extends GUIPanel {
+public class GUIDisplayMain extends GUIPanel implements GuiDisplayInterface {
 
 	private JLabel displayOutline;
 	private JTextField display;
@@ -100,8 +100,9 @@ public class GUIDisplayMain extends GUIPanel {
 	 * Displays the message in the display field
 	 * @param msg The message to display
 	 */
-	public void updateMessage(String msg) {
-
+	public void updateMessage(String message) {
+		display.setText(message);
+		update();
 	}
 
 	/**

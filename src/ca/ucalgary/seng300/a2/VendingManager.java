@@ -1,10 +1,12 @@
 package ca.ucalgary.seng300.a2;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.lsmr.vending.hardware.*;
 
 import ca.ucalgary.seng300.a2.gui.GUIMain;
+import ca.ucalgary.seng300.a2.gui.GuiDisplayInterface;
 
 import java.io.FileNotFoundException;
 
@@ -59,6 +61,8 @@ public class VendingManager {
 
 	private static Lock lock;
 
+	private static GUIMain gui;
+
 
 //vvv=======================SETUP START=======================vvv
 	/**
@@ -83,6 +87,8 @@ public class VendingManager {
 		displayDriver.greetingMessage();
 
 		if (isOutOfOrder()) enableSafety();
+
+
 	}
 
 	/**
@@ -94,6 +100,9 @@ public class VendingManager {
 		vm = host;
 		acceptedCoins = coinValues;
 		mgr = new VendingManager();
+
+		if(ENABLE_GUI)
+			startGui();
 
 		return getInstance();
 	}
@@ -162,6 +171,15 @@ public class VendingManager {
 		for (int i = 0; i< rackCount; i++){
 			getPopCanRack(i).register(listener);;
 		}
+	}
+
+	public static void startGui() {
+
+		gui = new GUIMain(vm, acceptedCoins);
+		gui.init();
+
+		//attach panel to displayDriver
+		displayDriver.attachGuiDisplay(gui.getSidePanel().getDisplayPanel());
 	}
 
 //^^^=======================SETUP END=======================^^^
@@ -632,10 +650,21 @@ public class VendingManager {
 	 * @param args Command line arguments
 	 */
 	public static void main(String[] args) {
-		mgr = VendingManager.getInstance();
-		if (ENABLE_GUI) {
-			GUIMain gui = new GUIMain(vm, acceptedCoins);
-			gui.init();
-		}
+		final int[] coinKinds = new int[] { 5, 10, 25, 100, 200 };
+
+		List<String> popCanNames = Arrays.asList("Coke", "Sprite", "Crush", "Ale", "Pepsi", "Diet");
+		List<Integer> popCanCosts = Arrays.asList(250, 250, 250, 250, 250, 250);
+
+		int selectionButtonCount = popCanNames.size();
+		int coinRackCapacity = 15;
+		int popCanRackCapacity = 10;
+		int receptacleCapacity = 200;
+		int deliveryChuteCapacity = 200;
+		int coinReturnCapacity = 200;
+
+		VendingMachine machine = new VendingMachine(coinKinds, selectionButtonCount, coinRackCapacity, popCanRackCapacity,
+				receptacleCapacity, deliveryChuteCapacity, coinReturnCapacity);
+
+		VendingManager manager = VendingManager.initialize(machine, coinKinds);
 	}
 }

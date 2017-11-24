@@ -18,11 +18,14 @@ public class DispListener extends VendingListener implements DisplayListener {
 	private String messageLast = "";
 	private String messageCurrent = "";
 	private VendingManager mgr;
-	
+
+	/**
+	 * @param manager The vending machine manager
+	 */
 	public DispListener(VendingManager manager) {
 		mgr = manager;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 *
@@ -35,11 +38,10 @@ public class DispListener extends VendingListener implements DisplayListener {
 		messageLast = oldMessage;
 		messageCurrent = newMessage;
 		String greeting = DisplayDriver.getGreeetingMessage();
-		if (newMessage != (null) && !newMessage.equals("") && !newMessage.equals(greeting)) 
-			if (mgr != null) 
+		if (newMessage != (null) && !newMessage.equals("") && !newMessage.equals(greeting))
+			if (mgr != null)
 				mgr.log("Message displayed: " + newMessage);
 	}
-
 
 	/**
 	 * Returns the last message displayed
@@ -58,4 +60,5 @@ public class DispListener extends VendingListener implements DisplayListener {
 	public String getCurrentMessage() {
 		return messageCurrent;
 	}
+
 }
