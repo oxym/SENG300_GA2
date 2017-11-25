@@ -16,6 +16,10 @@ import javax.swing.border.Border;
 
 import ca.ucalgary.seng300.a2.MachineConfiguration;
 
+/**
+ * This panel holds the feedback to the user including a display, and indicator lights
+ *
+ */
 public class GUIDisplayMain extends GUIPanel implements GuiInterfaceDisplay, GuiInterfaceIndicators {
 
 	private static final long serialVersionUID = 6739741022013889750L;
@@ -59,7 +63,7 @@ public class GUIDisplayMain extends GUIPanel implements GuiInterfaceDisplay, Gui
 		display.setFont(new Font("Monospaced", Font.PLAIN, 18));
 		display.setBackground(COLOR_BLACK);
 		display.setForeground(COLOR_DISPLAYTEXT);
-		display.setColumns(60);
+		display.setColumns(40);
 		display.setEditable(false);
 
 		Border border = BorderFactory.createLineBorder(Color.DARK_GRAY, 7);
@@ -68,14 +72,14 @@ public class GUIDisplayMain extends GUIPanel implements GuiInterfaceDisplay, Gui
 
 
 		//add components and layout panel
-	    constraints.anchor = GridBagConstraints.FIRST_LINE_START;
+	    constraints.anchor = GridBagConstraints.NORTH;
 	    constraints.fill = GridBagConstraints.BOTH;
 	    constraints.gridx = 0;
 	    constraints.gridy = 0;
 	    constraints.weightx = 0.33;
 	    constraints.weighty = 0.5;
 		constraints.gridwidth = GridBagConstraints.REMAINDER;
-		constraints.insets = new Insets(5, 5, 10, 5);
+		constraints.insets = new Insets(10, 5, 15, 5);
 		add(display, constraints);
 
 		//indicator lights
@@ -83,9 +87,9 @@ public class GUIDisplayMain extends GUIPanel implements GuiInterfaceDisplay, Gui
 		constraints.gridwidth = 2;
 		constraints.weighty = 0.0;
 
-		//TODO: center indicator lights
 		constraints.gridx = 0;
 		constraints.gridy++;
+		constraints.gridwidth = GridBagConstraints.RELATIVE;
 		add(indicator[EXACT_CHANGE], constraints);
 		constraints.gridwidth = GridBagConstraints.REMAINDER;
 		constraints.gridx++;
@@ -105,8 +109,6 @@ public class GUIDisplayMain extends GUIPanel implements GuiInterfaceDisplay, Gui
 		setVisible(true);
 	}
 
-	//TODO methods to update display and indicator lights
-
 	/**
 	 * Displays the message in the display field
 	 * @param msg The message to display
@@ -116,6 +118,9 @@ public class GUIDisplayMain extends GUIPanel implements GuiInterfaceDisplay, Gui
 		update();
 	}
 
+	/* (non-Javadoc)
+	 * @see ca.ucalgary.seng300.a2.gui.GuiInterfaceIndicators#indicatorOn(int)
+	 */
 	@Override
 	public void indicatorOn(int index) {
 		ImageIcon indicator_on = new ImageIcon("images/indicator_on.png");
@@ -124,12 +129,14 @@ public class GUIDisplayMain extends GUIPanel implements GuiInterfaceDisplay, Gui
 
 	}
 
+	/* (non-Javadoc)
+	 * @see ca.ucalgary.seng300.a2.gui.GuiInterfaceIndicators#indicatorOff(int)
+	 */
 	@Override
 	public void indicatorOff(int index) {
 		ImageIcon indicator_on = new ImageIcon("images/indicator_off.png");
 		indicator[index].setIcon(indicator_on);
 		update();
 	}
-
 
 }

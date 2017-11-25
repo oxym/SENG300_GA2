@@ -4,7 +4,6 @@ import org.lsmr.vending.PopCan;
 import org.lsmr.vending.hardware.*;
 
 import ca.ucalgary.seng300.a2.gui.GuiInterfaceDeliveryChute;
-import ca.ucalgary.seng300.a2.gui.GuiInterfaceIndicators;
 
 /**
  * Event-handling listener class for PopCanRack and DeliveryChute.
