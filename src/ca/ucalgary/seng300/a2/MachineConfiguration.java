@@ -8,6 +8,11 @@ import java.util.List;
  *
  */
 public class MachineConfiguration {
+
+	//indicator indices
+	public static final int OUT_OF_ORDER = 0;
+	public static final int EXACT_CHANGE = 1;
+
 	public final int[] coinKinds = new int[] { 5, 10, 25, 100, 200 };
 
 	public final List<String> popCanNames = Arrays.asList("Coke", "Sprite", "Crush", "Ale", "Pepsi", "Diet");

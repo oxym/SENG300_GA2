@@ -13,14 +13,19 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 
-public class GUIDisplayMain extends GUIPanel implements GuiDisplayInterface {
+public class GUIDisplayMain extends GUIPanel implements GuiInterfaceDisplay, GuiInterfaceIndicators {
 
+	private static final String MSG_INIT = "Initializing...";
+	private static final int OUT_OF_ORDER = 0;
+	private static final int EXACT_CHANGE = 1;
 	private JLabel displayOutline;
 	private JTextField display;
-	private JLabel indicatorOutOfOrder;
-	private JLabel labelOutOfOrder;
-	private JLabel indicatorExactChange;
-	private JLabel labelExactChange;
+	private JLabel[] label;
+	private JLabel[] indicator;
+	private String[] labelText = {"Out Of Order", "Exact Change"};;
+
+	GUIDisplayMain(){
+	}
 
 
 	@Override
@@ -32,17 +37,15 @@ public class GUIDisplayMain extends GUIPanel implements GuiDisplayInterface {
 		setBackground(COLOR_BACKGROUND);
 
 		//initialize components
-		ImageIcon display_background = new ImageIcon("images/display.png");
-		displayOutline = new JLabel(display_background);
-		ImageIcon imageOutOfOrder = new ImageIcon("images/indicator_off.png");
-		indicatorOutOfOrder = new JLabel(imageOutOfOrder);
-		ImageIcon imageExactChange = new ImageIcon("images/indicator_off.png");
-		indicatorExactChange = new JLabel(imageExactChange);
-		labelOutOfOrder = new JLabel("Out Of Order");
-		labelExactChange = new JLabel("ExactChange");
+		//ImageIcon display_background = new ImageIcon("images/display.png");
+		//displayOutline = new JLabel(display_background);
+		ImageIcon indicatorOff = new ImageIcon("images/indicator_off.png");
+		indicator[OUT_OF_ORDER] = new JLabel(indicatorOff);
+		indicator[EXACT_CHANGE] = new JLabel(indicatorOff);
+		label[OUT_OF_ORDER] = new JLabel(labelText[OUT_OF_ORDER]);
+		label[EXACT_CHANGE] = new JLabel(labelText[EXACT_CHANGE]);
 
-		display = new JTextField("Display");
-		//TODO: increase border width, etc, system font
+		display = new JTextField(MSG_INIT);
 		//display.setFont(new Font("MS Gothic", Font.PLAIN, 18));
 		display.setFont(new Font("Monospaced", Font.PLAIN, 18));
 		display.setBackground(COLOR_BLACK);
@@ -75,20 +78,20 @@ public class GUIDisplayMain extends GUIPanel implements GuiDisplayInterface {
 		//TODO: center indicator lights
 		constraints.gridx = 0;
 		constraints.gridy++;
-		add(indicatorExactChange, constraints);
+		add(indicator[EXACT_CHANGE], constraints);
 		constraints.gridwidth = GridBagConstraints.REMAINDER;
 		constraints.gridx++;
-		add(indicatorOutOfOrder, constraints);
+		add(indicator[OUT_OF_ORDER], constraints);
 
 		//indicator labels
 		constraints.gridwidth = GridBagConstraints.RELATIVE;
 		constraints.insets = new Insets(5, 5, 5, 5);
 		constraints.gridy++;
 		constraints.gridx = 0;
-		add(labelExactChange, constraints);
+		add(label[EXACT_CHANGE], constraints);
 		constraints.gridheight = GridBagConstraints.REMAINDER;
 		constraints.gridx++;
-		add(labelOutOfOrder, constraints);
+		add(label[OUT_OF_ORDER], constraints);
 
 
 		setVisible(true);
@@ -105,31 +108,20 @@ public class GUIDisplayMain extends GUIPanel implements GuiDisplayInterface {
 		update();
 	}
 
-	/**
-	 * Turns off the Out of Order indicator
-	 */
-	public void indicatorOutOfOrderOff() {
+	@Override
+	public void indicatorOn(int index) {
+		ImageIcon indicator_on = new ImageIcon("images/indicator_on.png");
+		indicator[index].setIcon(indicator_on);
+		update();
 
 	}
 
-	/**
-	 * Turns on the Out of Order indicator
-	 */
-	public void indicatorOutOfOrderOn() {
-
+	@Override
+	public void indicatorOff(int index) {
+		ImageIcon indicator_on = new ImageIcon("images/indicator_on.png");
+		indicator[index].setIcon(indicator_on);
+		update();
 	}
 
-	/**
-	 * Turns off the Exact Change indicator
-	 */
-	public void indicatorExactChangerOff() {
 
-	}
-
-	/**
-	 * Turns on the Exact Change indicator
-	 */
-	public void indicatorExactChangeOn() {
-
-	}
 }

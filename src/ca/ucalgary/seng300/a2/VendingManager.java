@@ -6,7 +6,8 @@ import java.util.List;
 import org.lsmr.vending.hardware.*;
 
 import ca.ucalgary.seng300.a2.gui.GUIMain;
-import ca.ucalgary.seng300.a2.gui.GuiDisplayInterface;
+import ca.ucalgary.seng300.a2.gui.GuiInterfaceDisplay;
+import ca.ucalgary.seng300.a2.gui.GuiInterfaceIndicators;
 
 import java.io.FileNotFoundException;
 
@@ -178,8 +179,10 @@ public class VendingManager {
 		gui = new GUIMain(vm, acceptedCoins);
 		gui.init();
 
+//TODO: attach indicator lights, coin return, and any other gui output elements
 		//attach panel to displayDriver
 		displayDriver.attachGuiDisplay(gui.getSidePanel().getDisplayPanel());
+		lightListener.attachGuiIndicators((GuiInterfaceIndicators) gui.getSidePanel().getDisplayPanel());
 	}
 
 //^^^=======================SETUP END=======================^^^
@@ -362,6 +365,9 @@ public class VendingManager {
 		if (getCredit() >= cost){
 			getPopCanRack(popIndex).dispensePopCan(); //Will throw EmptyException if pop rack is empty
 			credit -= cost; //Will only be performed if the pop is successfully dispensed.
+			if (ENABLE_GUI) {
+				//TODO: update the gui delivery chute
+			}
 
 			//These coin-related actions may need to be nested in a conditional once additional
 			//Payment methods are supported. It depends on whether change is returned automatically.
@@ -401,6 +407,7 @@ public class VendingManager {
 			while (getCredit() >= coinVal && rack.size() != 0){
 				rack.releaseCoin();
 				subtractCredit(coinVal);
+				//TODO: gui integration with coin return
 			}
 
 			if (getCredit() == 0){

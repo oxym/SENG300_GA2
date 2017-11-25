@@ -4,7 +4,7 @@ package ca.ucalgary.seng300.a2.gui;
  *This class ensures that any GUI display that implements it will have the methods contained in this interface
  *
  */
-public interface GuiDisplayInterface {
+public interface GuiInterfaceDisplay {
 
 	/**
 	 * The message to update the display with

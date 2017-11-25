@@ -3,7 +3,7 @@ package ca.ucalgary.seng300.a2;
 import org.lsmr.vending.hardware.Display;
 
 import ca.ucalgary.seng300.a2.gui.GUIMain;
-import ca.ucalgary.seng300.a2.gui.GuiDisplayInterface;
+import ca.ucalgary.seng300.a2.gui.GuiInterfaceDisplay;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -25,10 +25,8 @@ public class DisplayDriver {
 	private VendingManager mgr;
 	private Display display;
 
-	private GuiDisplayInterface guiDisplay;
+	private GuiInterfaceDisplay guiDisplay;
 	private boolean guiDisplayPresent;
-
-	private GUIMain gui;
 
 	/**
 	 * @param display
@@ -49,7 +47,7 @@ public class DisplayDriver {
 	 * @param guiDisplay
 	 *            the object representing the guiDisplay that has access methods
 	 */
-	public DisplayDriver(Display display, GuiDisplayInterface guiDisplay) {
+	public DisplayDriver(Display display, GuiInterfaceDisplay guiDisplay) {
 		this(display);
 		this.guiDisplay = guiDisplay;
 		guiDisplayPresent = true;
@@ -180,19 +178,8 @@ public class DisplayDriver {
 	 * @param guiDisplay
 	 *            gui display object
 	 */
-	public void attachGuiDisplay(GuiDisplayInterface guiDisplay) {
+	public void attachGuiDisplay(GuiInterfaceDisplay guiDisplay) {
 		this.guiDisplay = guiDisplay;
-		guiDisplayPresent = true;
-	}
-
-	/**
-	 * Attaches a gui Display object
-	 *
-	 * @param guiDisplay
-	 *            gui display object
-	 */
-	public void attachGui(GUIMain gui) {
-		this.gui = gui;
 		guiDisplayPresent = true;
 	}
 
