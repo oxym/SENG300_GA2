@@ -28,7 +28,7 @@ public class VendingManagerSystemTest {
 
 	private VendingMachine machine = null;
 	private VendingManager manager = null;
-	private int[] coinKinds = new int[] { 5, 10, 25, 100, 200 };
+	private MachineConfiguration cfg;
 
 	// Stored as a field due to bugs with JUnit and multi-threading
 	private DispListener testDisplayListener;
@@ -36,21 +36,13 @@ public class VendingManagerSystemTest {
 	@Before
 	public void setup() throws Exception {
 
-		List<String> popCanNames = Arrays.asList("Coke", "Sprite", "Crush", "Ale", "Pepsi", "Diet");
-		List<Integer> popCanCosts = Arrays.asList(250, 250, 250, 250, 250, 250);
+		cfg = new MachineConfiguration();
 
-		int selectionButtonCount = popCanNames.size();
-		int coinRackCapacity = 15;
-		int popCanRackCapacity = 10;
-		int receptacleCapacity = 200;
-		int deliveryChuteCapacity = 200;
-		int coinReturnCapacity = 200;
+		VendingMachine machine = new VendingMachine(cfg.coinKinds, cfg.selectionButtonCount, cfg.coinRackCapacity, cfg.popCanRackCapacity,
+				cfg.receptacleCapacity, cfg.deliveryChuteCapacity, cfg.coinReturnCapacity);
+		machine.configure(cfg.popCanNames, cfg.popCanCosts);
 
-		machine = new VendingMachine(coinKinds, selectionButtonCount, coinRackCapacity, popCanRackCapacity,
-				receptacleCapacity, deliveryChuteCapacity, coinReturnCapacity);
-		machine.configure(popCanNames, popCanCosts);
-
-		manager = VendingManager.initialize(machine, coinKinds);
+		manager = VendingManager.initialize(machine, cfg.coinKinds);
 
 		machine.disableSafety(); //needed due to singleton instance being passed to multiple tests
 								 //that appear to clone the current state of the machine at the time of instantiation
@@ -196,14 +188,11 @@ public class VendingManagerSystemTest {
 	 */
 	@Test
 	public void testOverflowCoinRack() {
-		List<String> popCanNames = Arrays.asList("Coke", "Sprite", "Crush", "Ale", "Pepsi", "Diet");
-		List<Integer> popCanCosts = Arrays.asList(250, 250, 250, 250, 250, 250);
 
-		int[] coinKinds = new int[] { 5, 10, 25, 100, 200 };
 		int coinRackCapacity = 10;
 
-		machine = new VendingMachine(coinKinds, popCanNames.size(), coinRackCapacity, 1, 1, 1, 10);
-		machine.configure(popCanNames, popCanCosts);
+		machine = new VendingMachine(cfg.coinKinds, cfg.popCanNames.size(), cfg.coinRackCapacity, 1, 1, 1, 10);
+		machine.configure(cfg.popCanNames, cfg.popCanCosts);
 
 		Coin coin = new Coin(100);
 		for (int i = 0; i < 2; i++) { // Adds three dollars to the machine
@@ -226,18 +215,15 @@ public class VendingManagerSystemTest {
 	 */
 	@Test
 	public void testOverflowCoinReturn() throws DisabledException {
-		List<String> popCanNames = Arrays.asList("Coke", "Sprite", "Crush", "Ale", "Pepsi", "Diet");
-		List<Integer> popCanCosts = Arrays.asList(250, 250, 250, 250, 250, 250);
 
-		int[] coinKinds = new int[] { 5, 10, 25, 100, 200 };
 		int coinReturnCapacity = 1;
 
-		machine = new VendingMachine(coinKinds, popCanNames.size(), 10, 5, 5, 5, coinReturnCapacity);
-		machine.configure(popCanNames, popCanCosts);
+		machine = new VendingMachine(cfg.coinKinds, cfg.popCanNames.size(), 10, 5, 5, 5, coinReturnCapacity);
+		machine.configure(cfg.popCanNames, cfg.popCanCosts);
 		machine.loadPopCans(1, 1, 1, 1, 1, 1);
 		machine.loadCoins(5, 5, 5, 5, 5);
 
-		manager = VendingManager.initialize(machine, coinKinds);
+		manager = VendingManager.initialize(machine, cfg.coinKinds);
 
 		Coin coin = new Coin(1);
 		machine.getCoinSlot().addCoin(coin);
@@ -393,15 +379,10 @@ public class VendingManagerSystemTest {
 	@Test
 	public void testDeliveryChuteOverflow() throws DisabledException {
 
-		//Initialize a new
-		List<String> popCanNames = Arrays.asList("Coke", "Sprite", "Crush", "Ale", "Pepsi", "Diet");
-		List<Integer> popCanCosts = Arrays.asList(250, 250, 250, 250, 250, 250);
+		machine = new VendingMachine(cfg.coinKinds, cfg.popCanNames.size(), 10, 10,	10, 1, 10);
+		machine.configure(cfg.popCanNames, cfg.popCanCosts);
 
-		//note bug in code, delivery chute is initialized with receptacle capacity in VendingMachine.Java
-		machine = new VendingMachine(coinKinds, popCanNames.size(), 10, 10,	1, 1, 10);
-		machine.configure(popCanNames, popCanCosts);
-
-		manager = VendingManager.initialize(machine, coinKinds);
+		manager = VendingManager.initialize(machine, cfg.coinKinds);
 
 		machine.loadPopCans(10, 10, 10, 10, 10, 10);
 		machine.disableSafety();
@@ -429,7 +410,7 @@ public class VendingManagerSystemTest {
 		assertEquals(0, manager.getCredit()); // default credit should be 0
 		int amountInserted = 0;
 
-		for (int coinValue : coinKinds) {
+		for (int coinValue : cfg.coinKinds) {
 			userAddCoin(coinValue);
 			amountInserted += coinValue;
 			assertEquals(amountInserted, manager.getCredit());// confirm that amount inserted is correct

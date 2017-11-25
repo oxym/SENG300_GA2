@@ -650,21 +650,12 @@ public class VendingManager {
 	 * @param args Command line arguments
 	 */
 	public static void main(String[] args) {
-		final int[] coinKinds = new int[] { 5, 10, 25, 100, 200 };
+		MachineConfiguration cfg = new MachineConfiguration();
 
-		List<String> popCanNames = Arrays.asList("Coke", "Sprite", "Crush", "Ale", "Pepsi", "Diet");
-		List<Integer> popCanCosts = Arrays.asList(250, 250, 250, 250, 250, 250);
+		VendingMachine machine = new VendingMachine(cfg.coinKinds, cfg.selectionButtonCount, cfg.coinRackCapacity, cfg.popCanRackCapacity,
+				cfg.receptacleCapacity, cfg.deliveryChuteCapacity, cfg.coinReturnCapacity);
+		machine.configure(cfg.popCanNames, cfg.popCanCosts);
 
-		int selectionButtonCount = popCanNames.size();
-		int coinRackCapacity = 15;
-		int popCanRackCapacity = 10;
-		int receptacleCapacity = 200;
-		int deliveryChuteCapacity = 200;
-		int coinReturnCapacity = 200;
-
-		VendingMachine machine = new VendingMachine(coinKinds, selectionButtonCount, coinRackCapacity, popCanRackCapacity,
-				receptacleCapacity, deliveryChuteCapacity, coinReturnCapacity);
-
-		VendingManager manager = VendingManager.initialize(machine, coinKinds);
+		VendingManager.initialize(machine, cfg.coinKinds);
 	}
 }
