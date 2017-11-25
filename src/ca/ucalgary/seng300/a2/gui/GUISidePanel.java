@@ -1,9 +1,13 @@
 package ca.ucalgary.seng300.a2.gui;
 
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
+import javax.swing.BorderFactory;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.border.Border;
 
 /**
  * This panel holds all of the panels that are on the right hand side of the vending machine
@@ -31,6 +35,9 @@ public class GUISidePanel extends GUIPanel {
 		GridBagConstraints constraints = new GridBagConstraints();
 		GridBagLayout gridbag = new GridBagLayout();
 		setLayout(gridbag);
+
+		Border border = BorderFactory.createMatteBorder(4, 4, 1, 1, COLOR_DARKGRAY);
+		this.setBorder(border);
 
 		displayPanel = new GUIDisplayMain();
 		coinSlotPanel = new GUICoinSlot();

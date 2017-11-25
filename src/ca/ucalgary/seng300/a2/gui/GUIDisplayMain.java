@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -13,23 +14,31 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 
+import ca.ucalgary.seng300.a2.MachineConfiguration;
+
 public class GUIDisplayMain extends GUIPanel implements GuiInterfaceDisplay, GuiInterfaceIndicators {
 
+	private static final long serialVersionUID = 6739741022013889750L;
 	private static final String MSG_INIT = "Initializing...";
-	private static final int OUT_OF_ORDER = 0;
-	private static final int EXACT_CHANGE = 1;
+	private static final int OUT_OF_ORDER = MachineConfiguration.OUT_OF_ORDER;
+	private static final int EXACT_CHANGE = MachineConfiguration.EXACT_CHANGE;
 	private JLabel displayOutline;
 	private JTextField display;
 	private JLabel[] label;
 	private JLabel[] indicator;
-	private String[] labelText = {"Out Of Order", "Exact Change"};;
+
+	//TODO: Move these to configuration file
+	private String[] indicatorLabelText = {"Out Of Order", "Exact Change"};;
 
 	GUIDisplayMain(){
 	}
 
-
 	@Override
 	void init() {
+
+		indicator = new JLabel[indicatorLabelText.length];
+		label = new JLabel[indicatorLabelText.length];
+
 		GridBagConstraints constraints = new GridBagConstraints();
 		GridBagLayout gridbag = new GridBagLayout();
 
@@ -42,8 +51,8 @@ public class GUIDisplayMain extends GUIPanel implements GuiInterfaceDisplay, Gui
 		ImageIcon indicatorOff = new ImageIcon("images/indicator_off.png");
 		indicator[OUT_OF_ORDER] = new JLabel(indicatorOff);
 		indicator[EXACT_CHANGE] = new JLabel(indicatorOff);
-		label[OUT_OF_ORDER] = new JLabel(labelText[OUT_OF_ORDER]);
-		label[EXACT_CHANGE] = new JLabel(labelText[EXACT_CHANGE]);
+		label[OUT_OF_ORDER] = new JLabel(indicatorLabelText[OUT_OF_ORDER]);
+		label[EXACT_CHANGE] = new JLabel(indicatorLabelText[EXACT_CHANGE]);
 
 		display = new JTextField(MSG_INIT);
 		//display.setFont(new Font("MS Gothic", Font.PLAIN, 18));
@@ -52,7 +61,6 @@ public class GUIDisplayMain extends GUIPanel implements GuiInterfaceDisplay, Gui
 		display.setForeground(COLOR_DISPLAYTEXT);
 		display.setColumns(60);
 		display.setEditable(false);
-
 
 		Border border = BorderFactory.createLineBorder(Color.DARK_GRAY, 7);
 
@@ -118,7 +126,7 @@ public class GUIDisplayMain extends GUIPanel implements GuiInterfaceDisplay, Gui
 
 	@Override
 	public void indicatorOff(int index) {
-		ImageIcon indicator_on = new ImageIcon("images/indicator_on.png");
+		ImageIcon indicator_on = new ImageIcon("images/indicator_off.png");
 		indicator[index].setIcon(indicator_on);
 		update();
 	}

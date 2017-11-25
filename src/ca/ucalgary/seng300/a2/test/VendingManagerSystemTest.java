@@ -38,7 +38,7 @@ public class VendingManagerSystemTest {
 
 		cfg = new MachineConfiguration();
 
-		VendingMachine machine = new VendingMachine(cfg.coinKinds, cfg.selectionButtonCount, cfg.coinRackCapacity, cfg.popCanRackCapacity,
+		machine = new VendingMachine(cfg.coinKinds, cfg.selectionButtonCount, cfg.coinRackCapacity, cfg.popCanRackCapacity,
 				cfg.receptacleCapacity, cfg.deliveryChuteCapacity, cfg.coinReturnCapacity);
 		machine.configure(cfg.popCanNames, cfg.popCanCosts);
 

@@ -6,10 +6,13 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.io.IOException;
 
+import javax.swing.BorderFactory;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
+import javax.swing.border.Border;
 
 import org.lsmr.vending.hardware.VendingMachine;
 
@@ -60,8 +63,12 @@ public class GUIMain extends JFrame {
 	 *
 	 */
 	public void init() {
+
 		setLayout(new BorderLayout());
 		Container pane = getContentPane();
+
+		Border border = BorderFactory.createLineBorder(Color.DARK_GRAY, 10);
+		((JComponent) pane).setBorder(border);
 
 		Dimension panelSize = new Dimension((int) (X_SIZE * V_SPLIT), Y_SIZE);
 		sidePanel = new GUISidePanel();
@@ -107,4 +114,11 @@ public class GUIMain extends JFrame {
 		return sidePanel;
 	}
 
+	/**
+	 * Returns the delivery chute panel
+	 * @return the delivery chute panel object
+	 */
+	public GuiInterfaceDeliveryChute getDeliveryChutePanel() {
+		return (GuiInterfaceDeliveryChute) deliveryChutePanel;
+	}
 }

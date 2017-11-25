@@ -13,7 +13,7 @@ public class LightListener extends VendingListener implements IndicatorLightList
 	protected static VendingManager mgr;
 
 	private GuiInterfaceIndicators guiIndicators;
-	private boolean guiIndicatorsPresent;
+	private boolean guiIndicatorsPresent = false;
 
 	protected LightListener() {
 	}
@@ -57,7 +57,7 @@ public class LightListener extends VendingListener implements IndicatorLightList
 		} else if (light == mgr.getOutOfOrderLight()) {
 			message = "Out of order (safety) light turned on.";
 			if (guiIndicatorsPresent)
-				guiIndicators.indicatorOn(MachineConfiguration.EXACT_CHANGE);
+				guiIndicators.indicatorOn(MachineConfiguration.OUT_OF_ORDER);
 		} else
 			message = "Unknown light turned on.";
 		mgr.log(message);

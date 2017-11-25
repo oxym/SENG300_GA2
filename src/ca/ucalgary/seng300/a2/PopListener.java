@@ -3,6 +3,9 @@ package ca.ucalgary.seng300.a2;
 import org.lsmr.vending.PopCan;
 import org.lsmr.vending.hardware.*;
 
+import ca.ucalgary.seng300.a2.gui.GuiInterfaceDeliveryChute;
+import ca.ucalgary.seng300.a2.gui.GuiInterfaceIndicators;
+
 /**
  * Event-handling listener class for PopCanRack and DeliveryChute.
  */
@@ -10,6 +13,9 @@ public class PopListener extends VendingListener implements PopCanRackListener, 
 
 	protected static PopListener listener;
 	protected static VendingManager mgr;
+
+	private GuiInterfaceDeliveryChute guiDeliveryChute;
+	private boolean guiDeliveryChutePresent = false;
 
 	protected PopListener(){}
 
@@ -99,6 +105,9 @@ public class PopListener extends VendingListener implements PopCanRackListener, 
 	@Override
 	public void itemDelivered(DeliveryChute chute) {
 		mgr.log("PopCan delivered to the Delivery Chute");
+		if (guiDeliveryChutePresent) {
+			guiDeliveryChute.addItem();
+		}
 	}
 
 	/*
@@ -112,10 +121,14 @@ public class PopListener extends VendingListener implements PopCanRackListener, 
 	/*
 	 * Handles the "notifyDoorClosed" event from the registered deliveryChute
 	 * If there is room in the chute then keep the safety off
+	 * In the hardware the door open is only notified if all of the items are removed
 	 *
 	 */
 	@Override
 	public void doorClosed(DeliveryChute chute) {
+		if (guiDeliveryChutePresent) {
+			guiDeliveryChute.removeItems();
+		}
 		mgr.log("Delivery chute door closed");
 		if (chute.hasSpace())
 			mgr.disableSafety();
@@ -130,6 +143,16 @@ public class PopListener extends VendingListener implements PopCanRackListener, 
 	public void chuteFull(DeliveryChute chute) {
 		mgr.log("Delivery chute full");
 		mgr.enableSafety();
+	}
+
+	/**
+	 * Attach a gui delivery chute object
+	 *
+	 * @param guiInterfaceDeliveryChute A gui Delivery Chute
+	 */
+	public void attachGuiDeliveryChute(GuiInterfaceDeliveryChute guiDeliveryChute) {
+		this.guiDeliveryChute = guiDeliveryChute;
+		guiDeliveryChutePresent = true;
 	}
 //^^^=======================DELIVERY CHUTE LISTENER METHODS END=======================^^^
 }

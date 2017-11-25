@@ -12,7 +12,7 @@ import javax.swing.ImageIcon;
  * users may click to remove the item
  *
  */
-public class GUIDeliveryChute extends GUIPanel {
+public class GUIDeliveryChute extends GUIPanel implements GuiInterfaceDeliveryChute {
 
 	private static final long serialVersionUID = 4619366058643743527L;
 
@@ -38,8 +38,8 @@ public class GUIDeliveryChute extends GUIPanel {
 		setBackground(COLOR_BACKGROUND);
 
 		//instantiate components
-		ImageIcon dispenser_icon = new ImageIcon("images/dispenser_empty.png");
-		chute = new JLabel(dispenser_icon);
+		ImageIcon chuteIcon = new ImageIcon("images/dispenser_empty.png");
+		chute = new JLabel(chuteIcon);
 		MouseListener mouseListener = new MouseListener();
 		chute.addMouseListener(mouseListener);
 
@@ -52,38 +52,50 @@ public class GUIDeliveryChute extends GUIPanel {
 	 * Adds an item to the delivery chute
 	 */
 	public void addItem() {
+		ImageIcon chuteIcon;
+
+		//update quantity of items in the chute
 		itemQty++;
+
+		//select correct image
 		if (itemQty >5) {
-			ImageIcon icon = new ImageIcon("images/dispenser_over5.png");
+			chuteIcon = new ImageIcon("images/dispenser_over5.png");
 		} else {
 			String path = "images/dispenser_" + itemQty + ".png";
-			ImageIcon icon = new ImageIcon("images/dispenser_over5.png");
+			chuteIcon = new ImageIcon(path);
 		}
 
-		//update jlabel and repaint panel
+		//update the display
+		chute.setIcon(chuteIcon);
+		update();
 	}
 
 	/**
-	 * Removes an item to the delivery chute
+	 * Removes an item from the delivery chute
 	 */
-	public void removeItem() {
+	public void removeItems() {
 
+		//update quantity of items in the chute
 		if (itemQty > 0) {
-			itemQty--;
-		}
+			itemQty = 0;
 
-		if (itemQty >5) {
-			ImageIcon icon = new ImageIcon("images/dispenser_over5.png");
-		}
-		else if (itemQty == 0) {
-			ImageIcon icon = new ImageIcon("images/dispenser_empty.png");
-		}
-		else {
-			String path = "images/dispenser_" + itemQty + ".png";
-			ImageIcon icon = new ImageIcon("images/dispenser_over5.png");
-		}
+			ImageIcon chuteIcon;
+			//select correct image
+			if (itemQty >5) {
+				chuteIcon = new ImageIcon("images/dispenser_over5.png");
+			}
+			else if (itemQty == 0) {
+				chuteIcon = new ImageIcon("images/dispenser_empty.png");
+			}
+			else {
+				String path = "images/dispenser_" + itemQty + ".png";
+				chuteIcon = new ImageIcon(path);
+			}
 
-		//update jlabel and repaint panel
+			//update image
+			chute.setIcon(chuteIcon);
+			update();
+		}
 	}
 
 	/**
@@ -97,7 +109,7 @@ public class GUIDeliveryChute extends GUIPanel {
 	    @Override
 	    public void mousePressed(MouseEvent e)
 	    {
-	    	System.out.println("It works");
+	    	removeItems();
 	    }
 	}
 

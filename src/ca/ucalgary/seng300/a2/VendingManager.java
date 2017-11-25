@@ -183,6 +183,7 @@ public class VendingManager {
 		//attach panel to displayDriver
 		displayDriver.attachGuiDisplay(gui.getSidePanel().getDisplayPanel());
 		lightListener.attachGuiIndicators((GuiInterfaceIndicators) gui.getSidePanel().getDisplayPanel());
+		popListener.attachGuiDeliveryChute(gui.getDeliveryChutePanel());
 	}
 
 //^^^=======================SETUP END=======================^^^
