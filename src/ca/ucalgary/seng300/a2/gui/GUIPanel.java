@@ -2,7 +2,6 @@ package ca.ucalgary.seng300.a2.gui;
 
 import java.awt.Color;
 
-import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 /**

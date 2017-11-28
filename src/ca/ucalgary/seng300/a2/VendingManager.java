@@ -1,12 +1,9 @@
 package ca.ucalgary.seng300.a2;
 
 import java.util.Arrays;
-import java.util.List;
-
 import org.lsmr.vending.hardware.*;
 
 import ca.ucalgary.seng300.a2.gui.GUIMain;
-import ca.ucalgary.seng300.a2.gui.GuiInterfaceDisplay;
 import ca.ucalgary.seng300.a2.gui.GuiInterfaceIndicators;
 
 import java.io.FileNotFoundException;

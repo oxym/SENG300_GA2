@@ -2,18 +2,10 @@ package ca.ucalgary.seng300.a2.test;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
-import org.lsmr.vending.Coin;
-import org.lsmr.vending.hardware.DisabledException;
 import org.lsmr.vending.hardware.Display;
-import org.lsmr.vending.hardware.VendingMachine;
-
 import ca.ucalgary.seng300.a2.DispListener;
-import ca.ucalgary.seng300.a2.VendingManager;
 
 public class TestDispListener {
 

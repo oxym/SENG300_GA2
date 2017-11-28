@@ -8,8 +8,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.ImageIcon;
 
 /**
- * This panel simulates the Delivery Chute
- * users may click to remove the item
+ * This panel simulates the Delivery Chute users may click to remove the item
  *
  */
 public class GUIDeliveryChute extends GUIPanel implements GuiInterfaceDeliveryChute {
@@ -18,32 +17,34 @@ public class GUIDeliveryChute extends GUIPanel implements GuiInterfaceDeliveryCh
 
 	private int itemQty;
 
-	//components in the JPanel
+	// components in the JPanel
 	private JLabel chute;
 
 	/**
 	 * Default Constructor
 	 */
-	public GUIDeliveryChute(){
+	public GUIDeliveryChute() {
 		itemQty = 0;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see ca.ucalgary.seng300.a2.gui.GUIPanel#init()
 	 */
 	@Override
 	void init() {
 
-		//set look of panel
+		// set look of panel
 		setBackground(COLOR_BACKGROUND);
 
-		//instantiate components
+		// instantiate components
 		ImageIcon chuteIcon = new ImageIcon("images/dispenser_empty.png");
 		chute = new JLabel(chuteIcon);
 		MouseListener mouseListener = new MouseListener();
 		chute.addMouseListener(mouseListener);
 
-		//add components to the panel and set visibility
+		// add components to the panel and set visibility
 		add(chute);
 		setVisible(true);
 	}
@@ -54,18 +55,18 @@ public class GUIDeliveryChute extends GUIPanel implements GuiInterfaceDeliveryCh
 	public void addItem() {
 		ImageIcon chuteIcon;
 
-		//update quantity of items in the chute
+		// update quantity of items in the chute
 		itemQty++;
 
-		//select correct image
-		if (itemQty >5) {
+		// select correct image
+		if (itemQty > 5) {
 			chuteIcon = new ImageIcon("images/dispenser_over5.png");
 		} else {
 			String path = "images/dispenser_" + itemQty + ".png";
 			chuteIcon = new ImageIcon(path);
 		}
 
-		//update the display
+		// update the display
 		chute.setIcon(chuteIcon);
 		update();
 	}
@@ -75,24 +76,22 @@ public class GUIDeliveryChute extends GUIPanel implements GuiInterfaceDeliveryCh
 	 */
 	public void removeItems() {
 
-		//update quantity of items in the chute
+		// update quantity of items in the chute
 		if (itemQty > 0) {
 			itemQty = 0;
 
 			ImageIcon chuteIcon;
-			//select correct image
-			if (itemQty >5) {
+			// select correct image
+			if (itemQty > 5) {
 				chuteIcon = new ImageIcon("images/dispenser_over5.png");
-			}
-			else if (itemQty == 0) {
+			} else if (itemQty == 0) {
 				chuteIcon = new ImageIcon("images/dispenser_empty.png");
-			}
-			else {
+			} else {
 				String path = "images/dispenser_" + itemQty + ".png";
 				chuteIcon = new ImageIcon(path);
 			}
 
-			//update image
+			// update image
 			chute.setIcon(chuteIcon);
 			update();
 		}
@@ -102,15 +101,16 @@ public class GUIDeliveryChute extends GUIPanel implements GuiInterfaceDeliveryCh
 	 * Mouse listener to handle clicks for delivery chute
 	 *
 	 */
-	class MouseListener extends MouseAdapter{
-	    /* (non-Javadoc)
-	     * @see java.awt.event.MouseAdapter#mousePressed(java.awt.event.MouseEvent)
-	     */
-	    @Override
-	    public void mousePressed(MouseEvent e)
-	    {
-	    	removeItems();
-	    }
+	class MouseListener extends MouseAdapter {
+		/*
+		 * (non-Javadoc)
+		 *
+		 * @see java.awt.event.MouseAdapter#mousePressed(java.awt.event.MouseEvent)
+		 */
+		@Override
+		public void mousePressed(MouseEvent e) {
+			removeItems();
+		}
 	}
 
 }

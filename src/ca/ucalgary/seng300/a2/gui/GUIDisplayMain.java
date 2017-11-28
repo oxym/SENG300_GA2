@@ -5,19 +5,17 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.util.ArrayList;
-
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 
 import ca.ucalgary.seng300.a2.MachineConfiguration;
 
 /**
- * This panel holds the feedback to the user including a display, and indicator lights
+ * This panel holds the feedback to the user including a display, and indicator
+ * lights
  *
  */
 public class GUIDisplayMain extends GUIPanel implements GuiInterfaceDisplay, GuiInterfaceIndicators {
@@ -31,10 +29,10 @@ public class GUIDisplayMain extends GUIPanel implements GuiInterfaceDisplay, Gui
 	private JLabel[] label;
 	private JLabel[] indicator;
 
-	//TODO: Move these to configuration file
-	private String[] indicatorLabelText = {"Out Of Order", "Exact Change"};;
+	// TODO: Move these to configuration file
+	private String[] indicatorLabelText = { "Out Of Order", "Exact Change" };;
 
-	GUIDisplayMain(){
+	GUIDisplayMain() {
 	}
 
 	@Override
@@ -49,9 +47,9 @@ public class GUIDisplayMain extends GUIPanel implements GuiInterfaceDisplay, Gui
 		setLayout(gridbag);
 		setBackground(COLOR_BACKGROUND);
 
-		//initialize components
-		//ImageIcon display_background = new ImageIcon("images/display.png");
-		//displayOutline = new JLabel(display_background);
+		// initialize components
+		// ImageIcon display_background = new ImageIcon("images/display.png");
+		// displayOutline = new JLabel(display_background);
 		ImageIcon indicatorOff = new ImageIcon("images/indicator_off.png");
 		indicator[OUT_OF_ORDER] = new JLabel(indicatorOff);
 		indicator[EXACT_CHANGE] = new JLabel(indicatorOff);
@@ -59,7 +57,7 @@ public class GUIDisplayMain extends GUIPanel implements GuiInterfaceDisplay, Gui
 		label[EXACT_CHANGE] = new JLabel(indicatorLabelText[EXACT_CHANGE]);
 
 		display = new JTextField(MSG_INIT);
-		//display.setFont(new Font("MS Gothic", Font.PLAIN, 18));
+		// display.setFont(new Font("MS Gothic", Font.PLAIN, 18));
 		display.setFont(new Font("Monospaced", Font.PLAIN, 18));
 		display.setBackground(COLOR_BLACK);
 		display.setForeground(COLOR_DISPLAYTEXT);
@@ -70,19 +68,18 @@ public class GUIDisplayMain extends GUIPanel implements GuiInterfaceDisplay, Gui
 
 		display.setBorder(border);
 
-
-		//add components and layout panel
-	    constraints.anchor = GridBagConstraints.NORTH;
-	    constraints.fill = GridBagConstraints.BOTH;
-	    constraints.gridx = 0;
-	    constraints.gridy = 0;
-	    constraints.weightx = 0.33;
-	    constraints.weighty = 0.5;
+		// add components and layout panel
+		constraints.anchor = GridBagConstraints.NORTH;
+		constraints.fill = GridBagConstraints.BOTH;
+		constraints.gridx = 0;
+		constraints.gridy = 0;
+		constraints.weightx = 0.33;
+		constraints.weighty = 0.5;
 		constraints.gridwidth = GridBagConstraints.REMAINDER;
 		constraints.insets = new Insets(10, 5, 15, 5);
 		add(display, constraints);
 
-		//indicator lights
+		// indicator lights
 		constraints.gridwidth = GridBagConstraints.RELATIVE;
 		constraints.gridwidth = 2;
 		constraints.weighty = 0.0;
@@ -95,7 +92,7 @@ public class GUIDisplayMain extends GUIPanel implements GuiInterfaceDisplay, Gui
 		constraints.gridx++;
 		add(indicator[OUT_OF_ORDER], constraints);
 
-		//indicator labels
+		// indicator labels
 		constraints.gridwidth = GridBagConstraints.RELATIVE;
 		constraints.insets = new Insets(5, 5, 5, 5);
 		constraints.gridy++;
@@ -105,20 +102,23 @@ public class GUIDisplayMain extends GUIPanel implements GuiInterfaceDisplay, Gui
 		constraints.gridx++;
 		add(label[OUT_OF_ORDER], constraints);
 
-
 		setVisible(true);
 	}
 
 	/**
 	 * Displays the message in the display field
-	 * @param msg The message to display
+	 *
+	 * @param msg
+	 *            The message to display
 	 */
 	public void updateMessage(String message) {
 		display.setText(message);
 		update();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see ca.ucalgary.seng300.a2.gui.GuiInterfaceIndicators#indicatorOn(int)
 	 */
 	@Override
@@ -129,7 +129,9 @@ public class GUIDisplayMain extends GUIPanel implements GuiInterfaceDisplay, Gui
 
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see ca.ucalgary.seng300.a2.gui.GuiInterfaceIndicators#indicatorOff(int)
 	 */
 	@Override

@@ -1,12 +1,9 @@
 package ca.ucalgary.seng300.a2.gui;
 
-import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
 import javax.swing.BorderFactory;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
 import javax.swing.border.Border;
 
 /**
