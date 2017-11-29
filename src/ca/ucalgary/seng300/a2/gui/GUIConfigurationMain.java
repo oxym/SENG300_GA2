@@ -21,7 +21,7 @@ public class GUIConfigurationMain extends JFrame {
 	 *
 	 */
 	private static final long serialVersionUID = -8393833057316799549L;
-	private static final int X_SIZE = 480;
+	private static final int X_SIZE = 490;
 	private static final int Y_SIZE = 640;
 	private static final String TITLE = "Configuration Panel";
 	private static final int H_SPLIT = 25;
@@ -61,6 +61,7 @@ public class GUIConfigurationMain extends JFrame {
 		pane.add(keypadPanel, BorderLayout.CENTER);
 
 		setVisible(true);
+		setResizable(false);
 	}
 
 	/**

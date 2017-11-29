@@ -8,23 +8,30 @@ public class GUIConfigurationKeypad extends GUIPanel {
 	 *
 	 */
 	private static final long serialVersionUID = 1803496343446827611L;
-	private JButton[] buttons;
-	private String[] buttonLabels = { "0", "1", "2", "3", "4", "5", "6", "7",
-										"8", "9", "Shift", "Enter",
-										"a", "b", "c", "d", "e", "f", "g", "h",
-										"i", "j", "k", "l" ,"m", "n", "o", "p",
-										"q", "r", "s", "t", "u", "v", "w", "x",
-										"y", "z"};
+	private JButton[] letterButtons;
+	private JButton[] numberButtons;
+	private String[] letterLabels = { "q", "w", "e", "r", "t", "y", "u", "i",
+										"o", "p", "a", "s",
+										"d", "f", "g", "h", "j", "k", "l", "z",
+										"x", "c", "v", "b" ,"n", "m",
+										"Shift", "Enter"};
+	private String[] numberLabels = {"0", "1","2", "3", "4", "5", "6", "7", "8", "9"};
 
 
 	@Override
 	void init() {
 		//setLayout(grid);
-		buttons = new JButton[buttonLabels.length];
+		letterButtons = new JButton[letterLabels.length];
+		numberButtons = new JButton[numberLabels.length];
 
-		for(int i = 0; i < buttonLabels.length; i++) {
-			buttons[i] = new JButton(buttonLabels[i]);
-			add(buttons[i]);
+		for(int i = 0; i < letterLabels.length; i++) {
+			letterButtons[i] = new JButton(letterLabels[i]);
+			add(letterButtons[i]);
+		}
+		
+		for(int i = 0; i < numberLabels.length; i++) {
+			numberButtons[i] = new JButton(numberLabels[i]);
+			add(numberButtons[i]);
 		}
 
 		setVisible(true);
