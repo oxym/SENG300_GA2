@@ -24,9 +24,6 @@ public class DisplayDriver {
 	private VendingManager mgr;
 	private Display display;
 
-	private GuiInterfaceDisplay guiDisplay;
-	private boolean guiDisplayPresent;
-
 	/**
 	 * @param display
 	 *            the display object that is driven/controlled by this class
@@ -35,21 +32,6 @@ public class DisplayDriver {
 		this.display = display;
 		mgr = VendingManager.getInstance();
 		timer = new Timer();
-		guiDisplayPresent = false;
-	}
-
-	/**
-	 * Instantiates the object with a guiDisplay
-	 *
-	 * @param display
-	 *            the display object that is driven/controlled by this class
-	 * @param guiDisplay
-	 *            the object representing the guiDisplay that has access methods
-	 */
-	public DisplayDriver(Display display, GuiInterfaceDisplay guiDisplay) {
-		this(display);
-		this.guiDisplay = guiDisplay;
-		guiDisplayPresent = true;
 	}
 
 	/**
@@ -69,8 +51,6 @@ public class DisplayDriver {
 	public void newMessage(String message) {
 		cancelCycle();
 		display.display(message);
-		if (guiDisplayPresent)
-			guiDisplay.updateMessage(message);
 		if (TESTING)
 			System.out.println(message);
 	}
@@ -172,17 +152,6 @@ public class DisplayDriver {
 	}
 
 	/**
-	 * Attaches a gui Display object
-	 *
-	 * @param guiDisplay
-	 *            gui display object
-	 */
-	public void attachGuiDisplay(GuiInterfaceDisplay guiDisplay) {
-		this.guiDisplay = guiDisplay;
-		guiDisplayPresent = true;
-	}
-
-	/**
 	 * Inner Class for the display message task
 	 *
 	 */
@@ -213,12 +182,8 @@ public class DisplayDriver {
 		public void run() {
 			if (message.equals("$CREDIT$")) {
 				display.display(VendingManager.getInstance().getCreditMessage());
-				if (guiDisplayPresent)
-					guiDisplay.updateMessage(VendingManager.getInstance().getCreditMessage());
 			} else {
 				display.display(message);
-				if (guiDisplayPresent)
-					guiDisplay.updateMessage(message);
 			}
 			if (TESTING) {
 				DateTimeFormatter format = DateTimeFormatter.ofPattern("HH:mm:ss.SSSSSS");

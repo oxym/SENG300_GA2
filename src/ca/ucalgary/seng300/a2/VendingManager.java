@@ -178,7 +178,7 @@ public class VendingManager {
 
 //TODO: attach indicator lights, coin return, and any other gui output elements
 		//attach panel to displayDriver
-		displayDriver.attachGuiDisplay(gui.getSidePanel().getDisplayPanel());
+		displayListener.attachGuiDisplay(gui.getSidePanel().getDisplayPanel());
 		lightListener.attachGuiIndicators((GuiInterfaceIndicators) gui.getSidePanel().getDisplayPanel());
 		popListener.attachGuiDeliveryChute(gui.getDeliveryChutePanel());
 	}
