@@ -405,7 +405,6 @@ public class VendingManager {
 			while (getCredit() >= coinVal && rack.size() != 0){
 				rack.releaseCoin();
 				subtractCredit(coinVal);
-				//TODO: gui integration with coin return
 			}
 
 			if (getCredit() == 0){

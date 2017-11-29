@@ -2,10 +2,14 @@ package ca.ucalgary.seng300.a2.gui;
 
 import javax.swing.JLabel;
 
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 
 /**
  * This panel simulates the Delivery Chute users may click to remove the item
@@ -19,6 +23,8 @@ public class GUIDeliveryChute extends GUIPanel implements GuiInterfaceDeliveryCh
 
 	// components in the JPanel
 	private JLabel chute;
+	private JButton lock;
+	private GUIConfigurationListener listener;
 
 	/**
 	 * Default Constructor
@@ -44,8 +50,13 @@ public class GUIDeliveryChute extends GUIPanel implements GuiInterfaceDeliveryCh
 		MouseListener mouseListener = new MouseListener();
 		chute.addMouseListener(mouseListener);
 
+		lock = new JButton ("unlock");
+		lock.addActionListener(new LockListener());
+
 		// add components to the panel and set visibility
-		add(chute);
+
+		add(chute, BorderLayout.CENTER);
+		add(lock, BorderLayout.EAST);
 		setVisible(true);
 	}
 
@@ -110,6 +121,30 @@ public class GUIDeliveryChute extends GUIPanel implements GuiInterfaceDeliveryCh
 		@Override
 		public void mousePressed(MouseEvent e) {
 			GUIMain.getVM().getDeliveryChute().removeItems();
+		}
+	}
+
+	public class LockListener implements ActionListener{
+
+		public void actionPerformed(ActionEvent event) {
+
+			String command = event.getActionCommand();
+			System.out.println(command);
+
+			switch (command) {
+
+			case "lock":
+				lock.setText("unlock");
+				//TODO: lock machine, toggle text on panel to unlock
+				break;
+
+			case "unlock":
+				lock.setText("lock");
+				//TODO: unlock machine, toggle text on panel to lock
+				GUIConfigurationMain configPanel = new GUIConfigurationMain();
+				configPanel.init();
+				break;
+			}
 		}
 	}
 

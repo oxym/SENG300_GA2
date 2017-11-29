@@ -8,6 +8,7 @@ import org.lsmr.vending.hardware.VendingMachine;
 
 import ca.ucalgary.seng300.a2.MachineConfiguration;
 import ca.ucalgary.seng300.a2.VendingManager;
+import ca.ucalgary.seng300.a2.gui.GUIConfigurationMain;
 
 /**
  * A quick gui test for functionality of what is working
@@ -73,6 +74,12 @@ public class TestQuickGuiTest {
 		Thread.sleep(actionDelay); //pause between action
 		//simulate buy pop
 		userPressButton(1);
+
+
+		GUIConfigurationMain cfgpanel = new GUIConfigurationMain();
+		cfgpanel.init();
+		Thread.sleep(10000);
+
 
 //TODO: Note: simulation fails when change return overflows
 		for(int i = 0; i < 6; i++) {
