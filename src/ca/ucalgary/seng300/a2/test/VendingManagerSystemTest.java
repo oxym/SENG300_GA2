@@ -77,7 +77,7 @@ public class VendingManagerSystemTest {
 
 		assertEquals(1, delivered.length);
 		assertEquals(expected, dispensed);
-		assertEquals(0, manager.getCredit());
+		assertEquals(0, manager.getCreditHandler().getCredit());
 	}
 
 
@@ -107,7 +107,7 @@ public class VendingManagerSystemTest {
 		PopCan[] delivered = machine.getDeliveryChute().removeItems();
 
 		assertEquals(0, delivered.length);
-		assertEquals(300, manager.getCredit());
+		assertEquals(300, manager.getCreditHandler().getCredit());
 	}
 
 	/**
@@ -133,7 +133,7 @@ public class VendingManagerSystemTest {
 		PopCan[] delivered = machine.getDeliveryChute().removeItems();
 
 		assertEquals(0, delivered.length);
-		assertEquals(200, manager.getCredit());
+		assertEquals(200, manager.getCreditHandler().getCredit());
 	}
 
 	/**
@@ -151,7 +151,7 @@ public class VendingManagerSystemTest {
 		PopCan[] delivered = machine.getDeliveryChute().removeItems();
 
 		assertEquals(0, delivered.length);
-		assertEquals(0, manager.getCredit());
+		assertEquals(0, manager.getCreditHandler().getCredit());
 	}
 
 	/**
@@ -404,15 +404,15 @@ public class VendingManagerSystemTest {
 	@Test
 	public void testCoinInsertedDisplay() throws DisabledException {
 
-		assertEquals(0, manager.getCredit()); // default credit should be 0
+		assertEquals(0, manager.getCreditHandler().getCredit()); // default credit should be 0
 		int amountInserted = 0;
 
 		for (int coinValue : cfg.coinKinds) {
 			userAddCoin(coinValue);
 			amountInserted += coinValue;
-			assertEquals(amountInserted, manager.getCredit());// confirm that amount inserted is correct
-			int dollars = manager.getCredit() / 100;
-			int cents = manager.getCredit() % 100;
+			assertEquals(amountInserted, manager.getCreditHandler().getCredit());// confirm that amount inserted is correct
+			int dollars = manager.getCreditHandler().getCredit() / 100;
+			int cents = manager.getCreditHandler().getCredit() % 100;
 			String testMessage = String.format("Credit: $%3d.%02d", dollars, cents);
 			assertEquals(testMessage, testDisplayListener.getCurrentMessage());
 		}

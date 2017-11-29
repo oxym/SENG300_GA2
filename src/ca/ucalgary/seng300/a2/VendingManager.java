@@ -313,11 +313,11 @@ public class VendingManager {
 	}
 	
 	//TODO DOCUMENT
-	static CreditHandler getCreditHandler(){
+	public static CreditHandler getCreditHandler(){
 		return credHandler;
 	}
 	
-	static ProductHandler getProductHandler(){
+	public static ProductHandler getProductHandler(){
 		return prodHandler;
 	}
 	
