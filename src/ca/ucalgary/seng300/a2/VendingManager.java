@@ -49,13 +49,13 @@ public class VendingManager {
 	private static CoinListener coinListener;
 	private static LightListener lightListener;
 	private static MachineLockListener lockListener;
+	private static CreditHandler credHandler;
 	private static int[] acceptedCoins;
 
 	private static Logger eventLog;
 	private static String eventLogName = "VendingLog.txt";
 
-	private int credit = 0;
-	private static String currency = "CAD";
+
 
 	private static Lock lock;
 
@@ -310,15 +310,15 @@ public class VendingManager {
 	int getCoinRackValue(CoinRack coinRack){
 		return getCoinKindForCoinRack(getCoinRackIndex(coinRack));
 	}
-
-	/**
-	 * Gets the credit available for purchases, in cents.
-	 * Public access for testing and external access.
-	 * It is assumed to not be a security vulnerability.
-	 * @return The stored credit, in cents.
-	 */
-	public int getCredit(){
-		return credit;
+	
+	//TODO DOCUMENT
+	CreditHandler getCreditHandler(){
+		return credHandler;
+	}
+	
+	//TODO DOCUMENT
+	boolean getGUIEnabled(){
+		return ENABLE_GUI;
 	}
 //^^^=======================ACCESSORS END=======================^^^
 
@@ -348,44 +348,6 @@ public class VendingManager {
 	}
 
 	/**
-	 * Handles a pop purchase. Checks if the pop rack has pop, confirms funds available,
-	 *  dispenses the pop, reduces available funds and deposits the added coins into storage.
-	 * @param popIndex The index of the selected pop rack.
-	 * @throws InsufficientFundsException Thrown if credit < cost.
-	 * @throws EmptyException Thrown if the selected pop rack is empty.
-	 * @throws DisabledException Thrown if the pop rack or delivery chute is disabled.
-	 * @throws CapacityExceededException Thrown if the delivery chute is full.
-	 */
-	void buy(int popIndex) throws InsufficientFundsException, EmptyException,
-											DisabledException, CapacityExceededException {
-		int cost = getPopKindCost(popIndex);
-
-		if (getCredit() >= cost){
-			getPopCanRack(popIndex).dispensePopCan(); //Will throw EmptyException if pop rack is empty
-			credit -= cost; //Will only be performed if the pop is successfully dispensed.
-			if (ENABLE_GUI) {
-				//TODO: update the gui delivery chute
-			}
-
-			//These coin-related actions may need to be nested in a conditional once additional
-			//Payment methods are supported. It depends on whether change is returned automatically.
-			getCoinReceptacle().storeCoins();
-			returnChange();
-
-			if (credit > 0) {
-				displayCredit();
-			} else {
-				display("Thank you for your purchase!", 3);
-			}
-
-		} else { //Not enough credit
-			int diff = cost - credit;
-			String popName = getPopKindName(popIndex);
-			throw new InsufficientFundsException("Cannot buy " + popName + ". " + diff + " cents missing.");
-		}
-	}
-
-	/**
 	 * A method for returning change.
 	 * May not return exact change.
 	 * Dispenses the largest denominations first.
@@ -402,12 +364,12 @@ public class VendingManager {
 			coinVal = rackValues[i];
 			rack = getCoinRackForCoinKind(coinVal);
 
-			while (getCredit() >= coinVal && rack.size() != 0){
+			while (getCreditHandler().getCredit() >= coinVal && rack.size() != 0){
 				rack.releaseCoin();
-				subtractCredit(coinVal);
+				getCreditHandler().subtractCredit(coinVal);
 			}
 
-			if (getCredit() == 0){
+			if (getCreditHandler().getCredit() == 0){
 				break;
 			}
 		}
@@ -434,50 +396,13 @@ public class VendingManager {
 	 * Displays the current credit on the hardware display
 	 */
 	void displayCredit() {
-		display(getCreditMessage());
+		display(getCreditHandler().getCreditMessage());
 	}
 
 //^^^======================HARDWARE LOGIC END=======================^^^
 
 //vvv======================LOGIC INTERNALS START=======================vvv
-	/**
-	 * Adds value to the tracked credit.
-	 * @param added The credit to add, in cents.
-	 */
-	void addCredit(int added){
-		credit += added;
-		log("Credit added:" + added);
-	}
-
-	/**
-	 * Subtracts value to the tracked credit.
-	 * @param subtracted The credit to add, in cents.
-	 */
-	void subtractCredit(int subtracted){
-		credit -= subtracted;
-		log("Credit removed:" + subtracted);
-	}
-
-	/**
-	 * Returns a formatted string to display credit.
-	 * @return The formatted credit string.
-	 */
-	public String getCreditMessage(){
-		String message;
-
-		//Prettify the message for known currencies.
-		if (currency.equals("CAD") || currency.equals("USD")){
-			int dollars = credit / 100;
-			int cents = credit % 100;
-			message = String.format("Credit: $%3d.%02d", dollars, cents);
-		}
-		else{
-			message = "Credit: " + credit;
-		}
-
-		return message;
-	}
-
+	
 
 	/**
 	 * Takes the coin values inside the machine and sorts them in
@@ -530,7 +455,7 @@ public class VendingManager {
 	boolean canReturnExactChange(int cost){
 		boolean exact = true;
 
-		int credit = getCredit();
+		int credit = getCreditHandler().getCredit();
 		int excess = credit - cost; // i.e. credit after the possible purchase
 
 		int rackCount = getNumberOfCoinRacks();
