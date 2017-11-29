@@ -51,7 +51,7 @@ public class ButtonListener extends VendingListener implements PushButtonListene
 		else{
 			try{
 				//Assumes a 1-to-1, strictly ordered mapping between popIndex and and butttonindex
-				mgr.buy(bIndex);
+				VendingManager.getProductHandler().buy(bIndex);
 			} catch(InsufficientFundsException e){
 				mgr.display(e.toString(), 5);
 			} catch(DisabledException e){

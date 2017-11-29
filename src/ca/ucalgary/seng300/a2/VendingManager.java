@@ -50,6 +50,7 @@ public class VendingManager {
 	private static LightListener lightListener;
 	private static MachineLockListener lockListener;
 	private static CreditHandler credHandler;
+	private static ProductHandler prodHandler;
 	private static int[] acceptedCoins;
 
 	private static Logger eventLog;
@@ -312,8 +313,12 @@ public class VendingManager {
 	}
 	
 	//TODO DOCUMENT
-	CreditHandler getCreditHandler(){
+	static CreditHandler getCreditHandler(){
 		return credHandler;
+	}
+	
+	static ProductHandler getProductHandler(){
+		return prodHandler;
 	}
 	
 	//TODO DOCUMENT
