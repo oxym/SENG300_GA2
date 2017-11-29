@@ -173,7 +173,7 @@ public class VendingManager {
 
 	public static void startGui() {
 
-		gui = new GUIMain(vm, acceptedCoins);
+		gui = new GUIMain(vm, mgr, acceptedCoins);
 		gui.init();
 
 //TODO: attach indicator lights, coin return, and any other gui output elements
@@ -329,7 +329,7 @@ public class VendingManager {
 	 * If the safety is not already enabled, it will always relay the message
 	 * to the hardware.
 	 */
-	void enableSafety(){
+	public void enableSafety(){
 		if (!isSafetyEnabled())
 			log("Safety enabled");
 			vm.enableSafety();
@@ -341,7 +341,7 @@ public class VendingManager {
 	 * there are many cases where this will be called but the message will
 	 * not be relayed to the hardware.
 	 */
-	void disableSafety(){
+	public void disableSafety(){
 		if (isSafetyEnabled() && !isOutOfOrder() && !lockListener.isLocked())
 			log("Safety disabled");
 			vm.disableSafety();

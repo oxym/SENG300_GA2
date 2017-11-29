@@ -33,7 +33,6 @@ public class GUIConfigurationMain extends JFrame {
 	 *
 	 */
 	public GUIConfigurationMain() {
-		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setSize(X_SIZE, Y_SIZE);
 		setTitle(TITLE);
 	}

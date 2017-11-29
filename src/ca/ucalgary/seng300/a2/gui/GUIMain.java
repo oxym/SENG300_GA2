@@ -12,6 +12,8 @@ import javax.swing.border.Border;
 
 import org.lsmr.vending.hardware.VendingMachine;
 
+import ca.ucalgary.seng300.a2.VendingManager;
+
 /**
  * The main window, this class is responsible for setting up the main JFrame and
  * populating it with various JPanels, that correspond to the hardware
@@ -39,14 +41,16 @@ public class GUIMain extends JFrame {
 	private GUIPanel deliveryChutePanel;
 
 	protected static VendingMachine vm;
+	protected static VendingManager mgr;
 	private int[] acceptedCoins;
 
 	/**
 	 * @param vm
 	 * @param acceptedCoins
 	 */
-	public GUIMain(VendingMachine vm, int[] acceptedCoins) {
+	public GUIMain(VendingMachine vm, VendingManager mgr, int[] acceptedCoins) {
 		GUIMain.vm = vm;
+		GUIMain.mgr = mgr;
 		this.acceptedCoins = acceptedCoins;
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setSize(X_SIZE, Y_SIZE);
@@ -124,5 +128,13 @@ public class GUIMain extends JFrame {
 	 */
 	public static VendingMachine getVM() {
 		return vm;
+	}
+
+	/**
+	 * Returns the vending manager that this gui is connected to
+	 * @return vending manager object
+	 */
+	public static VendingManager getVendingManager() {
+		return mgr;
 	}
 }

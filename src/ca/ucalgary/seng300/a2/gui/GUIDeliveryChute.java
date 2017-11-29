@@ -3,6 +3,8 @@ package ca.ucalgary.seng300.a2.gui;
 import javax.swing.JLabel;
 
 import java.awt.BorderLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -43,6 +45,10 @@ public class GUIDeliveryChute extends GUIPanel implements GuiInterfaceDeliveryCh
 
 		// set look of panel
 		setBackground(COLOR_BACKGROUND);
+		GridBagConstraints constraints = new GridBagConstraints();
+		GridBagLayout gridbag = new GridBagLayout();
+
+		setLayout(gridbag);
 
 		// instantiate components
 		ImageIcon chuteIcon = new ImageIcon("images/dispenser_empty.png");
@@ -55,8 +61,20 @@ public class GUIDeliveryChute extends GUIPanel implements GuiInterfaceDeliveryCh
 
 		// add components to the panel and set visibility
 
-		add(chute, BorderLayout.CENTER);
-		add(lock, BorderLayout.EAST);
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.gridx = 0;
+		constraints.gridy = 0;
+		constraints.weightx = 0.33;
+		constraints.weighty = 0.5;
+		constraints.gridwidth = GridBagConstraints.RELATIVE;
+		add(chute, constraints);
+
+		constraints.weightx = 0.05;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.gridwidth = GridBagConstraints.REMAINDER;
+		constraints.gridx++;
+		add(lock, constraints);
 		setVisible(true);
 	}
 
@@ -135,11 +153,13 @@ public class GUIDeliveryChute extends GUIPanel implements GuiInterfaceDeliveryCh
 
 			case "lock":
 				lock.setText("unlock");
+				GUIMain.getVendingManager().disableSafety();
 				//TODO: lock machine, toggle text on panel to unlock
 				break;
 
 			case "unlock":
 				lock.setText("lock");
+				GUIMain.getVendingManager().enableSafety();
 				//TODO: unlock machine, toggle text on panel to lock
 				GUIConfigurationMain configPanel = new GUIConfigurationMain();
 				configPanel.init();

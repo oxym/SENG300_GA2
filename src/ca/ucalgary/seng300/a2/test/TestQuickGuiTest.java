@@ -75,9 +75,6 @@ public class TestQuickGuiTest {
 		//simulate buy pop
 		userPressButton(1);
 
-
-		GUIConfigurationMain cfgpanel = new GUIConfigurationMain();
-		cfgpanel.init();
 		Thread.sleep(10000);
 
 
