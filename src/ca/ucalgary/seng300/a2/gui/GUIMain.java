@@ -38,7 +38,7 @@ public class GUIMain extends JFrame {
 	private GUIPanel selectionButtonPanel;
 	private GUIPanel deliveryChutePanel;
 
-	private VendingMachine vm;
+	protected static VendingMachine vm;
 	private int[] acceptedCoins;
 
 	/**
@@ -46,7 +46,7 @@ public class GUIMain extends JFrame {
 	 * @param acceptedCoins
 	 */
 	public GUIMain(VendingMachine vm, int[] acceptedCoins) {
-		this.vm = vm;
+		GUIMain.vm = vm;
 		this.acceptedCoins = acceptedCoins;
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setSize(X_SIZE, Y_SIZE);
@@ -116,5 +116,13 @@ public class GUIMain extends JFrame {
 	 */
 	public GuiInterfaceDeliveryChute getDeliveryChutePanel() {
 		return (GuiInterfaceDeliveryChute) deliveryChutePanel;
+	}
+
+	/**
+	 * Returns the vending machine hardware that this gui is simulating
+	 * @return vending machine object
+	 */
+	public static VendingMachine getVM() {
+		return vm;
 	}
 }

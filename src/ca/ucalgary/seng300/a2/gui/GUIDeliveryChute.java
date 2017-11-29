@@ -109,7 +109,7 @@ public class GUIDeliveryChute extends GUIPanel implements GuiInterfaceDeliveryCh
 		 */
 		@Override
 		public void mousePressed(MouseEvent e) {
-			removeItems();
+			GUIMain.getVM().getDeliveryChute().removeItems();
 		}
 	}
 

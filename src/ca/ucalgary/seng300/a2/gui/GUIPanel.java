@@ -24,6 +24,7 @@ public abstract class GUIPanel extends JPanel {
 	public static final Color COLOR_DARKGRAY = Color.DARK_GRAY;
 	public static final Color COLOR_DISPLAYTEXT = new Color(0,222,255);
 
+
 	/**
 	 *
 	 * update - repaints the panel after an event
