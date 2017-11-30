@@ -623,8 +623,7 @@ public class VendingManager {
 	 */
 	void guiSetChangeLight(boolean state){
 		if (isGUIEnabled() && gui != null){
-			//TODO modify gui exact change light state
-//			gui.getSidePanel().getDisplayPanel().indicatorOff(MachineConfiguration.EXACT_CHANGE);
+			gui.getSidePanel().getDisplayPanel().indicatorSet(MachineConfiguration.EXACT_CHANGE, state);
 		}
 	}
 
@@ -634,8 +633,7 @@ public class VendingManager {
 	 */
 	void guiSetOutOfOrderLight(boolean state){
 		if (isGUIEnabled() && gui != null){
-			//TODO modify gui exact change light state
-//			gui.getSidePanel().getDisplayPanel().indicatorOff(MachineConfiguration.OUT_OF_ORDER);
+			gui.getSidePanel().getDisplayPanel().indicatorSet(MachineConfiguration.OUT_OF_ORDER, state);
 		}
 	}
 

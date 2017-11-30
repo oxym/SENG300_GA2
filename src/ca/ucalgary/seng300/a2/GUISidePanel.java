@@ -71,7 +71,7 @@ public class GUISidePanel extends GUIPanel {
 	 * Returns the main display panel
 	 * @return the display panel object
 	 */
-	public GuiInterfaceDisplay getDisplayPanel() {
+	public GUIDisplayMain getDisplayPanel() {
 		return displayPanel;
 	}
 

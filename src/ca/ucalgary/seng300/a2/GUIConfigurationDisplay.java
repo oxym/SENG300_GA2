@@ -1,6 +1,6 @@
 package ca.ucalgary.seng300.a2;
 
-public class GUIConfigurationDisplay extends GUIPanel implements GuiInterfaceDisplay {
+public class GUIConfigurationDisplay extends GUIPanel {
 
 	private static final long serialVersionUID = 1541606205308730945L;
 
@@ -10,7 +10,6 @@ public class GUIConfigurationDisplay extends GUIPanel implements GuiInterfaceDis
 
 	}
 
-	@Override
 	public void updateMessage(String message) {
 		// TODO Auto-generated method stub
 

@@ -16,7 +16,7 @@ import javax.swing.border.Border;
  * lights
  *
  */
-public class GUIDisplayMain extends GUIPanel implements GuiInterfaceDisplay, GuiInterfaceIndicators {
+public class GUIDisplayMain extends GUIPanel {
 
 	private static final long serialVersionUID = 6739741022013889750L;
 	private static final String MSG_INIT = "Initializing...";
@@ -27,8 +27,7 @@ public class GUIDisplayMain extends GUIPanel implements GuiInterfaceDisplay, Gui
 	private JLabel[] label;
 	private JLabel[] indicator;
 
-	// TODO: Move these to configuration file
-	private String[] indicatorLabelText = { "Out Of Order", "Exact Change" };;
+	private String[] indicatorLabelText = MachineConfiguration.indicatorLabelText;
 
 	GUIDisplayMain() {
 	}
@@ -119,24 +118,15 @@ public class GUIDisplayMain extends GUIPanel implements GuiInterfaceDisplay, Gui
 	 *
 	 * @see ca.ucalgary.seng300.a2.gui.GuiInterfaceIndicators#indicatorOn(int)
 	 */
-	@Override
-	public void indicatorOn(int index) {
-		ImageIcon indicator_on = new ImageIcon("images/indicator_on.png");
-		indicator[index].setIcon(indicator_on);
-		update();
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see ca.ucalgary.seng300.a2.gui.GuiInterfaceIndicators#indicatorOff(int)
-	 */
-	@Override
-	public void indicatorOff(int index) {
-		ImageIcon indicator_on = new ImageIcon("images/indicator_off.png");
-		indicator[index].setIcon(indicator_on);
+	public void indicatorSet(int index,boolean isLit) {
+		ImageIcon indicatorIcon;
+		if (isLit)
+			indicatorIcon = new ImageIcon("images/indicator_on.png");
+		else
+			indicatorIcon = new ImageIcon("images/indicator_off.png");
+		indicator[index].setIcon(indicatorIcon);
 		update();
 	}
+
 
 }

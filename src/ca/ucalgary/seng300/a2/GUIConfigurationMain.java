@@ -68,7 +68,7 @@ public class GUIConfigurationMain extends JFrame {
 	 * Returns the configuration display panel
 	 * @return the display panel object
 	 */
-	public GuiInterfaceDisplay getDisplayPanel() {
+	public GUIConfigurationDisplay getDisplayPanel() {
 		return displayPanel;
 	}
 }
