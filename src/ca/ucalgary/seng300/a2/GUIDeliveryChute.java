@@ -6,6 +6,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -73,6 +74,7 @@ public class GUIDeliveryChute extends GUIPanel implements GuiInterfaceDeliveryCh
 		constraints.weightx = 0.33;
 		constraints.weighty = 0.5;
 		constraints.gridwidth = GridBagConstraints.RELATIVE;
+		constraints.insets = new Insets(0,0,50,0);
 		add(chute, constraints);
 
 		constraints.weightx = 0.05;
