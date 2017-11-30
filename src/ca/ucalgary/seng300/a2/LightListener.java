@@ -15,8 +15,7 @@ public class LightListener extends VendingListener implements IndicatorLightList
 	private GuiInterfaceIndicators guiIndicators;
 	private boolean guiIndicatorsPresent = false;
 
-	protected LightListener() {
-	}
+	private LightListener() {}
 
 	/**
 	 * Forces the existing singleton instance to be replaced. Called by

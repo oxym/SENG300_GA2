@@ -10,7 +10,7 @@ public class ButtonListener extends VendingListener implements PushButtonListene
 	protected static ButtonListener listener;
 	protected static VendingManager mgr;
 	
-	protected ButtonListener(){}
+	private ButtonListener(){}
 
 	/**
 	 * Forces the existing singleton instance to be replaced.

@@ -5,7 +5,7 @@ public class CreditHandler {
 	private static String currency = "CAD";
 	private VendingManager mgr;
 	
-	public CreditHandler(VendingManager manager){
+	protected CreditHandler(VendingManager manager){
 		mgr = manager;
 		credit = 0;
 	}

@@ -16,7 +16,7 @@ public class PopListener extends VendingListener implements PopCanRackListener, 
 	private GuiInterfaceDeliveryChute guiDeliveryChute;
 	private boolean guiDeliveryChutePresent = false;
 
-	protected PopListener(){}
+	private PopListener(){}
 
 	/**
 	 * Forces the existing singleton instance to be replaced.
