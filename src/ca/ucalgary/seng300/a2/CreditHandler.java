@@ -1,7 +1,5 @@
 package ca.ucalgary.seng300.a2;
 
-import java.util.Arrays;
-
 import org.lsmr.vending.hardware.CapacityExceededException;
 import org.lsmr.vending.hardware.CoinRack;
 import org.lsmr.vending.hardware.DisabledException;
@@ -16,7 +14,7 @@ public class CreditHandler {
 		mgr = manager;
 		credit = 0;
 	}
-	
+
 	/**
 	 * Gets the credit available for purchases, in cents.
 	 * Public access for testing and external access.
@@ -61,7 +59,7 @@ public class CreditHandler {
 	 * @throws CapacityExceededException DeliveryChute is full
 	 */
 	void returnChange() throws CapacityExceededException, EmptyException, DisabledException{
-		int[] rackValues = getDescendingRackValues();
+		int[] rackValues = mgr.getDescendingCoinRackValues();
 		int coinVal = 0;
 		CoinRack rack;
 		for (int i=0; i < rackValues.length; i++){
@@ -78,28 +76,7 @@ public class CreditHandler {
 			}
 		}
 	}
-	/**
-	 * Takes the coin values inside the machine and sorts them in
-	 * descending order for the purpose of change return
-	 * @return coins denominations in descending order as an array
-	 */
-	int[] getDescendingRackValues() {
-		int rackNumber = mgr.getNumberOfCoinRacks();
-		int[] rackAmounts = new int[rackNumber];
 
-		for (int i=0; i < rackNumber; i++){
-			rackAmounts[i] = mgr.getCoinKindForCoinRack(i);
-		}
-
-		Arrays.sort(rackAmounts);
-		int[] descending = new int[rackNumber];
-		//Reverse the array
-		for (int i = rackNumber - 1; i >= 0; i--){
-			descending[rackNumber - i - 1] = rackAmounts[i];
-		}
-		return descending;
-	}
-	
 	/**
 	 * Checks if valid change can be returned, but does not return anything.
 	 * Similar to returnChange, but sets the indicator light instead
@@ -112,7 +89,7 @@ public class CreditHandler {
 		int excess = getCredit() - cost; // i.e. credit after the possible purchase
 
 		int rackCount = mgr.getNumberOfCoinRacks();
-		int[] rackValues = getDescendingRackValues();
+		int[] rackValues = mgr.getDescendingCoinRackValues();
 
 		//Populate CoinRack count array
 		int[] rackAmounts = new int[mgr.getNumberOfCoinRacks()];

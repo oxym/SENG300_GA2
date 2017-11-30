@@ -184,79 +184,159 @@ public class VendingManager {
 	// Indirect access to the VM is used to simplify the removal of the
 	// VM class from the build.
 //vvv=======================ACCESSORS START=======================vvv
+	/**@see org.lsmr.vending.hardware.VendingMachine */
 	boolean isSafetyEnabled(){
 		return vm.isSafetyEnabled();
 	}
+	/**@see org.lsmr.vending.hardware.VendingMachine */
 	IndicatorLight getExactChangeLight(){
 		return vm.getExactChangeLight();
 	}
+	/**@see org.lsmr.vending.hardware.VendingMachine */
 	IndicatorLight getOutOfOrderLight(){
 		return vm.getOutOfOrderLight();
 	}
+	/**@see org.lsmr.vending.hardware.VendingMachine */
 	int getNumberOfSelectionButtons(){
 		return vm.getNumberOfSelectionButtons();
 	}
+	/**@see org.lsmr.vending.hardware.VendingMachine */
 	PushButton getSelectionButton(int index){
 		return vm.getSelectionButton(index);
 	}
+	/**@see org.lsmr.vending.hardware.VendingMachine */
 	CoinSlot getCoinSlot(){
 		return vm.getCoinSlot();
 	}
+	/**@see org.lsmr.vending.hardware.VendingMachine */
 	CoinReceptacle getCoinReceptacle(){
 		return vm.getCoinReceptacle();
 	}
+	/**@see org.lsmr.vending.hardware.VendingMachine */
 	CoinReturn getCoinReturn(){
 		return vm.getCoinReturn();
 	}
+	/**@see org.lsmr.vending.hardware.VendingMachine */
 	DeliveryChute getDeliveryChute(){
 		return vm.getDeliveryChute();
 	}
+	/**@see org.lsmr.vending.hardware.VendingMachine */
 	int getNumberOfCoinRacks(){
 		return vm.getNumberOfCoinRacks();
 	}
+	/**@see org.lsmr.vending.hardware.VendingMachine */
 	CoinRack getCoinRack(int index){
 		return vm.getCoinRack(index);
 	}
+	/**@see org.lsmr.vending.hardware.VendingMachine */
 	CoinRack getCoinRackForCoinKind(int value){
 		return vm.getCoinRackForCoinKind(value);
 	}
+	/**@see org.lsmr.vending.hardware.VendingMachine */
 	Integer getCoinKindForCoinRack(int index){
 		return vm.getCoinKindForCoinRack(index);
 	}
+	/**@see org.lsmr.vending.hardware.VendingMachine */
 	int getNumberOfProductRacks(){
 		return vm.getNumberOfPopCanRacks();
 	}
+	/**@see org.lsmr.vending.hardware.VendingMachine */
 	String getProductName(int index){
 		return vm.getPopKindName(index);
 	}
+	/**@see org.lsmr.vending.hardware.VendingMachine */
 	int getProductCost(int index){
 		return vm.getPopKindCost(index);
 	}
+	/**@see org.lsmr.vending.hardware.VendingMachine */
 	PopCanRack getProductRack(int index){
 		return vm.getPopCanRack(index);
 	}
+	/**@see org.lsmr.vending.hardware.VendingMachine */
 	Display getDisplay(){
 		return vm.getDisplay();
 	}
+	/**@see org.lsmr.vending.hardware.VendingMachine */
 	Lock getLock() {
 		return vm.getLock();
 	}
+	/**@see org.lsmr.vending.hardware.VendingMachine */
 	ConfigurationPanel getConfigurationPanel(){
 		return vm.getConfigurationPanel();
 	}
 	
+	/** @see CreditHandler */
+	public int getCredit(){
+		return mgr.getCreditHandler().getCredit();
+	}
+	/** @see CreditHandler */
+	public String getCurrency(){
+		return mgr.getCreditHandler().getCurrency();
+	}
+	/** @see CreditHandler */
+	void addCredit(int added){
+		mgr.getCreditHandler().addCredit(added);
+	}
+	/** @see CreditHandler */
+	void subtractCredit(int subtracted){
+		mgr.getCreditHandler().subtractCredit(subtracted);
+	}
+	/** @see CreditHandler */
+	void returnChange() throws CapacityExceededException, EmptyException, DisabledException{
+		mgr.getCreditHandler().returnChange();
+	}
+	/** @see CreditHandler */
+	public boolean checkExactChangeState(){
+		return mgr.getCreditHandler().checkExactChangeState();
+	}
+	/** @see CreditHandler */
+	public String getCreditMessage(){
+		return mgr.getCreditHandler().getCreditMessage();
+	}
+
+	/** @see ProductHandler */
+	void buy(int productIndex) throws InsufficientFundsException, EmptyException,
+	DisabledException, CapacityExceededException {
+		getProductHandler().buy(productIndex);
+	}
+	/** @see ProductHandler */
+	boolean checkAllProductsEmpty(){
+		return getProductHandler().checkAllProductsEmpty();
+	}
 	
 	/*
 	 * Gets the valid coin denominations.
 	 * @return The coin values for each coin rack, with order preserved..
 	 */
-	int[] getValidCoinTypes(){
+	int[] getCoinRackValues(){
 		int typeCount = getNumberOfCoinRacks();
 		int[] types = new int[typeCount];
 		for (int i = 0; i < typeCount; i++){
 			types[i] = getCoinKindForCoinRack(i);
 		}
 		return types;
+	}
+	
+	/**
+	 * Takes the coin values inside the machine and sorts them in
+	 * descending order for the purpose of change return
+	 * @return coins denominations in descending order as an array
+	 */
+	int[] getDescendingCoinRackValues() {
+		int rackNumber = mgr.getNumberOfCoinRacks();
+		int[] rackAmounts = new int[rackNumber];
+
+		for (int i=0; i < rackNumber; i++){
+			rackAmounts[i] = mgr.getCoinKindForCoinRack(i);
+		}
+
+		Arrays.sort(rackAmounts);
+		int[] descending = new int[rackNumber];
+		//Reverse the array
+		for (int i = rackNumber - 1; i >= 0; i--){
+			descending[rackNumber - i - 1] = rackAmounts[i];
+		}
+		return descending;
 	}
 	
 	/**
@@ -289,7 +369,7 @@ public class VendingManager {
 		}
 		return -1;
 	}
-
+	
 	/**
 	  * Returns the name pop in the given PopCanRack.
 	 * @param popRack The PopCanRack to check the name for.
@@ -332,13 +412,7 @@ public class VendingManager {
 	public static ProductHandler getProductHandler(){
 		return prodHandler;
 	}
-	
-	//TODO DOCUMENT
-	boolean isGUIEnabled(){
-		return GUI_enabled;
-	}
 //^^^=======================ACCESSORS END=======================^^^
-
 
 //vvv=======================HARDWARE LOGIC START=======================vvv
 	/**
@@ -391,14 +465,6 @@ public class VendingManager {
 //^^^======================HARDWARE LOGIC END=======================^^^
 
 //vvv======================LOGIC INTERNALS START=======================vvv
-	/**
-	 * Checks if all of the product racks are empty.
-	 * Relays message to product handler
-	 * @return True if all are empty, else false
-	 */
-	boolean checkAllProductsEmpty(){
-		return getProductHandler().checkAllProductsEmpty();
-	}
 
 	/**
 	 * Checks the machine state to determine whether it is out of order.
@@ -417,6 +483,7 @@ public class VendingManager {
 		}
 		return response;
 	}
+	
 	/**
 	 * Returns the debugging state of the system.
 	 * @return Whether the VendingManager is in debug mode.
@@ -466,8 +533,13 @@ public class VendingManager {
 	 * Loads and initializes the GUI for the vending machine simulation.
 	 */
 	private void startGui() {
-		gui = new GUIMain(vm, mgr, getValidCoinTypes());
+		gui = new GUIMain(vm, mgr, getCoinRackValues());
 		gui.init();
+	}
+	
+	//TODO DOCUMENT
+	boolean isGUIEnabled(){
+		return GUI_enabled;
 	}
 	
 	/**

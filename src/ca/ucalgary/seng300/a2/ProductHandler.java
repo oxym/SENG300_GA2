@@ -20,12 +20,12 @@ public class ProductHandler {
 	 * @throws DisabledException Thrown if the pop rack or delivery chute is disabled.
 	 * @throws CapacityExceededException Thrown if the delivery chute is full.
 	 */
-	void buy(int popIndex) throws InsufficientFundsException, EmptyException,
+	void buy(int productIndex) throws InsufficientFundsException, EmptyException,
 											DisabledException, CapacityExceededException {
-		int cost = mgr.getProductCost(popIndex);
+		int cost = mgr.getProductCost(productIndex);
 
 		if (mgr.getCreditHandler().getCredit() >= cost){
-			mgr.getProductRack(popIndex).dispensePopCan(); //Will throw EmptyException if pop rack is empty
+			mgr.getProductRack(productIndex).dispensePopCan(); //Will throw EmptyException if pop rack is empty
 			mgr.getCreditHandler().subtractCredit(cost); //Will only be performed if the pop is successfully dispensed.
 			if (mgr.isGUIEnabled()) {
 				//TODO: update the gui delivery chute
@@ -44,7 +44,7 @@ public class ProductHandler {
 
 		} else { //Not enough credit
 			int diff = cost - mgr.getCreditHandler().getCredit();
-			String popName = mgr.getProductName(popIndex);
+			String popName = mgr.getProductName(productIndex);
 			throw new InsufficientFundsException("Cannot buy " + popName + ". " + diff + " cents missing.");
 		}
 	}
