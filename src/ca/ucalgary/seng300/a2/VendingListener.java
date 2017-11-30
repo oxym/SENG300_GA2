@@ -7,7 +7,7 @@ import org.lsmr.vending.hardware.*;
  * Handles the enabled and disabled methods common to all AbstractHardwareListeners.  
  *
  */
-public class VendingListener implements AbstractHardwareListener {
+public abstract class VendingListener implements AbstractHardwareListener {
 	private static boolean debug = false;
 
 //vvv=======================ABSTRACT HARDWARE LISTENER METHODS START=======================vvv
