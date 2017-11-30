@@ -33,7 +33,8 @@ import java.io.FileNotFoundException;
  * @author Michaela Olsakova (30002591)
  * @author Paul Dan (30011349)
  * @author Dan Dunareanu (30002346)
- *
+ * @author Xiangyu (Michael) Han ()
+ * @author Keegan Barnett ()
  */
 public class VendingManager {
 	private static boolean debug = false;
