@@ -25,9 +25,9 @@ public class TestQuickGuiTest {
 
 		cfg = new MachineConfiguration();
 
-		machine = new VendingMachine(cfg.coinKinds, cfg.selectionButtonCount, cfg.coinRackCapacity, cfg.popCanRackCapacity,
+		machine = new VendingMachine(cfg.coinKinds, cfg.selectionButtonCount, cfg.coinRackCapacity, cfg.productRackCapacity,
 				cfg.receptacleCapacity, cfg.deliveryChuteCapacity, cfg.coinReturnCapacity);
-		machine.configure(cfg.popCanNames, cfg.popCanCosts);
+		machine.configure(cfg.productNames, cfg.productCosts);
 
 		manager = VendingManager.initialize(machine, cfg.coinKinds);
 

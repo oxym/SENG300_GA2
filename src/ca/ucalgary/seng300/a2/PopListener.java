@@ -60,7 +60,7 @@ public class PopListener extends VendingListener implements PopCanRackListener, 
 	 */
 	@Override
 	public void popCanRemoved(PopCanRack popCanRack, PopCan popCan) {
-		String popName = mgr.getPopCanRackName(popCanRack);
+		String popName = mgr.getProductRackName(popCanRack);
 		mgr.log(popCan.getName() + " removed from " + popName + " rack.");
 	}
 
@@ -71,7 +71,7 @@ public class PopListener extends VendingListener implements PopCanRackListener, 
 	 */
 	@Override
 	public void popCansFull(PopCanRack popCanRack) {
-		String popName = mgr.getPopCanRackName(popCanRack);
+		String popName = mgr.getProductRackName(popCanRack);
 		mgr.log(popName + " rack full.");
 	}
 
@@ -83,7 +83,7 @@ public class PopListener extends VendingListener implements PopCanRackListener, 
 	 */
 	@Override
 	public void popCansEmpty(PopCanRack popCanRack) {
-		String popName = mgr.getPopCanRackName(popCanRack);
+		String popName = mgr.getProductRackName(popCanRack);
 		mgr.log(popName + " rack empty.");
 		if (mgr.checkAllProductsEmpty()){
 			mgr.enableSafety();

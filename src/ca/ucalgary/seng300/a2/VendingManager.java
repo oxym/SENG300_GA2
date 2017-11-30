@@ -65,9 +65,9 @@ public class VendingManager {
 	public static void main(String[] args) {
 		MachineConfiguration cfg = new MachineConfiguration();
 
-		VendingMachine machine = new VendingMachine(cfg.coinKinds, cfg.selectionButtonCount, cfg.coinRackCapacity, cfg.popCanRackCapacity,
+		VendingMachine machine = new VendingMachine(cfg.coinKinds, cfg.selectionButtonCount, cfg.coinRackCapacity, cfg.productRackCapacity,
 				cfg.receptacleCapacity, cfg.deliveryChuteCapacity, cfg.coinReturnCapacity);
-		machine.configure(cfg.popCanNames, cfg.popCanCosts);
+		machine.configure(cfg.productNames, cfg.productCosts);
 
 		VendingManager.initialize(machine, cfg.coinKinds);
 	}
@@ -280,10 +280,10 @@ public class VendingManager {
 	 * @param popRack The PopCanRack of interest.
 	 * @return The matching index, or -1 if no match.
 	 */
-	int getPopCanRackIndex(PopCanRack popRack){
+	int getProductRackIndex(PopCanRack productRack){
 		int rackCount = getNumberOfProductRacks();
 		for (int i = 0; i < rackCount; i++){
-			if (getProductRack(i) == popRack){
+			if (getProductRack(i) == productRack){
 				return i;
 			}
 		}
@@ -295,8 +295,8 @@ public class VendingManager {
 	 * @param popRack The PopCanRack to check the name for.
 	 * @return The name of the pop.
 	 */
-	String getPopCanRackName(PopCanRack popRack){
-		return getProductName(getPopCanRackIndex(popRack));
+	String getProductRackName(PopCanRack productRack){
+		return getProductName(getProductRackIndex(productRack));
 	}
 
 	/**
@@ -392,7 +392,7 @@ public class VendingManager {
 
 //vvv======================LOGIC INTERNALS START=======================vvv
 	/**
-	 * Checks if all of the pop racks are empty.
+	 * Checks if all of the product racks are empty.
 	 * Relays message to product handler
 	 * @return True if all are empty, else false
 	 */

@@ -35,9 +35,9 @@ public class VendingManagerSystemTest {
 
 		cfg = new MachineConfiguration();
 
-		machine = new VendingMachine(cfg.coinKinds, cfg.selectionButtonCount, cfg.coinRackCapacity, cfg.popCanRackCapacity,
+		machine = new VendingMachine(cfg.coinKinds, cfg.selectionButtonCount, cfg.coinRackCapacity, cfg.productRackCapacity,
 				cfg.receptacleCapacity, cfg.deliveryChuteCapacity, cfg.coinReturnCapacity);
-		machine.configure(cfg.popCanNames, cfg.popCanCosts);
+		machine.configure(cfg.productNames, cfg.productCosts);
 
 		manager = VendingManager.initialize(machine, cfg.coinKinds);
 
@@ -186,8 +186,8 @@ public class VendingManagerSystemTest {
 	@Test
 	public void testOverflowCoinRack() {
 
-		machine = new VendingMachine(cfg.coinKinds, cfg.popCanNames.size(), cfg.coinRackCapacity, 1, 1, 1, 10);
-		machine.configure(cfg.popCanNames, cfg.popCanCosts);
+		machine = new VendingMachine(cfg.coinKinds, cfg.productNames.size(), cfg.coinRackCapacity, 1, 1, 1, 10);
+		machine.configure(cfg.productNames, cfg.productCosts);
 
 		Coin coin = new Coin(100);
 		for (int i = 0; i < 2; i++) { // Adds three dollars to the machine
@@ -213,8 +213,8 @@ public class VendingManagerSystemTest {
 
 		int coinReturnCapacity = 1;
 
-		machine = new VendingMachine(cfg.coinKinds, cfg.popCanNames.size(), 10, 5, 5, 5, coinReturnCapacity);
-		machine.configure(cfg.popCanNames, cfg.popCanCosts);
+		machine = new VendingMachine(cfg.coinKinds, cfg.productNames.size(), 10, 5, 5, 5, coinReturnCapacity);
+		machine.configure(cfg.productNames, cfg.productCosts);
 		machine.loadPopCans(1, 1, 1, 1, 1, 1);
 		machine.loadCoins(5, 5, 5, 5, 5);
 
@@ -374,8 +374,8 @@ public class VendingManagerSystemTest {
 	@Test
 	public void testDeliveryChuteOverflow() throws DisabledException {
 
-		machine = new VendingMachine(cfg.coinKinds, cfg.popCanNames.size(), 10, 10,	10, 1, 10);
-		machine.configure(cfg.popCanNames, cfg.popCanCosts);
+		machine = new VendingMachine(cfg.coinKinds, cfg.productNames.size(), 10, 10,	10, 1, 10);
+		machine.configure(cfg.productNames, cfg.productCosts);
 
 		manager = VendingManager.initialize(machine, cfg.coinKinds);
 
