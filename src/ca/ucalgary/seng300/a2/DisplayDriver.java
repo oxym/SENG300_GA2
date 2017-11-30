@@ -2,8 +2,6 @@ package ca.ucalgary.seng300.a2;
 
 import org.lsmr.vending.hardware.Display;
 
-import ca.ucalgary.seng300.a2.gui.GuiInterfaceDisplay;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Timer;

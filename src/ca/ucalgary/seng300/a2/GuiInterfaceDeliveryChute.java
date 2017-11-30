@@ -1,4 +1,4 @@
-package ca.ucalgary.seng300.a2.gui;
+package ca.ucalgary.seng300.a2;
 
 /**
  * Provides and interface for the delivery chute gui

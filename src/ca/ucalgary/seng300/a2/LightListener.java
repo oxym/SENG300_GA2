@@ -2,8 +2,6 @@ package ca.ucalgary.seng300.a2;
 
 import org.lsmr.vending.hardware.*;
 
-import ca.ucalgary.seng300.a2.gui.GuiInterfaceIndicators;
-
 /**
  * Event-handling listener class for IndicatorLight.
  */

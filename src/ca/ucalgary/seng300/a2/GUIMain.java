@@ -1,4 +1,4 @@
-package ca.ucalgary.seng300.a2.gui;
+package ca.ucalgary.seng300.a2;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -11,8 +11,6 @@ import javax.swing.WindowConstants;
 import javax.swing.border.Border;
 
 import org.lsmr.vending.hardware.VendingMachine;
-
-import ca.ucalgary.seng300.a2.VendingManager;
 
 /**
  * The main window, this class is responsible for setting up the main JFrame and

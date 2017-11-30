@@ -1,4 +1,4 @@
-package ca.ucalgary.seng300.a2.gui;
+package ca.ucalgary.seng300.a2;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -10,8 +10,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
-
-import ca.ucalgary.seng300.a2.MachineConfiguration;
 
 /**
  * This panel holds the feedback to the user including a display, and indicator

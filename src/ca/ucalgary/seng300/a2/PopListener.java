@@ -3,8 +3,6 @@ package ca.ucalgary.seng300.a2;
 import org.lsmr.vending.PopCan;
 import org.lsmr.vending.hardware.*;
 
-import ca.ucalgary.seng300.a2.gui.GuiInterfaceDeliveryChute;
-
 /**
  * Event-handling listener class for PopCanRack and DeliveryChute.
  */

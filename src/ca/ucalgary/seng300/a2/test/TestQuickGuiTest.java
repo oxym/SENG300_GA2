@@ -6,9 +6,9 @@ import org.lsmr.vending.Coin;
 import org.lsmr.vending.hardware.DisabledException;
 import org.lsmr.vending.hardware.VendingMachine;
 
+import ca.ucalgary.seng300.a2.GUIConfigurationMain;
 import ca.ucalgary.seng300.a2.MachineConfiguration;
 import ca.ucalgary.seng300.a2.VendingManager;
-import ca.ucalgary.seng300.a2.gui.GUIConfigurationMain;
 
 /**
  * A quick gui test for functionality of what is working

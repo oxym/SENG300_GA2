@@ -2,8 +2,6 @@ package ca.ucalgary.seng300.a2;
 
 import org.lsmr.vending.hardware.*;
 
-import ca.ucalgary.seng300.a2.gui.GuiInterfaceDisplay;
-
 /**
  * This class is registered by VendingManager with hardware classes to listen
  * for display events.

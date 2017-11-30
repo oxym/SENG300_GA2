@@ -27,7 +27,7 @@ public class ProductHandler {
 		if (mgr.getCreditHandler().getCredit() >= cost){
 			mgr.getPopCanRack(popIndex).dispensePopCan(); //Will throw EmptyException if pop rack is empty
 			mgr.getCreditHandler().subtractCredit(cost); //Will only be performed if the pop is successfully dispensed.
-			if (mgr.getGUIEnabled()) {
+			if (mgr.isGUIEnabled()) {
 				//TODO: update the gui delivery chute
 			}
 
