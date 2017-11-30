@@ -40,7 +40,7 @@ public class GUIMain extends JFrame {
 
 	protected static VendingMachine vm;
 	protected static VendingManager mgr;
-	private int[] acceptedCoins;
+	protected static int[] acceptedCoins;
 
 	/**
 	 * @param vm

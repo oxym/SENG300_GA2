@@ -3,6 +3,7 @@ package ca.ucalgary.seng300.a2;
 import javax.swing.JLabel;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -27,6 +28,7 @@ public class GUIDeliveryChute extends GUIPanel implements GuiInterfaceDeliveryCh
 	private JLabel chute;
 	private JButton lock;
 	private GUIConfigurationListener listener;
+	GUIConfigurationMain configPanel;
 
 	/**
 	 * Default Constructor
@@ -57,6 +59,9 @@ public class GUIDeliveryChute extends GUIPanel implements GuiInterfaceDeliveryCh
 		chute.addMouseListener(mouseListener);
 
 		lock = new JButton ("unlock");
+		lock.addActionListener(new LockListener());
+		lock = new JButton("unlock");
+		lock.setPreferredSize(new Dimension(80,30));
 		lock.addActionListener(new LockListener());
 
 		// add components to the panel and set visibility
@@ -142,26 +147,31 @@ public class GUIDeliveryChute extends GUIPanel implements GuiInterfaceDeliveryCh
 		}
 	}
 
-	public class LockListener implements ActionListener{
+	/**
+	 * Listener for lock/unlock button events
+	 *
+	 */
+	private class LockListener implements ActionListener{
 
+		/* (non-Javadoc)
+		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+		 */
 		public void actionPerformed(ActionEvent event) {
 
 			String command = event.getActionCommand();
-			System.out.println(command);
 
 			switch (command) {
 
 			case "lock":
 				lock.setText("unlock");
 				GUIMain.getVendingManager().disableSafety();
-				//TODO: lock machine, toggle text on panel to unlock
+				configPanel.dispose();
 				break;
 
 			case "unlock":
 				lock.setText("lock");
 				GUIMain.getVendingManager().enableSafety();
-				//TODO: unlock machine, toggle text on panel to lock
-				GUIConfigurationMain configPanel = new GUIConfigurationMain();
+				configPanel = new GUIConfigurationMain();
 				configPanel.init();
 				break;
 			}

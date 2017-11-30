@@ -56,7 +56,7 @@ public class GUIDisplayMain extends GUIPanel implements GuiInterfaceDisplay, Gui
 
 		display = new JTextField(MSG_INIT);
 		// display.setFont(new Font("MS Gothic", Font.PLAIN, 18));
-		display.setFont(new Font("Monospaced", Font.PLAIN, 18));
+		display.setFont(new Font("Monospaced", Font.PLAIN, 14));
 		display.setBackground(COLOR_BLACK);
 		display.setForeground(COLOR_DISPLAYTEXT);
 		display.setColumns(40);
