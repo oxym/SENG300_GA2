@@ -56,6 +56,7 @@ public class ConfigPanelHandler {
 		};
 		return code;
 	}
+	
 	public void pressKey(int key){
 		if (isLetter(key) || isNum(key)){
 			buffer += getButtonDisplayCode(key);
@@ -77,27 +78,33 @@ public class ConfigPanelHandler {
 	public boolean isLetter(int key){
 		return key >= BOUND_LETTER[0] && key <= BOUND_LETTER[1];
 	}
+	
 	//TODO DOCUMENT
 	public boolean isNum(int key){
 		return key >= BOUND_NUM[0] && key <= BOUND_NUM[1];
 	}
+	
 	//TODO DOCUMENT
 	public boolean isSpecial(int key){
 		return key >= BOUND_SPECIAL[0] && key <= BOUND_SPECIAL[1];
 	}
+	
 	//TODO DOCUMENT
 	public boolean isShift(int key){
 		return key == INDEX_SHIFT;
 	}
+	
 	//TODO DOCUMENT
 	public boolean isEnter(int key){
 		return key == INDEX_ENTER;
 	}
+	
 	//TODO DOCUMENT
 	public void toggleShift(){
 		shifted = !shifted;
 	};
-	
+
+	//TODO DOCUMENT
 	public void display(String message){
 		dispDriver.newMessage(message);
 	}
@@ -110,7 +117,7 @@ public class ConfigPanelHandler {
 				display(MENU_REPRICE_SELECT);
 				state = "product_select";
 			} else{
-				display("Error." + MENU_MAIN);
+				display("Error. " + MENU_MAIN);
 			}
 			clearTextBuffer();
 			break;
