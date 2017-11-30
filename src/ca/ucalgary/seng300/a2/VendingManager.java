@@ -106,7 +106,7 @@ public class VendingManager {
 		vm = host;
 		mgr = new VendingManager();
 
-		if(GUI_enabled)
+		if(GUI_enabled) 
 			mgr.startGui();
 
 		return getInstance();
@@ -180,9 +180,9 @@ public class VendingManager {
 
 //^^^=======================SETUP END=======================^^^
 
-	// Accessors used throughout the vending logic classes to get hardware references.
-	// Indirect access to the VM is used to simplify the removal of the
-	// VM class from the build.
+// Accessors used throughout the vending logic classes to get hardware references.
+// Indirect access to the VM is used to simplify the removal of the
+// VM class from the build.
 //vvv=======================ACCESSORS START=======================vvv
 	/**@see org.lsmr.vending.hardware.VendingMachine */
 	boolean isSafetyEnabled(){
@@ -264,46 +264,7 @@ public class VendingManager {
 	ConfigurationPanel getConfigurationPanel(){
 		return vm.getConfigurationPanel();
 	}
-	
-	/** @see CreditHandler */
-	public int getCredit(){
-		return mgr.getCreditHandler().getCredit();
-	}
-	/** @see CreditHandler */
-	public String getCurrency(){
-		return mgr.getCreditHandler().getCurrency();
-	}
-	/** @see CreditHandler */
-	void addCredit(int added){
-		mgr.getCreditHandler().addCredit(added);
-	}
-	/** @see CreditHandler */
-	void subtractCredit(int subtracted){
-		mgr.getCreditHandler().subtractCredit(subtracted);
-	}
-	/** @see CreditHandler */
-	void returnChange() throws CapacityExceededException, EmptyException, DisabledException{
-		mgr.getCreditHandler().returnChange();
-	}
-	/** @see CreditHandler */
-	public boolean checkExactChangeState(){
-		return mgr.getCreditHandler().checkExactChangeState();
-	}
-	/** @see CreditHandler */
-	public String getCreditMessage(){
-		return mgr.getCreditHandler().getCreditMessage();
-	}
 
-	/** @see ProductHandler */
-	void buy(int productIndex) throws InsufficientFundsException, EmptyException,
-	DisabledException, CapacityExceededException {
-		getProductHandler().buy(productIndex);
-	}
-	/** @see ProductHandler */
-	boolean checkAllProductsEmpty(){
-		return getProductHandler().checkAllProductsEmpty();
-	}
-	
 	/*
 	 * Gets the valid coin denominations.
 	 * @return The coin values for each coin rack, with order preserved..
@@ -402,18 +363,63 @@ public class VendingManager {
 	int getCoinRackValue(CoinRack coinRack){
 		return getCoinKindForCoinRack(getCoinRackIndex(coinRack));
 	}
+//^^^=======================ACCESSORS END=======================^^^
 	
+//vvv====================FUNCTIONALITY HANDLERS START===================vvv
 	//TODO DOCUMENT
 	public CreditHandler getCreditHandler(){
 		return credHandler;
 	}
-
+	
 	//TODO DOCUMENT	
 	public static ProductHandler getProductHandler(){
 		return prodHandler;
 	}
-//^^^=======================ACCESSORS END=======================^^^
 
+	//The below accessor methods are preserved in VendingManager
+	//are intended to decouple other logic classes (e.g. listeners) from
+	//the handler classes.
+	
+	/** @see CreditHandler */
+	public int getCredit(){
+		return mgr.getCreditHandler().getCredit();
+	}
+	/** @see CreditHandler */
+	public String getCurrency(){
+		return mgr.getCreditHandler().getCurrency();
+	}
+	/** @see CreditHandler */
+	void addCredit(int added){
+		mgr.getCreditHandler().addCredit(added);
+	}
+	/** @see CreditHandler */
+	void subtractCredit(int subtracted){
+		mgr.getCreditHandler().subtractCredit(subtracted);
+	}
+	/** @see CreditHandler */
+	void returnChange() throws CapacityExceededException, EmptyException, DisabledException{
+		mgr.getCreditHandler().returnChange();
+	}
+	/** @see CreditHandler */
+	public boolean checkExactChangeState(){
+		return mgr.getCreditHandler().checkExactChangeState();
+	}
+	/** @see CreditHandler */
+	public String getCreditMessage(){
+		return mgr.getCreditHandler().getCreditMessage();
+	}
+	
+	/** @see ProductHandler */
+	void buy(int productIndex) throws InsufficientFundsException, EmptyException,
+	DisabledException, CapacityExceededException {
+		getProductHandler().buy(productIndex);
+	}
+	/** @see ProductHandler */
+	boolean checkAllProductsEmpty(){
+		return getProductHandler().checkAllProductsEmpty();
+	}
+//^^^====================FUNCTIONALITY HANDLERS END===================^^^
+	
 //vvv=======================HARDWARE LOGIC START=======================vvv
 	/**
 	 * Used by calling code to to enable the safety.
