@@ -1,4 +1,4 @@
-package ca.ucalgary.seng300.a2.gui;
+package ca.ucalgary.seng300.a2;
 
 /**
  *This class ensures that any GUI display that implements it will have the methods contained in this interface

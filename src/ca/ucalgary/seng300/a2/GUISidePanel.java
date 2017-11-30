@@ -1,4 +1,4 @@
-package ca.ucalgary.seng300.a2.gui;
+package ca.ucalgary.seng300.a2;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;

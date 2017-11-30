@@ -35,9 +35,9 @@ public class VendingManagerSystemTest {
 
 		cfg = new MachineConfiguration();
 
-		machine = new VendingMachine(cfg.coinKinds, cfg.selectionButtonCount, cfg.coinRackCapacity, cfg.popCanRackCapacity,
+		machine = new VendingMachine(cfg.coinKinds, cfg.selectionButtonCount, cfg.coinRackCapacity, cfg.productRackCapacity,
 				cfg.receptacleCapacity, cfg.deliveryChuteCapacity, cfg.coinReturnCapacity);
-		machine.configure(cfg.popCanNames, cfg.popCanCosts);
+		machine.configure(cfg.productNames, cfg.productCosts);
 
 		manager = VendingManager.initialize(machine, cfg.coinKinds);
 
@@ -77,7 +77,7 @@ public class VendingManagerSystemTest {
 
 		assertEquals(1, delivered.length);
 		assertEquals(expected, dispensed);
-		assertEquals(0, manager.getCredit());
+		assertEquals(0, manager.getCreditHandler().getCredit());
 	}
 
 
@@ -107,7 +107,7 @@ public class VendingManagerSystemTest {
 		PopCan[] delivered = machine.getDeliveryChute().removeItems();
 
 		assertEquals(0, delivered.length);
-		assertEquals(300, manager.getCredit());
+		assertEquals(300, manager.getCreditHandler().getCredit());
 	}
 
 	/**
@@ -133,7 +133,7 @@ public class VendingManagerSystemTest {
 		PopCan[] delivered = machine.getDeliveryChute().removeItems();
 
 		assertEquals(0, delivered.length);
-		assertEquals(200, manager.getCredit());
+		assertEquals(200, manager.getCreditHandler().getCredit());
 	}
 
 	/**
@@ -151,7 +151,7 @@ public class VendingManagerSystemTest {
 		PopCan[] delivered = machine.getDeliveryChute().removeItems();
 
 		assertEquals(0, delivered.length);
-		assertEquals(0, manager.getCredit());
+		assertEquals(0, manager.getCreditHandler().getCredit());
 	}
 
 	/**
@@ -186,10 +186,8 @@ public class VendingManagerSystemTest {
 	@Test
 	public void testOverflowCoinRack() {
 
-		int coinRackCapacity = 10;
-
-		machine = new VendingMachine(cfg.coinKinds, cfg.popCanNames.size(), cfg.coinRackCapacity, 1, 1, 1, 10);
-		machine.configure(cfg.popCanNames, cfg.popCanCosts);
+		machine = new VendingMachine(cfg.coinKinds, cfg.productNames.size(), cfg.coinRackCapacity, 1, 1, 1, 10);
+		machine.configure(cfg.productNames, cfg.productCosts);
 
 		Coin coin = new Coin(100);
 		for (int i = 0; i < 2; i++) { // Adds three dollars to the machine
@@ -215,8 +213,8 @@ public class VendingManagerSystemTest {
 
 		int coinReturnCapacity = 1;
 
-		machine = new VendingMachine(cfg.coinKinds, cfg.popCanNames.size(), 10, 5, 5, 5, coinReturnCapacity);
-		machine.configure(cfg.popCanNames, cfg.popCanCosts);
+		machine = new VendingMachine(cfg.coinKinds, cfg.productNames.size(), 10, 5, 5, 5, coinReturnCapacity);
+		machine.configure(cfg.productNames, cfg.productCosts);
 		machine.loadPopCans(1, 1, 1, 1, 1, 1);
 		machine.loadCoins(5, 5, 5, 5, 5);
 
@@ -322,8 +320,8 @@ public class VendingManagerSystemTest {
 			}
 		}
 
-		assertEquals(false, manager.checkExactChangeState());
-		assertNotEquals(manager.checkExactChangeState(),("Thank you for your purchase!"));	}
+		assertEquals(false, manager.getCreditHandler().checkExactChangeState());
+		assertNotEquals(manager.getCreditHandler().checkExactChangeState(),("Thank you for your purchase!"));	}
 
 /**
 	 *
@@ -348,7 +346,7 @@ public class VendingManagerSystemTest {
 			}
 		}
 
-		assertEquals(true, manager.checkExactChangeState());
+		assertEquals(true, manager.getCreditHandler().checkExactChangeState());
 
 
 		machine.getSelectionButton(0).press();
@@ -363,7 +361,7 @@ public class VendingManagerSystemTest {
 			}
 		}
 
-		assertEquals(false, manager.checkExactChangeState());
+		assertEquals(false, manager.getCreditHandler().checkExactChangeState());
 
 
 	}
@@ -376,8 +374,8 @@ public class VendingManagerSystemTest {
 	@Test
 	public void testDeliveryChuteOverflow() throws DisabledException {
 
-		machine = new VendingMachine(cfg.coinKinds, cfg.popCanNames.size(), 10, 10,	10, 1, 10);
-		machine.configure(cfg.popCanNames, cfg.popCanCosts);
+		machine = new VendingMachine(cfg.coinKinds, cfg.productNames.size(), 10, 10,	10, 1, 10);
+		machine.configure(cfg.productNames, cfg.productCosts);
 
 		manager = VendingManager.initialize(machine, cfg.coinKinds);
 
@@ -404,15 +402,15 @@ public class VendingManagerSystemTest {
 	@Test
 	public void testCoinInsertedDisplay() throws DisabledException {
 
-		assertEquals(0, manager.getCredit()); // default credit should be 0
+		assertEquals(0, manager.getCreditHandler().getCredit()); // default credit should be 0
 		int amountInserted = 0;
 
 		for (int coinValue : cfg.coinKinds) {
 			userAddCoin(coinValue);
 			amountInserted += coinValue;
-			assertEquals(amountInserted, manager.getCredit());// confirm that amount inserted is correct
-			int dollars = manager.getCredit() / 100;
-			int cents = manager.getCredit() % 100;
+			assertEquals(amountInserted, manager.getCreditHandler().getCredit());// confirm that amount inserted is correct
+			int dollars = manager.getCreditHandler().getCredit() / 100;
+			int cents = manager.getCreditHandler().getCredit() % 100;
 			String testMessage = String.format("Credit: $%3d.%02d", dollars, cents);
 			assertEquals(testMessage, testDisplayListener.getCurrentMessage());
 		}

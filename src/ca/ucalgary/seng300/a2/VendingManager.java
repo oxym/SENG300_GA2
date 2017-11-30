@@ -1,10 +1,9 @@
 package ca.ucalgary.seng300.a2;
 
 import java.util.Arrays;
-import org.lsmr.vending.hardware.*;
+import java.util.List;
 
-import ca.ucalgary.seng300.a2.gui.GUIMain;
-import ca.ucalgary.seng300.a2.gui.GuiInterfaceIndicators;
+import org.lsmr.vending.hardware.*;
 
 import java.io.FileNotFoundException;
 
@@ -33,11 +32,12 @@ import java.io.FileNotFoundException;
  * @author Michaela Olsakova (30002591)
  * @author Paul Dan (30011349)
  * @author Dan Dunareanu (30002346)
- *
+ * @author Xiangyu (Michael) Han ()
+ * @author Keegan Barnett ()
  */
 public class VendingManager {
 	private static boolean debug = false;
-	private static boolean ENABLE_GUI = true;
+	private static boolean GUI_enabled = true;
 
 	private static VendingManager mgr;
 	private static VendingMachine vm;
@@ -49,20 +49,34 @@ public class VendingManager {
 	private static CoinListener coinListener;
 	private static LightListener lightListener;
 	private static MachineLockListener lockListener;
-	private static int[] acceptedCoins;
+	
+	private static CreditHandler credHandler;
+	private static ProductHandler prodHandler;
+	private static ConfigPanelHandler configHandler;
+	
 
 	private static Logger eventLog;
 	private static String eventLogName = "VendingLog.txt";
 
-	private int credit = 0;
-	private static String currency = "CAD";
-
-	private static Lock lock;
 
 	private static GUIMain gui;
 
 
 //vvv=======================SETUP START=======================vvv
+	/**
+	 * Main method used primarily to drive manual testing.
+	 * @param args Command line arguments
+	 */
+	public static void main(String[] args) {
+		MachineConfiguration cfg = new MachineConfiguration();
+
+		VendingMachine machine = new VendingMachine(cfg.coinKinds, cfg.selectionButtonCount, cfg.coinRackCapacity, cfg.productRackCapacity,
+				cfg.receptacleCapacity, cfg.deliveryChuteCapacity, cfg.coinReturnCapacity);
+		machine.configure(cfg.productNames, cfg.productCosts);
+
+		VendingManager.initialize(machine, cfg.coinKinds);
+	}
+	
 	/**
 	 * Singleton constructor. Initializes and stores the singleton instances
 	 * of hardware listeners. Registers the listeners with the appropriate hardware.
@@ -71,8 +85,12 @@ public class VendingManager {
 	private VendingManager(){
 		eventLog = new Logger(eventLogName);
 
-		lock = new Lock();
+		credHandler = new CreditHandler(this); 
+		prodHandler = new ProductHandler(this);
+		configHandler = new ConfigPanelHandler(this);
+		
 		displayListener = new DispListener(this);
+		
 		buttonListener = ButtonListener.initialize(this);
 		popListener = PopListener.initialize(this);
 		lightListener = LightListener.initialize(this);
@@ -80,13 +98,11 @@ public class VendingManager {
 		lockListener = MachineLockListener.initialize(this);
 
 		registerListeners();
-
+		
 		displayDriver = new DisplayDriver(getDisplay());
 		displayDriver.greetingMessage();
-
+		
 		if (isOutOfOrder()) enableSafety();
-
-
 	}
 
 	/**
@@ -96,11 +112,10 @@ public class VendingManager {
 	 */
 	public static VendingManager initialize(VendingMachine host, int[] coinValues){
 		vm = host;
-		acceptedCoins = coinValues;
 		mgr = new VendingManager();
 
-		if(ENABLE_GUI)
-			startGui();
+		if(GUI_enabled) 
+			mgr.startGui();
 
 		return getInstance();
 	}
@@ -118,10 +133,11 @@ public class VendingManager {
 	 */
 	private void registerListeners(){
 		getDisplay().register(displayListener);
-
+		getConfigurationPanel().getDisplay().register(displayListener);
+		
 		registerPopCanRackListener(popListener);
 		getDeliveryChute().register(popListener);
-
+		
 		getCoinSlot().register(coinListener);
 		getCoinReceptacle().register(coinListener);
 		registerCoinRackListener(coinListener);
@@ -165,100 +181,179 @@ public class VendingManager {
 	 * @param listener The listener that will handle PopCanRackListener events.
 	 */
 	private void registerPopCanRackListener(PopCanRackListener listener){
-		int rackCount = getNumberOfPopCanRacks();
+		int rackCount = getNumberOfProductRacks();
 		for (int i = 0; i< rackCount; i++){
-			getPopCanRack(i).register(listener);;
+			getProductRack(i).register(listener);;
 		}
-	}
-
-	public static void startGui() {
-
-		gui = new GUIMain(vm, mgr, acceptedCoins);
-		gui.init();
-
-//TODO: attach indicator lights, coin return, and any other gui output elements
-		//attach panel to displayDriver
-		displayListener.attachGuiDisplay(gui.getSidePanel().getDisplayPanel());
-		lightListener.attachGuiIndicators((GuiInterfaceIndicators) gui.getSidePanel().getDisplayPanel());
-		popListener.attachGuiDeliveryChute(gui.getDeliveryChutePanel());
 	}
 
 //^^^=======================SETUP END=======================^^^
 
-	// Accessors used throughout the vending logic classes to get hardware references.
-	// Indirect access to the VM is used to simplify the removal of the
-	// VM class from the build.
+// Accessors used throughout the vending logic classes to get hardware references.
+// Indirect access to the VM is used to simplify the removal of the
+// VM class from the build.
 //vvv=======================ACCESSORS START=======================vvv
+	/**@see org.lsmr.vending.hardware.VendingMachine */
 	boolean isSafetyEnabled(){
 		return vm.isSafetyEnabled();
 	}
+	/**@see org.lsmr.vending.hardware.VendingMachine */
 	IndicatorLight getExactChangeLight(){
 		return vm.getExactChangeLight();
 	}
+	/**@see org.lsmr.vending.hardware.VendingMachine */
 	IndicatorLight getOutOfOrderLight(){
 		return vm.getOutOfOrderLight();
 	}
+	/**@see org.lsmr.vending.hardware.VendingMachine */
 	int getNumberOfSelectionButtons(){
 		return vm.getNumberOfSelectionButtons();
 	}
+	/**@see org.lsmr.vending.hardware.VendingMachine */
 	PushButton getSelectionButton(int index){
 		return vm.getSelectionButton(index);
 	}
+	/**@see org.lsmr.vending.hardware.VendingMachine */
 	CoinSlot getCoinSlot(){
 		return vm.getCoinSlot();
 	}
+	/**@see org.lsmr.vending.hardware.VendingMachine */
 	CoinReceptacle getCoinReceptacle(){
 		return vm.getCoinReceptacle();
 	}
+	/**@see org.lsmr.vending.hardware.VendingMachine */
 	CoinReturn getCoinReturn(){
 		return vm.getCoinReturn();
 	}
+	/**@see org.lsmr.vending.hardware.VendingMachine */
 	DeliveryChute getDeliveryChute(){
 		return vm.getDeliveryChute();
 	}
+	/**@see org.lsmr.vending.hardware.VendingMachine */
 	int getNumberOfCoinRacks(){
 		return vm.getNumberOfCoinRacks();
 	}
+	/**@see org.lsmr.vending.hardware.VendingMachine */
 	CoinRack getCoinRack(int index){
 		return vm.getCoinRack(index);
 	}
+	/**@see org.lsmr.vending.hardware.VendingMachine */
 	CoinRack getCoinRackForCoinKind(int value){
 		return vm.getCoinRackForCoinKind(value);
 	}
+	/**@see org.lsmr.vending.hardware.VendingMachine */
 	Integer getCoinKindForCoinRack(int index){
 		return vm.getCoinKindForCoinRack(index);
 	}
-	int getNumberOfPopCanRacks(){
+	/**@see org.lsmr.vending.hardware.VendingMachine */
+	int getNumberOfProductRacks(){
 		return vm.getNumberOfPopCanRacks();
 	}
-	String getPopKindName(int index){
+	/**@see org.lsmr.vending.hardware.VendingMachine */
+	String getProductName(int index){
 		return vm.getPopKindName(index);
 	}
-	int getPopKindCost(int index){
+	/**@see org.lsmr.vending.hardware.VendingMachine */
+	int getProductCost(int index){
 		return vm.getPopKindCost(index);
 	}
-	PopCanRack getPopCanRack(int index){
+	/**@see org.lsmr.vending.hardware.VendingMachine */
+	PopCanRack getProductRack(int index){
 		return vm.getPopCanRack(index);
 	}
+	/**@see org.lsmr.vending.hardware.VendingMachine */
 	Display getDisplay(){
 		return vm.getDisplay();
 	}
+	/**@see org.lsmr.vending.hardware.VendingMachine */
 	Lock getLock() {
-		return lock;
+		return vm.getLock();
+	}
+	/**@see org.lsmr.vending.hardware.VendingMachine */
+	ConfigurationPanel getConfigurationPanel(){
+		return vm.getConfigurationPanel();
+	}
+	boolean configureVendingMachine(List<String> popCanNames, List<Integer> popCanCosts){
+		boolean success = false; 
+		//Must match current product configuration or we reject the request
+		if (popCanNames.size() == mgr.getNumberOfProductRacks() &&
+			popCanCosts.size() == popCanNames.size()){
+			vm.configure(popCanNames, popCanCosts);
+			success = true;
+		}
+		
+			
+		return success;
 	}
 
+	/*
+	 * Gets the valid coin denominations.
+	 * @return The coin values for each coin rack, with order preserved..
+	 */
+	int[] getCoinRackValues(){
+		int typeCount = getNumberOfCoinRacks();
+		int[] types = new int[typeCount];
+		for (int i = 0; i < typeCount; i++){
+			types[i] = getCoinKindForCoinRack(i);
+		}
+		return types;
+	}
+	
+	/**
+	 * Takes the coin values inside the machine and sorts them in
+	 * descending order for the purpose of change return
+	 * @return coins denominations in descending order as an array
+	 */
+	int[] getDescendingCoinRackValues() {
+		int rackNumber = mgr.getNumberOfCoinRacks();
+		int[] rackAmounts = new int[rackNumber];
+
+		for (int i=0; i < rackNumber; i++){
+			rackAmounts[i] = mgr.getCoinKindForCoinRack(i);
+		}
+
+		Arrays.sort(rackAmounts);
+		int[] descending = new int[rackNumber];
+		//Reverse the array
+		for (int i = rackNumber - 1; i >= 0; i--){
+			descending[rackNumber - i - 1] = rackAmounts[i];
+		}
+		return descending;
+	}
+	
 	/**
 	 * Returns the index of the given SelectionButton,
 	 * which implies the index of the associated PopRack.
 	 * @param button The button of interest.
 	 * @return The matching index, or -1 if no match.
 	 */
-	int getButtonIndex(PushButton button){
+	int getSelectionButtonIndex(PushButton button){
 		int buttonCount = getNumberOfSelectionButtons();
 		for (int i = 0; i < buttonCount; i++){
 			if (getSelectionButton(i) == button){
 				return i;
 			}
+		}
+		return -1;
+	}
+	
+	/**
+	 * Returns the index of the given SelectionButton in the config panel.
+	 * @param button The button of interest.
+	 * @return The matching index, or -1 if no match.
+	 */
+	int getConfigButtonIndex(PushButton button){
+		int buttonCount = MachineConfiguration.CONFIG_PANEL_BUTTONS;
+		ConfigurationPanel config = getConfigurationPanel();
+		for (int i = 0; i < buttonCount; i++){
+			if (config.getButton(i) == button){
+				return i;
+			}
+		}
+		if (button == config.getEnterButton()){
+			//Then return a "pseudo-index" of configButtonMaxIndex+1
+			//Is used internally to facilitate handling of the "enter" key
+			return buttonCount; 
 		}
 		return -1;
 	}
@@ -268,23 +363,23 @@ public class VendingManager {
 	 * @param popRack The PopCanRack of interest.
 	 * @return The matching index, or -1 if no match.
 	 */
-	int getPopCanRackIndex(PopCanRack popRack){
-		int rackCount = getNumberOfPopCanRacks();
+	int getProductRackIndex(PopCanRack productRack){
+		int rackCount = getNumberOfProductRacks();
 		for (int i = 0; i < rackCount; i++){
-			if (getPopCanRack(i) == popRack){
+			if (getProductRack(i) == productRack){
 				return i;
 			}
 		}
 		return -1;
 	}
-
+	
 	/**
 	  * Returns the name pop in the given PopCanRack.
 	 * @param popRack The PopCanRack to check the name for.
 	 * @return The name of the pop.
 	 */
-	String getPopCanRackName(PopCanRack popRack){
-		return getPopKindName(getPopCanRackIndex(popRack));
+	String getProductRackName(PopCanRack productRack){
+		return getProductName(getProductRackIndex(productRack));
 	}
 
 	/**
@@ -310,19 +405,67 @@ public class VendingManager {
 	int getCoinRackValue(CoinRack coinRack){
 		return getCoinKindForCoinRack(getCoinRackIndex(coinRack));
 	}
-
-	/**
-	 * Gets the credit available for purchases, in cents.
-	 * Public access for testing and external access.
-	 * It is assumed to not be a security vulnerability.
-	 * @return The stored credit, in cents.
-	 */
-	public int getCredit(){
-		return credit;
-	}
 //^^^=======================ACCESSORS END=======================^^^
+	
+//vvv====================FUNCTIONALITY HANDLERS START===================vvv
+	//TODO DOCUMENT
+	public CreditHandler getCreditHandler(){
+		return credHandler;
+	}
+	
+	//TODO DOCUMENT	
+	public ProductHandler getProductHandler(){
+		return prodHandler;
+	}
 
-
+	public ConfigPanelHandler getConfigPanelHandler(){
+		return configHandler;
+	}
+	
+	//The below accessor methods are preserved in VendingManager
+	//are intended to decouple other logic classes (e.g. listeners) from
+	//the handler classes.
+	
+	/** @see CreditHandler */
+	public int getCredit(){
+		return mgr.getCreditHandler().getCredit();
+	}
+	/** @see CreditHandler */
+	public String getCurrency(){
+		return mgr.getCreditHandler().getCurrency();
+	}
+	/** @see CreditHandler */
+	void addCredit(int added){
+		mgr.getCreditHandler().addCredit(added);
+	}
+	/** @see CreditHandler */
+	void subtractCredit(int subtracted){
+		mgr.getCreditHandler().subtractCredit(subtracted);
+	}
+	/** @see CreditHandler */
+	void returnChange() throws CapacityExceededException, EmptyException, DisabledException{
+		mgr.getCreditHandler().returnChange();
+	}
+	/** @see CreditHandler */
+	public boolean checkExactChangeState(){
+		return mgr.getCreditHandler().checkExactChangeState();
+	}
+	/** @see CreditHandler */
+	public String getCreditMessage(){
+		return mgr.getCreditHandler().getCreditMessage();
+	}
+	
+	/** @see ProductHandler */
+	void buy(int productIndex) throws InsufficientFundsException, EmptyException,
+	DisabledException, CapacityExceededException {
+		getProductHandler().buy(productIndex);
+	}
+	/** @see ProductHandler */
+	boolean checkAllProductsEmpty(){
+		return getProductHandler().checkAllProductsEmpty();
+	}
+//^^^====================FUNCTIONALITY HANDLERS END===================^^^
+	
 //vvv=======================HARDWARE LOGIC START=======================vvv
 	/**
 	 * Used by calling code to to enable the safety.
@@ -342,75 +485,9 @@ public class VendingManager {
 	 * not be relayed to the hardware.
 	 */
 	public void disableSafety(){
-		if (isSafetyEnabled() && !isOutOfOrder() && !lockListener.isLocked())
+		if (isSafetyEnabled() && !isOutOfOrder() && !getLock().isLocked())
 			log("Safety disabled");
 			vm.disableSafety();
-	}
-
-	/**
-	 * Handles a pop purchase. Checks if the pop rack has pop, confirms funds available,
-	 *  dispenses the pop, reduces available funds and deposits the added coins into storage.
-	 * @param popIndex The index of the selected pop rack.
-	 * @throws InsufficientFundsException Thrown if credit < cost.
-	 * @throws EmptyException Thrown if the selected pop rack is empty.
-	 * @throws DisabledException Thrown if the pop rack or delivery chute is disabled.
-	 * @throws CapacityExceededException Thrown if the delivery chute is full.
-	 */
-	void buy(int popIndex) throws InsufficientFundsException, EmptyException,
-											DisabledException, CapacityExceededException {
-		int cost = getPopKindCost(popIndex);
-
-		if (getCredit() >= cost){
-			getPopCanRack(popIndex).dispensePopCan(); //Will throw EmptyException if pop rack is empty
-			credit -= cost; //Will only be performed if the pop is successfully dispensed.
-			if (ENABLE_GUI) {
-				//TODO: update the gui delivery chute
-			}
-
-			//These coin-related actions may need to be nested in a conditional once additional
-			//Payment methods are supported. It depends on whether change is returned automatically.
-			getCoinReceptacle().storeCoins();
-			returnChange();
-
-			if (credit > 0) {
-				displayCredit();
-			} else {
-				display("Thank you for your purchase!", 3);
-			}
-
-		} else { //Not enough credit
-			int diff = cost - credit;
-			String popName = getPopKindName(popIndex);
-			throw new InsufficientFundsException("Cannot buy " + popName + ". " + diff + " cents missing.");
-		}
-	}
-
-	/**
-	 * A method for returning change.
-	 * May not return exact change.
-	 * Dispenses the largest denominations first.
-	 *
-	 * @throws DisabledException Some necessary hardware is disabled
-	 * @throws EmptyException CoinSlot is empty and a coin removal was attempted
-	 * @throws CapacityExceededException DeliveryChute is full
-	 */
-	void returnChange() throws CapacityExceededException, EmptyException, DisabledException{
-		int[] rackValues = getDescendingRackValues();
-		int coinVal = 0;
-		CoinRack rack;
-		for (int i=0; i < getNumberOfCoinRacks(); i++){
-			coinVal = rackValues[i];
-			rack = getCoinRackForCoinKind(coinVal);
-
-			while (getCredit() >= coinVal && rack.size() != 0){
-				rack.releaseCoin();
-				subtractCredit(coinVal);
-			}
-
-			if (getCredit() == 0){
-				break;
-			}
-		}
 	}
 
 	/**
@@ -434,153 +511,12 @@ public class VendingManager {
 	 * Displays the current credit on the hardware display
 	 */
 	void displayCredit() {
-		display(getCreditMessage());
+		display(getCreditHandler().getCreditMessage());
 	}
 
 //^^^======================HARDWARE LOGIC END=======================^^^
 
 //vvv======================LOGIC INTERNALS START=======================vvv
-	/**
-	 * Adds value to the tracked credit.
-	 * @param added The credit to add, in cents.
-	 */
-	void addCredit(int added){
-		credit += added;
-		log("Credit added:" + added);
-	}
-
-	/**
-	 * Subtracts value to the tracked credit.
-	 * @param subtracted The credit to add, in cents.
-	 */
-	void subtractCredit(int subtracted){
-		credit -= subtracted;
-		log("Credit removed:" + subtracted);
-	}
-
-	/**
-	 * Returns a formatted string to display credit.
-	 * @return The formatted credit string.
-	 */
-	public String getCreditMessage(){
-		String message;
-
-		//Prettify the message for known currencies.
-		if (currency.equals("CAD") || currency.equals("USD")){
-			int dollars = credit / 100;
-			int cents = credit % 100;
-			message = String.format("Credit: $%3d.%02d", dollars, cents);
-		}
-		else{
-			message = "Credit: " + credit;
-		}
-
-		return message;
-	}
-
-
-	/**
-	 * Takes the coin values inside the machine and sorts them in
-	 * descending order for the purpose of change return
-	 * @return coins denominations in descending order as an array
-	 */
-	int[] getDescendingRackValues() {
-		int rackNumber = getNumberOfCoinRacks();
-		int[] rackAmounts = new int[rackNumber];
-
-		for (int i=0; i < rackNumber; i++){
-			rackAmounts[i] = getCoinKindForCoinRack(i);
-		}
-
-		Arrays.sort(rackAmounts);
-		int[] descending = new int[rackNumber];
-		//Reverse the array
-		for (int i = rackNumber - 1; i >= 0; i--){
-			descending[rackNumber - i - 1] = rackAmounts[i];
-		}
-		return descending;
-	}
-
-	/**
-	 * Checks that exact change could be provided for each possible purchase,
-	 * given the current credit.
-	 * @return True if exact change can be provided for each purchase
-	 */
-	public boolean checkExactChangeState(){
-		boolean exact = true;
-		int rackCount = getNumberOfPopCanRacks();
-
-		int popCost;
-		for (int i = 0; i < rackCount; i++){
-			popCost = getPopKindCost(i);
-			exact = canReturnExactChange(popCost);
-			if (!exact)
-				break;
-		}
-
-		return exact;
-	}
-
-	/**
-	 * Checks if valid change can be returned, but does not return anything.
-	 * Similar to returnChange, but sets the indicator light instead
-	 * @param cost The cost (in cents) of a hypothetical purchase
-	 * @return Whether exact change could be provided for an item of the given cost
-	 */
-	boolean canReturnExactChange(int cost){
-		boolean exact = true;
-
-		int credit = getCredit();
-		int excess = credit - cost; // i.e. credit after the possible purchase
-
-		int rackCount = getNumberOfCoinRacks();
-		int[] rackValues = getDescendingRackValues();
-
-		//Populate CoinRack count array
-		int[] rackAmounts = new int[getNumberOfCoinRacks()];
-		for (int i=0; i < rackCount; i++){
-			rackAmounts[i] = getCoinRackForCoinKind(rackValues[i]).size();
-			if (debug) System.out.println("CoinRack (value: " + rackValues[i]
-										+ ") has " + rackAmounts[i] + " coins.");
-		}
-		//Try to reduce the excess credit to 0
-		for (int i=0; i < rackCount; i++){
-			while (excess >= rackValues[i] && rackAmounts[i] != 0){
-				excess -= rackValues[i];
-				rackAmounts[i]--;
-			}
-			if (excess == 0){
-				if (debug) System.out.println("Correct Change");
-				break;
-			}
-		}
-
-		//If credit remains, inexact change would need to be be provided
-		if (excess > 0){
-			exact = false;
-			if (debug) System.out.println("Wrong change");
-		}
-
-		return exact;
-	}
-
-	/**
-	 * Checks if all of the pop racks are empty.
-	 * @return True if all are empty, else false
-	 */
-	boolean checkAllProductsEmpty(){
-		boolean empty = true;
-
-		int popCount = getNumberOfPopCanRacks();
-		for (int i = 0; i < popCount; i++){
-			if (getPopCanRack(i).size() != 0){
-				empty = false;
-				break;
-			}
-		}
-
-		return empty;
-	}
 
 	/**
 	 * Checks the machine state to determine whether it is out of order.
@@ -592,11 +528,20 @@ public class VendingManager {
 			!getDeliveryChute().hasSpace() ||
 			!getCoinReceptacle().hasSpace() ||
 			!getCoinReturn().hasSpace() ||
-			checkAllProductsEmpty()
+			checkAllProductsEmpty() ||
+			getLock().isLocked()
 		) {
 			response = true;
 		}
 		return response;
+	}
+	
+	/**
+	 * Returns the debugging state of the system.
+	 * @return Whether the VendingManager is in debug mode.
+	 */
+	boolean isDebug(){
+		return debug;
 	}
 
 	/**
@@ -632,34 +577,83 @@ public class VendingManager {
 			if (debug) System.out.println(e);
 		}
 	}
-
-	//TODO Finish implementation once coin return button added.
-//	/**
-//	 * **Currently unused**. Provides a method of returning the coins that are stored
-//	 * in the coin receptacle.
-//	 * @throws CapacityExceededException
-//	 * @throws DisabledException
-//	 */
-//	public void returnInsertedCoins() throws CapacityExceededException, DisabledException {
-//		getCoinReceptacle().returnCoins();
-//		//TODO Decide where it would be best to handle credit adjustment
-//		// e.g. in listener method for CoinReturn coinDelivered()?
-//
-//
-//	}
+	
 //^^^======================LOGIC INTERNALS END=======================^^^
 
+//vvv======================GUI ACCESS START=======================vvv
 	/**
-	 * Main method
-	 * @param args Command line arguments
+	 * Loads and initializes the GUI for the vending machine simulation.
 	 */
-	public static void main(String[] args) {
-		MachineConfiguration cfg = new MachineConfiguration();
-
-		VendingMachine machine = new VendingMachine(cfg.coinKinds, cfg.selectionButtonCount, cfg.coinRackCapacity, cfg.popCanRackCapacity,
-				cfg.receptacleCapacity, cfg.deliveryChuteCapacity, cfg.coinReturnCapacity);
-		machine.configure(cfg.popCanNames, cfg.popCanCosts);
-
-		VendingManager.initialize(machine, cfg.coinKinds);
+	private void startGui() {
+		gui = new GUIMain(vm, mgr, getCoinRackValues());
+		gui.init();
 	}
+	
+	//TODO DOCUMENT
+	boolean isGUIEnabled(){
+		return GUI_enabled;
+	}
+	
+	/**
+	 * Updates the user display in the GUI
+	 * @param message Message to display in GUI
+	 */
+	void guiUpdateUserDisplay(String message){
+		if (isGUIEnabled() && gui != null){
+			gui.getSidePanel().getDisplayPanel().updateMessage(message);
+		}
+
+	}
+	
+	/**
+	 * Updates the config panel display in the GUI
+	 * @param message Message to display in GUI
+	 */
+	void guiUpdateConfigDisplay(String message){
+		if (isGUIEnabled() && gui != null){
+			//TODO Add config panel message update call
+//			gui.getConfigPanel().getDisplayPanel().updateMessage(message);
+		}
+	}
+	
+	/**
+	 * Updates the GUI "exact change" light state
+	 * @param state The on/off state of the light
+	 */
+	void guiSetChangeLight(boolean state){
+		if (isGUIEnabled() && gui != null){
+			//TODO modify gui exact change light state
+//			gui.getSidePanel().getDisplayPanel().indicatorOff(MachineConfiguration.EXACT_CHANGE);
+		}
+	}
+	
+	/**
+	 * Updates the GUI "out of order" light state
+	 * @param state The on/off state of the light 
+	 */
+	void guiSetOutOfOrderLight(boolean state){
+		if (isGUIEnabled() && gui != null){
+			//TODO modify gui exact change light state
+//			gui.getSidePanel().getDisplayPanel().indicatorOff(MachineConfiguration.OUT_OF_ORDER);
+		}
+	}
+	
+	/**
+	 * Notifies the GUI delivery chute that an item has been added
+	 */
+	void guiAddItemToChute(){
+		if (mgr.isGUIEnabled() && gui != null){
+			gui.getDeliveryChutePanel().addItem();
+		}
+	}
+	
+	/**
+	 * Notifies the GUI delivery chute that an item has been removed
+	 */
+	void guiRemoveItemFromChute(){
+		if (mgr.isGUIEnabled() && gui != null){
+			gui.getDeliveryChutePanel().removeItems();			
+		}
+	}
+//^^^======================GUI ACCESS END=======================^^^
 }

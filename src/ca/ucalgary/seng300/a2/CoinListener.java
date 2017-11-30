@@ -10,8 +10,8 @@ public class CoinListener extends VendingListener implements
 							CoinSlotListener, CoinReceptacleListener,
 							CoinRackListener, CoinReturnListener {
 
-	protected static CoinListener listener;
-	protected static VendingManager mgr;
+	private static CoinListener listener;
+	private static VendingManager mgr;
 
 	private CoinListener (){}
 
@@ -50,10 +50,10 @@ public class CoinListener extends VendingListener implements
 	 */
 	@Override
 	public void validCoinInserted(CoinSlot slot, Coin coin) {
-		mgr.addCredit(coin.getValue());
+		mgr.getCreditHandler().addCredit(coin.getValue());
 		mgr.displayCredit();
 
-		if (mgr.checkExactChangeState()){
+		if (mgr.getCreditHandler().checkExactChangeState()){
 			mgr.getExactChangeLight().deactivate();
 		}
 		else{

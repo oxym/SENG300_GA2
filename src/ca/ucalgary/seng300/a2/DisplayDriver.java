@@ -2,8 +2,6 @@ package ca.ucalgary.seng300.a2;
 
 import org.lsmr.vending.hardware.Display;
 
-import ca.ucalgary.seng300.a2.gui.GuiInterfaceDisplay;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Timer;
@@ -77,7 +75,7 @@ public class DisplayDriver {
 		}
 
 		int delay = duration * 1000;
-		if (mgr != null && VendingManager.getInstance().getCredit() > 0) {
+		if (mgr != null && mgr.getCreditHandler().getCredit() > 0) {
 			DisplayMessageTask messageTask = getMessageTask("$CREDIT$");
 			timer.schedule(messageTask, delay);
 		} else { // Restore greeting message
@@ -181,7 +179,7 @@ public class DisplayDriver {
 		@Override
 		public void run() {
 			if (message.equals("$CREDIT$")) {
-				display.display(VendingManager.getInstance().getCreditMessage());
+				display.display(mgr.getCreditHandler().getCreditMessage());
 			} else {
 				display.display(message);
 			}

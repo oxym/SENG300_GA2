@@ -23,8 +23,8 @@ import org.lsmr.vending.PopCan;
  * <li>a set of one or more pop can racks (the number, cost, and pop name stored
  * in each is specified in the constructor);</li>
  * <li>one textual display;</li>
- * <li>a set of one or more selection buttons (exactly one per pop can rack);
- * and</li>
+ * <li>a set of one or more selection buttons (exactly one per pop can rack);</li>
+ * <li>one lock; and</li>
  * <li>two indicator lights: one to indicate that exact change should be used by
  * the user; the other to indicate that the machine is out of order.</li>
  * </ul>
@@ -71,6 +71,7 @@ public final class VendingMachine {
     private IndicatorLight exactChangeLight, outOfOrderLight;
     private CoinReturn coinReturn;
     private ConfigurationPanel configurationPanel;
+    private Lock lock;
 
     /**
      * Creates a standard arrangement for the vending machine. All the
@@ -164,6 +165,8 @@ public final class VendingMachine {
 
 	exactChangeLight = new IndicatorLight();
 	outOfOrderLight = new IndicatorLight();
+		
+	lock = new Lock();
     }
 
     /**
@@ -441,6 +444,15 @@ public final class VendingMachine {
      */
     public Display getDisplay() {
 	return display;
+    }
+
+    /**
+     * Accesses the lock.
+     * 
+     * @return The relevant device.
+     */
+    public Lock getLock() {
+	return lock;
     }
 
     /**

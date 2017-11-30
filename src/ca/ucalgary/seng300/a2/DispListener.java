@@ -2,8 +2,6 @@ package ca.ucalgary.seng300.a2;
 
 import org.lsmr.vending.hardware.*;
 
-import ca.ucalgary.seng300.a2.gui.GuiInterfaceDisplay;
-
 /**
  * This class is registered by VendingManager with hardware classes to listen
  * for display events.
@@ -21,15 +19,11 @@ public class DispListener extends VendingListener implements DisplayListener {
 	private String messageCurrent = "";
 	private VendingManager mgr;
 
-	private GuiInterfaceDisplay guiDisplay;
-	private boolean guiDisplayPresent;
-
 	/**
 	 * @param manager The vending machine manager
 	 */
 	public DispListener(VendingManager manager) {
 		mgr = manager;
-		guiDisplayPresent = false;
 	}
 
 	/*
@@ -43,12 +37,26 @@ public class DispListener extends VendingListener implements DisplayListener {
 	public void messageChange(Display display, String oldMessage, String newMessage) {
 		messageLast = oldMessage;
 		messageCurrent = newMessage;
-		if (guiDisplayPresent)
-			guiDisplay.updateMessage(newMessage);
-		String greeting = DisplayDriver.getGreeetingMessage();
-		if (newMessage != (null) && !newMessage.equals("") && !newMessage.equals(greeting))
-			if (mgr != null)
-				mgr.log("Message displayed: " + newMessage);
+		
+		
+		if (mgr != null){
+			String displayType;
+			if (display == mgr.getDisplay()){ //If it's the user display
+				mgr.guiUpdateUserDisplay(newMessage);
+				displayType = "user";
+			} else if (display == mgr.getConfigurationPanel().getDisplay()){ //If it's the config display
+				mgr.guiUpdateConfigDisplay(newMessage);
+				displayType = "configuration panel";
+			} else{
+				displayType = "unknown";
+			}
+					
+			String greeting = DisplayDriver.getGreeetingMessage();
+			if (newMessage != (null) && !newMessage.equals("") && !newMessage.equals(greeting)){
+					mgr.log("Message displayed on the " + 
+							displayType + " display: " + newMessage);
+			}
+		}
 	}
 
 	/**
@@ -68,16 +76,4 @@ public class DispListener extends VendingListener implements DisplayListener {
 	public String getCurrentMessage() {
 		return messageCurrent;
 	}
-
-	/**
-	 * Attaches a gui Display object
-	 *
-	 * @param guiDisplay
-	 *            gui display object
-	 */
-	public void attachGuiDisplay(GuiInterfaceDisplay guiDisplay) {
-		this.guiDisplay = guiDisplay;
-		guiDisplayPresent = true;
-	}
-
 }

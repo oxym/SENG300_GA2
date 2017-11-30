@@ -7,10 +7,10 @@ import org.lsmr.vending.hardware.*;
  */
 public class ButtonListener extends VendingListener implements PushButtonListener{
 
-	protected static ButtonListener listener;
-	protected static VendingManager mgr;
+	private static ButtonListener listener;
+	private static VendingManager mgr;
 	
-	protected ButtonListener(){}
+	private ButtonListener(){}
 
 	/**
 	 * Forces the existing singleton instance to be replaced.
@@ -39,25 +39,30 @@ public class ButtonListener extends VendingListener implements PushButtonListene
 	 */
 	@Override
 	public void pressed(PushButton button) {
-		int bIndex = mgr.getButtonIndex(button);
+		int sIndex = mgr.getSelectionButtonIndex(button);
 
-		String popName = mgr.getPopKindName(bIndex);
-		mgr.log("Button for: " + popName + ", button: " + bIndex + " pressed.");
-
-		if (bIndex == -1){
-			//Then it's not a pop selection button.
-			//This may be where we handle "change return" button presses
+		String productName = mgr.getProductName(sIndex);
+		mgr.log("Button for: " + productName + ", button: " + sIndex + " pressed.");
+		
+		if (sIndex == -1){
+			int cIndex = mgr.getConfigButtonIndex(button); 
+			if (cIndex != -1){ 
+				mgr.getConfigPanelHandler().pressKey(cIndex);
+				//TODO Handle config panel input
+				//NOTE: The "Enter" button has index 38, even though there
+				//is no such index in the ConfigurationPanel's buttton array
+			}
 		}
 		else{
 			try{
 				//Assumes a 1-to-1, strictly ordered mapping between popIndex and and butttonindex
-				mgr.buy(bIndex);
+				mgr.getProductHandler().buy(sIndex);
 			} catch(InsufficientFundsException e){
 				mgr.display(e.toString(), 5);
 			} catch(DisabledException e){
 				mgr.display("Vending machine disabled", 5);
 			} catch (EmptyException e){
-				mgr.display(popName + " is out of stock.", 5);
+				mgr.display(productName + " is out of stock.", 5);
 			} catch (CapacityExceededException e){
 				mgr.display("Delivery chute full", 5);
 			}

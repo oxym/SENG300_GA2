@@ -3,20 +3,15 @@ package ca.ucalgary.seng300.a2;
 import org.lsmr.vending.PopCan;
 import org.lsmr.vending.hardware.*;
 
-import ca.ucalgary.seng300.a2.gui.GuiInterfaceDeliveryChute;
-
 /**
  * Event-handling listener class for PopCanRack and DeliveryChute.
  */
 public class PopListener extends VendingListener implements PopCanRackListener, DeliveryChuteListener {
 
-	protected static PopListener listener;
-	protected static VendingManager mgr;
+	private static PopListener listener;
+	private  static VendingManager mgr;
 
-	private GuiInterfaceDeliveryChute guiDeliveryChute;
-	private boolean guiDeliveryChutePresent = false;
-
-	protected PopListener(){}
+	private PopListener(){}
 
 	/**
 	 * Forces the existing singleton instance to be replaced.
@@ -65,7 +60,7 @@ public class PopListener extends VendingListener implements PopCanRackListener, 
 	 */
 	@Override
 	public void popCanRemoved(PopCanRack popCanRack, PopCan popCan) {
-		String popName = mgr.getPopCanRackName(popCanRack);
+		String popName = mgr.getProductRackName(popCanRack);
 		mgr.log(popCan.getName() + " removed from " + popName + " rack.");
 	}
 
@@ -76,7 +71,7 @@ public class PopListener extends VendingListener implements PopCanRackListener, 
 	 */
 	@Override
 	public void popCansFull(PopCanRack popCanRack) {
-		String popName = mgr.getPopCanRackName(popCanRack);
+		String popName = mgr.getProductRackName(popCanRack);
 		mgr.log(popName + " rack full.");
 	}
 
@@ -88,7 +83,7 @@ public class PopListener extends VendingListener implements PopCanRackListener, 
 	 */
 	@Override
 	public void popCansEmpty(PopCanRack popCanRack) {
-		String popName = mgr.getPopCanRackName(popCanRack);
+		String popName = mgr.getProductRackName(popCanRack);
 		mgr.log(popName + " rack empty.");
 		if (mgr.checkAllProductsEmpty()){
 			mgr.enableSafety();
@@ -104,9 +99,8 @@ public class PopListener extends VendingListener implements PopCanRackListener, 
 	@Override
 	public void itemDelivered(DeliveryChute chute) {
 		mgr.log("PopCan delivered to the Delivery Chute");
-		if (guiDeliveryChutePresent) {
-			guiDeliveryChute.addItem();
-		}
+		
+		mgr.guiAddItemToChute();
 	}
 
 	/*
@@ -124,11 +118,11 @@ public class PopListener extends VendingListener implements PopCanRackListener, 
 	 *
 	 */
 	@Override
-	public void doorClosed(DeliveryChute chute) {
-		if (guiDeliveryChutePresent) {
-			guiDeliveryChute.removeItems();
-		}
+	public void doorClosed(DeliveryChute chute) {	
 		mgr.log("Delivery chute door closed");
+
+		mgr.guiRemoveItemFromChute();
+				
 		if (chute.hasSpace())
 			mgr.disableSafety();
 	}
@@ -142,16 +136,6 @@ public class PopListener extends VendingListener implements PopCanRackListener, 
 	public void chuteFull(DeliveryChute chute) {
 		mgr.log("Delivery chute full");
 		mgr.enableSafety();
-	}
-
-	/**
-	 * Attach a gui delivery chute object
-	 *
-	 * @param guiInterfaceDeliveryChute A gui Delivery Chute
-	 */
-	public void attachGuiDeliveryChute(GuiInterfaceDeliveryChute guiDeliveryChute) {
-		this.guiDeliveryChute = guiDeliveryChute;
-		guiDeliveryChutePresent = true;
 	}
 //^^^=======================DELIVERY CHUTE LISTENER METHODS END=======================^^^
 }
