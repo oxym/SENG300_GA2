@@ -37,7 +37,7 @@ import java.io.FileNotFoundException;
  */
 public class VendingManager {
 	private static boolean debug = false;
-	private static boolean ENABLE_GUI = true;
+	private static boolean GUI_enabled = true;
 
 	private static VendingManager mgr;
 	private static VendingMachine vm;
@@ -51,19 +51,29 @@ public class VendingManager {
 	private static MachineLockListener lockListener;
 	private static CreditHandler credHandler;
 	private static ProductHandler prodHandler;
-	private static int[] acceptedCoins;
 
 	private static Logger eventLog;
 	private static String eventLogName = "VendingLog.txt";
 
 
-
-	private static Lock lock;
-
 	private static GUIMain gui;
 
 
 //vvv=======================SETUP START=======================vvv
+	/**
+	 * Main method used primarily to drive manual testing.
+	 * @param args Command line arguments
+	 */
+	public static void main(String[] args) {
+		MachineConfiguration cfg = new MachineConfiguration();
+
+		VendingMachine machine = new VendingMachine(cfg.coinKinds, cfg.selectionButtonCount, cfg.coinRackCapacity, cfg.popCanRackCapacity,
+				cfg.receptacleCapacity, cfg.deliveryChuteCapacity, cfg.coinReturnCapacity);
+		machine.configure(cfg.popCanNames, cfg.popCanCosts);
+
+		VendingManager.initialize(machine, cfg.coinKinds);
+	}
+	
 	/**
 	 * Singleton constructor. Initializes and stores the singleton instances
 	 * of hardware listeners. Registers the listeners with the appropriate hardware.
@@ -72,7 +82,6 @@ public class VendingManager {
 	private VendingManager(){
 		eventLog = new Logger(eventLogName);
 
-		lock = new Lock();
 		displayListener = new DispListener(this);
 		buttonListener = ButtonListener.initialize(this);
 		popListener = PopListener.initialize(this);
@@ -97,11 +106,10 @@ public class VendingManager {
 	 */
 	public static VendingManager initialize(VendingMachine host, int[] coinValues){
 		vm = host;
-		acceptedCoins = coinValues;
 		mgr = new VendingManager();
 
-		if(ENABLE_GUI)
-			startGui();
+		if(GUI_enabled)
+			mgr.startGui();
 
 		return getInstance();
 	}
@@ -172,18 +180,6 @@ public class VendingManager {
 		}
 	}
 
-	public static void startGui() {
-
-		gui = new GUIMain(vm, mgr, acceptedCoins);
-		gui.init();
-
-//TODO: attach indicator lights, coin return, and any other gui output elements
-		//attach panel to displayDriver
-		displayListener.attachGuiDisplay(gui.getSidePanel().getDisplayPanel());
-		lightListener.attachGuiIndicators((GuiInterfaceIndicators) gui.getSidePanel().getDisplayPanel());
-		popListener.attachGuiDeliveryChute(gui.getDeliveryChutePanel());
-	}
-
 //^^^=======================SETUP END=======================^^^
 
 	// Accessors used throughout the vending logic classes to get hardware references.
@@ -245,9 +241,26 @@ public class VendingManager {
 		return vm.getDisplay();
 	}
 	Lock getLock() {
-		return lock;
+		return vm.getLock();
 	}
-
+	ConfigurationPanel getConfigurationPanel(){
+		return vm.getConfigurationPanel();
+	}
+	
+	
+	/*
+	 * Gets the valid coin denominations.
+	 * @return The coin values for each coin rack, with order preserved..
+	 */
+	int[] getValidCoinTypes(){
+		int typeCount = getNumberOfCoinRacks();
+		int[] types = new int[typeCount];
+		for (int i = 0; i < typeCount; i++){
+			types[i] = getCoinKindForCoinRack(i);
+		}
+		return types;
+	}
+	
 	/**
 	 * Returns the index of the given SelectionButton,
 	 * which implies the index of the associated PopRack.
@@ -316,14 +329,15 @@ public class VendingManager {
 	public static CreditHandler getCreditHandler(){
 		return credHandler;
 	}
-	
+
+	//TODO DOCUMENT	
 	public static ProductHandler getProductHandler(){
 		return prodHandler;
 	}
 	
 	//TODO DOCUMENT
-	boolean getGUIEnabled(){
-		return ENABLE_GUI;
+	boolean isGUIEnabled(){
+		return GUI_enabled;
 	}
 //^^^=======================ACCESSORS END=======================^^^
 
@@ -347,7 +361,7 @@ public class VendingManager {
 	 * not be relayed to the hardware.
 	 */
 	public void disableSafety(){
-		if (isSafetyEnabled() && !isOutOfOrder() && !lockListener.isLocked())
+		if (isSafetyEnabled() && !isOutOfOrder() && !getLock().isLocked())
 			log("Safety disabled");
 			vm.disableSafety();
 	}
@@ -522,7 +536,8 @@ public class VendingManager {
 			!getDeliveryChute().hasSpace() ||
 			!getCoinReceptacle().hasSpace() ||
 			!getCoinReturn().hasSpace() ||
-			checkAllProductsEmpty()
+			checkAllProductsEmpty() ||
+			getLock().isLocked()
 		) {
 			response = true;
 		}
@@ -562,34 +577,78 @@ public class VendingManager {
 			if (debug) System.out.println(e);
 		}
 	}
-
-	//TODO Finish implementation once coin return button added.
-//	/**
-//	 * **Currently unused**. Provides a method of returning the coins that are stored
-//	 * in the coin receptacle.
-//	 * @throws CapacityExceededException
-//	 * @throws DisabledException
-//	 */
-//	public void returnInsertedCoins() throws CapacityExceededException, DisabledException {
-//		getCoinReceptacle().returnCoins();
-//		//TODO Decide where it would be best to handle credit adjustment
-//		// e.g. in listener method for CoinReturn coinDelivered()?
-//
-//
-//	}
+	
 //^^^======================LOGIC INTERNALS END=======================^^^
 
+//vvv======================GUI ACCESS START=======================vvv
 	/**
-	 * Main method
-	 * @param args Command line arguments
+	 * Loads and initializes the GUI for the vending machine simulation.
 	 */
-	public static void main(String[] args) {
-		MachineConfiguration cfg = new MachineConfiguration();
-
-		VendingMachine machine = new VendingMachine(cfg.coinKinds, cfg.selectionButtonCount, cfg.coinRackCapacity, cfg.popCanRackCapacity,
-				cfg.receptacleCapacity, cfg.deliveryChuteCapacity, cfg.coinReturnCapacity);
-		machine.configure(cfg.popCanNames, cfg.popCanCosts);
-
-		VendingManager.initialize(machine, cfg.coinKinds);
+	private void startGui() {
+		gui = new GUIMain(vm, mgr, getValidCoinTypes());
+		gui.init();
 	}
+	
+	/**
+	 * Updates the user display in the GUI
+	 * @param message Message to display in GUI
+	 */
+	void guiUpdateUserDisplay(String message){
+		if (mgr.isGUIEnabled()){
+			gui.getSidePanel().getDisplayPanel().updateMessage(message);
+		}
+
+	}
+	
+	/**
+	 * Updates the config panel display in the GUI
+	 * @param message Message to display in GUI
+	 */
+	void guiUpdateConfigDisplay(String message){
+		if (mgr.isGUIEnabled()){
+			//TODO Add config panel message update call
+//			gui.getConfigPanel().getDisplayPanel().updateMessage(message);
+		}
+	}
+	
+	/**
+	 * Updates the GUI "exact change" light state
+	 * @param state The on/off state of the light
+	 */
+	void guiSetChangeLight(boolean state){
+		if (mgr.isGUIEnabled()){
+			//TODO modify gui exact change light state
+//			gui.getSidePanel().getDisplayPanel().indicatorOff(MachineConfiguration.EXACT_CHANGE);
+		}
+	}
+	
+	/**
+	 * Updates the GUI "out of order" light state
+	 * @param state The on/off state of the light 
+	 */
+	void guiSetOutOfOrderLight(boolean state){
+		if (mgr.isGUIEnabled()){
+			//TODO modify gui exact change light state
+//			gui.getSidePanel().getDisplayPanel().indicatorOff(MachineConfiguration.OUT_OF_ORDER);
+		}
+	}
+	
+	/**
+	 * Notifies the GUI delivery chute that an item has been added
+	 */
+	void guiAddItemToChute(){
+		if (mgr.isGUIEnabled()){
+			gui.getDeliveryChutePanel().addItem();
+		}
+	}
+	
+	/**
+	 * Notifies the GUI delivery chute that an item has been removed
+	 */
+	void guiRemoveItemFromChute(){
+		if (mgr.isGUIEnabled()){
+			gui.getDeliveryChutePanel().removeItems();			
+		}
+	}
+//^^^======================GUI ACCESS END=======================^^^
 }

@@ -7,8 +7,8 @@ import org.lsmr.vending.hardware.*;
  */
 public class ButtonListener extends VendingListener implements PushButtonListener{
 
-	protected static ButtonListener listener;
-	protected static VendingManager mgr;
+	private static ButtonListener listener;
+	private static VendingManager mgr;
 	
 	private ButtonListener(){}
 

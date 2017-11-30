@@ -10,8 +10,8 @@ public class CoinListener extends VendingListener implements
 							CoinSlotListener, CoinReceptacleListener,
 							CoinRackListener, CoinReturnListener {
 
-	protected static CoinListener listener;
-	protected static VendingManager mgr;
+	private static CoinListener listener;
+	private static VendingManager mgr;
 
 	private CoinListener (){}
 

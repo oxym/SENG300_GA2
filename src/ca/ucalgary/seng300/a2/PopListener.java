@@ -10,11 +10,8 @@ import ca.ucalgary.seng300.a2.gui.GuiInterfaceDeliveryChute;
  */
 public class PopListener extends VendingListener implements PopCanRackListener, DeliveryChuteListener {
 
-	protected static PopListener listener;
-	protected static VendingManager mgr;
-
-	private GuiInterfaceDeliveryChute guiDeliveryChute;
-	private boolean guiDeliveryChutePresent = false;
+	private static PopListener listener;
+	private  static VendingManager mgr;
 
 	private PopListener(){}
 
@@ -104,9 +101,8 @@ public class PopListener extends VendingListener implements PopCanRackListener, 
 	@Override
 	public void itemDelivered(DeliveryChute chute) {
 		mgr.log("PopCan delivered to the Delivery Chute");
-		if (guiDeliveryChutePresent) {
-			guiDeliveryChute.addItem();
-		}
+		
+		mgr.guiAddItemToChute();
 	}
 
 	/*
@@ -124,11 +120,11 @@ public class PopListener extends VendingListener implements PopCanRackListener, 
 	 *
 	 */
 	@Override
-	public void doorClosed(DeliveryChute chute) {
-		if (guiDeliveryChutePresent) {
-			guiDeliveryChute.removeItems();
-		}
+	public void doorClosed(DeliveryChute chute) {	
 		mgr.log("Delivery chute door closed");
+
+		mgr.guiRemoveItemFromChute();
+				
 		if (chute.hasSpace())
 			mgr.disableSafety();
 	}
@@ -142,16 +138,6 @@ public class PopListener extends VendingListener implements PopCanRackListener, 
 	public void chuteFull(DeliveryChute chute) {
 		mgr.log("Delivery chute full");
 		mgr.enableSafety();
-	}
-
-	/**
-	 * Attach a gui delivery chute object
-	 *
-	 * @param guiInterfaceDeliveryChute A gui Delivery Chute
-	 */
-	public void attachGuiDeliveryChute(GuiInterfaceDeliveryChute guiDeliveryChute) {
-		this.guiDeliveryChute = guiDeliveryChute;
-		guiDeliveryChutePresent = true;
 	}
 //^^^=======================DELIVERY CHUTE LISTENER METHODS END=======================^^^
 }
