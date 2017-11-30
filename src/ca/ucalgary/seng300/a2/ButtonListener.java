@@ -39,18 +39,23 @@ public class ButtonListener extends VendingListener implements PushButtonListene
 	 */
 	@Override
 	public void pressed(PushButton button) {
-		int bIndex = mgr.getButtonIndex(button);
+		int sIndex = mgr.getSelectionButtonIndex(button);
 
-		String productName = mgr.getProductName(bIndex);
-		mgr.log("Button for: " + productName + ", button: " + bIndex + " pressed.");
+		String productName = mgr.getProductName(sIndex);
+		mgr.log("Button for: " + productName + ", button: " + sIndex + " pressed.");
 		
-		if (bIndex == -1){
-			
+		if (sIndex == -1){
+			int cIndex = mgr.getConfigButtonIndex(button); 
+			if (cIndex != -1){ 
+				//TODO Handle config panel input
+				//NOTE: The "Enter" button has index 38, even though there
+				//is no such index in the ConfigurationPanel's buttton array
+			}
 		}
 		else{
 			try{
 				//Assumes a 1-to-1, strictly ordered mapping between popIndex and and butttonindex
-				VendingManager.getProductHandler().buy(bIndex);
+				mgr.getProductHandler().buy(sIndex);
 			} catch(InsufficientFundsException e){
 				mgr.display(e.toString(), 5);
 			} catch(DisabledException e){

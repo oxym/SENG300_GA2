@@ -38,17 +38,23 @@ public class DispListener extends VendingListener implements DisplayListener {
 		messageLast = oldMessage;
 		messageCurrent = newMessage;
 		
+		
 		if (mgr != null){
-			//Update GUI
+			String displayType;
 			if (display == mgr.getDisplay()){ //If it's the user display
-				mgr.guiUpdateUserDisplay(newMessage);			
+				mgr.guiUpdateUserDisplay(newMessage);
+				displayType = "user";
 			} else if (display == mgr.getConfigurationPanel().getDisplay()){ //If it's the config display
-				mgr.guiUpdateConfigDisplay(newMessage); 
+				mgr.guiUpdateConfigDisplay(newMessage);
+				displayType = "configuration panel";
+			} else{
+				displayType = "unknown";
 			}
 					
 			String greeting = DisplayDriver.getGreeetingMessage();
 			if (newMessage != (null) && !newMessage.equals("") && !newMessage.equals(greeting)){
-					mgr.log("Message displayed: " + newMessage);
+					mgr.log("Message displayed on the " + 
+							displayType + " display: " + newMessage);
 			}
 		}
 	}

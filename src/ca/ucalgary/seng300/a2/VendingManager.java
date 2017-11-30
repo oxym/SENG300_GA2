@@ -1,6 +1,8 @@
 package ca.ucalgary.seng300.a2;
 
 import java.util.Arrays;
+import java.util.List;
+
 import org.lsmr.vending.hardware.*;
 
 import java.io.FileNotFoundException;
@@ -47,8 +49,11 @@ public class VendingManager {
 	private static CoinListener coinListener;
 	private static LightListener lightListener;
 	private static MachineLockListener lockListener;
+	
 	private static CreditHandler credHandler;
 	private static ProductHandler prodHandler;
+	private static ConfigPanelHandler configHandler;
+	
 
 	private static Logger eventLog;
 	private static String eventLogName = "VendingLog.txt";
@@ -82,8 +87,10 @@ public class VendingManager {
 
 		credHandler = new CreditHandler(this); 
 		prodHandler = new ProductHandler(this);
+		configHandler = new ConfigPanelHandler(this);
 		
 		displayListener = new DispListener(this);
+		
 		buttonListener = ButtonListener.initialize(this);
 		popListener = PopListener.initialize(this);
 		lightListener = LightListener.initialize(this);
@@ -91,13 +98,11 @@ public class VendingManager {
 		lockListener = MachineLockListener.initialize(this);
 
 		registerListeners();
-
+		
 		displayDriver = new DisplayDriver(getDisplay());
 		displayDriver.greetingMessage();
-
+		
 		if (isOutOfOrder()) enableSafety();
-
-
 	}
 
 	/**
@@ -128,10 +133,11 @@ public class VendingManager {
 	 */
 	private void registerListeners(){
 		getDisplay().register(displayListener);
-
+		getConfigurationPanel().getDisplay().register(displayListener);
+		
 		registerPopCanRackListener(popListener);
 		getDeliveryChute().register(popListener);
-
+		
 		getCoinSlot().register(coinListener);
 		getCoinReceptacle().register(coinListener);
 		registerCoinRackListener(coinListener);
@@ -267,6 +273,18 @@ public class VendingManager {
 	ConfigurationPanel getConfigurationPanel(){
 		return vm.getConfigurationPanel();
 	}
+	boolean configureVendingMachine(List<String> popCanNames, List<Integer> popCanCosts){
+		boolean success = false; 
+		//Must match current product configuration or we reject the request
+		if (popCanNames.size() == mgr.getNumberOfProductRacks() &&
+			popCanCosts.size() == popCanNames.size()){
+			vm.configure(popCanNames, popCanCosts);
+			success = true;
+		}
+		
+			
+		return success;
+	}
 
 	/*
 	 * Gets the valid coin denominations.
@@ -309,12 +327,33 @@ public class VendingManager {
 	 * @param button The button of interest.
 	 * @return The matching index, or -1 if no match.
 	 */
-	int getButtonIndex(PushButton button){
+	int getSelectionButtonIndex(PushButton button){
 		int buttonCount = getNumberOfSelectionButtons();
 		for (int i = 0; i < buttonCount; i++){
 			if (getSelectionButton(i) == button){
 				return i;
 			}
+		}
+		return -1;
+	}
+	
+	/**
+	 * Returns the index of the given SelectionButton in the config panel.
+	 * @param button The button of interest.
+	 * @return The matching index, or -1 if no match.
+	 */
+	int getConfigButtonIndex(PushButton button){
+		int buttonCount = MachineConfiguration.CONFIG_PANEL_BUTTONS;
+		ConfigurationPanel config = getConfigurationPanel();
+		for (int i = 0; i < buttonCount; i++){
+			if (config.getButton(i) == button){
+				return i;
+			}
+		}
+		if (button == config.getEnterButton()){
+			//Then return a "pseudo-index" of configButtonMaxIndex+1
+			//Is used internally to facilitate handling of the "enter" key
+			return buttonCount; 
 		}
 		return -1;
 	}
@@ -375,10 +414,14 @@ public class VendingManager {
 	}
 	
 	//TODO DOCUMENT	
-	public static ProductHandler getProductHandler(){
+	public ProductHandler getProductHandler(){
 		return prodHandler;
 	}
 
+	public ConfigPanelHandler getConfigPanelHandler(){
+		return configHandler;
+	}
+	
 	//The below accessor methods are preserved in VendingManager
 	//are intended to decouple other logic classes (e.g. listeners) from
 	//the handler classes.

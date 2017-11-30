@@ -13,6 +13,8 @@ public class MachineConfiguration {
 	public static final int OUT_OF_ORDER = 0;
 	public static final int EXACT_CHANGE = 1;
 
+	public static final int CONFIG_PANEL_BUTTONS = 37;
+	
 	public final int[] coinKinds = new int[] { 5, 10, 25, 100, 200 };
 
 	public final List<String> productNames = Arrays.asList("Coke", "Sprite", "Crush", "Ale", "Pepsi", "Diet");
