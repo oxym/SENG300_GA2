@@ -91,7 +91,7 @@ public class ConfigPanelHandler {
 	
 	//TODO DOCUMENT
 	public boolean isSpecial(int key){
-		return key >= BOUND_SPECIAL[0] || key <= BOUND_SPECIAL[1];
+		return key >= BOUND_SPECIAL[0] && key <= BOUND_SPECIAL[1];
 	}
 	
 	//TODO DOCUMENT
