@@ -1,5 +1,12 @@
 package ca.ucalgary.seng300.a2;
 
+import java.util.Arrays;
+
+import org.lsmr.vending.hardware.CapacityExceededException;
+import org.lsmr.vending.hardware.CoinRack;
+import org.lsmr.vending.hardware.DisabledException;
+import org.lsmr.vending.hardware.EmptyException;
+
 public class CreditHandler {
 	private int credit = 0;
 	private static String currency = "CAD";
@@ -40,6 +47,119 @@ public class CreditHandler {
 	void subtractCredit(int subtracted){
 		credit -= subtracted;
 		mgr.log("Credit removed:" + subtracted);
+	}
+	
+	/**
+	 * A method for returning change.
+	 * May not return exact change.
+	 * Dispenses the largest denominations first.
+	 * NOTE: This method will only return change in the case where cash is used,
+	 * 		since that is the only way that the credit will exceed the cost.
+	 *
+	 * @throws DisabledException Some necessary hardware is disabled
+	 * @throws EmptyException CoinSlot is empty and a coin removal was attempted
+	 * @throws CapacityExceededException DeliveryChute is full
+	 */
+	void returnChange() throws CapacityExceededException, EmptyException, DisabledException{
+		int[] rackValues = getDescendingRackValues();
+		int coinVal = 0;
+		CoinRack rack;
+		for (int i=0; i < rackValues.length; i++){
+			coinVal = rackValues[i];
+			rack = mgr.getCoinRackForCoinKind(coinVal);
+
+			while (getCredit() >= coinVal && rack.size() != 0){
+				rack.releaseCoin();
+				subtractCredit(coinVal);
+			}
+
+			if (getCredit() == 0){
+				break;
+			}
+		}
+	}
+	/**
+	 * Takes the coin values inside the machine and sorts them in
+	 * descending order for the purpose of change return
+	 * @return coins denominations in descending order as an array
+	 */
+	int[] getDescendingRackValues() {
+		int rackNumber = mgr.getNumberOfCoinRacks();
+		int[] rackAmounts = new int[rackNumber];
+
+		for (int i=0; i < rackNumber; i++){
+			rackAmounts[i] = mgr.getCoinKindForCoinRack(i);
+		}
+
+		Arrays.sort(rackAmounts);
+		int[] descending = new int[rackNumber];
+		//Reverse the array
+		for (int i = rackNumber - 1; i >= 0; i--){
+			descending[rackNumber - i - 1] = rackAmounts[i];
+		}
+		return descending;
+	}
+	
+	/**
+	 * Checks if valid change can be returned, but does not return anything.
+	 * Similar to returnChange, but sets the indicator light instead
+	 * @param cost The cost (in cents) of a hypothetical purchase
+	 * @return Whether exact change could be provided for an item of the given cost
+	 */
+	boolean canReturnExactChange(int cost){
+		boolean exact = true;
+
+		int excess = getCredit() - cost; // i.e. credit after the possible purchase
+
+		int rackCount = mgr.getNumberOfCoinRacks();
+		int[] rackValues = getDescendingRackValues();
+
+		//Populate CoinRack count array
+		int[] rackAmounts = new int[mgr.getNumberOfCoinRacks()];
+		for (int i=0; i < rackCount; i++){
+			rackAmounts[i] = mgr.getCoinRackForCoinKind(rackValues[i]).size();
+			if (mgr.isDebug()) System.out.println("CoinRack (value: " + rackValues[i]
+										+ ") has " + rackAmounts[i] + " coins.");
+		}
+		//Try to reduce the excess credit to 0
+		for (int i=0; i < rackCount; i++){
+			while (excess >= rackValues[i] && rackAmounts[i] != 0){
+				excess -= rackValues[i];
+				rackAmounts[i]--;
+			}
+			if (excess == 0){
+				if (mgr.isDebug()) System.out.println("Correct Change");
+				break;
+			}
+		}
+
+		//If credit remains, inexact change would need to be be provided
+		if (excess > 0){
+			exact = false;
+			if (mgr.isDebug()) System.out.println("Wrong change");
+		}
+
+		return exact;
+	}
+	
+	/**
+	 * Checks that exact change could be provided for each possible purchase,
+	 * given the current credit.
+	 * @return True if exact change can be provided for each purchase
+	 */
+	public boolean checkExactChangeState(){
+		boolean exact = true;
+		int rackCount = mgr.getNumberOfProductRacks();
+
+		int popCost;
+		for (int i = 0; i < rackCount; i++){
+			popCost = mgr.getProductCost(i);
+			exact = canReturnExactChange(popCost);
+			if (!exact)
+				break;
+		}
+
+		return exact;
 	}
 	
 	/**

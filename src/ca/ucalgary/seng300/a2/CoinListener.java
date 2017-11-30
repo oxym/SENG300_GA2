@@ -50,10 +50,10 @@ public class CoinListener extends VendingListener implements
 	 */
 	@Override
 	public void validCoinInserted(CoinSlot slot, Coin coin) {
-		VendingManager.getCreditHandler().addCredit(coin.getValue());
+		mgr.getCreditHandler().addCredit(coin.getValue());
 		mgr.displayCredit();
 
-		if (mgr.checkExactChangeState()){
+		if (mgr.getCreditHandler().checkExactChangeState()){
 			mgr.getExactChangeLight().deactivate();
 		}
 		else{

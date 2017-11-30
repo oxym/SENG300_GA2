@@ -41,12 +41,11 @@ public class ButtonListener extends VendingListener implements PushButtonListene
 	public void pressed(PushButton button) {
 		int bIndex = mgr.getButtonIndex(button);
 
-		String popName = mgr.getPopKindName(bIndex);
-		mgr.log("Button for: " + popName + ", button: " + bIndex + " pressed.");
-
+		String productName = mgr.getProductName(bIndex);
+		mgr.log("Button for: " + productName + ", button: " + bIndex + " pressed.");
+		
 		if (bIndex == -1){
-			//Then it's not a pop selection button.
-			//This may be where we handle "change return" button presses
+			
 		}
 		else{
 			try{
@@ -57,7 +56,7 @@ public class ButtonListener extends VendingListener implements PushButtonListene
 			} catch(DisabledException e){
 				mgr.display("Vending machine disabled", 5);
 			} catch (EmptyException e){
-				mgr.display(popName + " is out of stock.", 5);
+				mgr.display(productName + " is out of stock.", 5);
 			} catch (CapacityExceededException e){
 				mgr.display("Delivery chute full", 5);
 			}

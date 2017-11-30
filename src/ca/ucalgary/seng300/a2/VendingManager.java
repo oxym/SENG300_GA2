@@ -172,9 +172,9 @@ public class VendingManager {
 	 * @param listener The listener that will handle PopCanRackListener events.
 	 */
 	private void registerPopCanRackListener(PopCanRackListener listener){
-		int rackCount = getNumberOfPopCanRacks();
+		int rackCount = getNumberOfProductRacks();
 		for (int i = 0; i< rackCount; i++){
-			getPopCanRack(i).register(listener);;
+			getProductRack(i).register(listener);;
 		}
 	}
 
@@ -223,16 +223,16 @@ public class VendingManager {
 	Integer getCoinKindForCoinRack(int index){
 		return vm.getCoinKindForCoinRack(index);
 	}
-	int getNumberOfPopCanRacks(){
+	int getNumberOfProductRacks(){
 		return vm.getNumberOfPopCanRacks();
 	}
-	String getPopKindName(int index){
+	String getProductName(int index){
 		return vm.getPopKindName(index);
 	}
-	int getPopKindCost(int index){
+	int getProductCost(int index){
 		return vm.getPopKindCost(index);
 	}
-	PopCanRack getPopCanRack(int index){
+	PopCanRack getProductRack(int index){
 		return vm.getPopCanRack(index);
 	}
 	Display getDisplay(){
@@ -281,9 +281,9 @@ public class VendingManager {
 	 * @return The matching index, or -1 if no match.
 	 */
 	int getPopCanRackIndex(PopCanRack popRack){
-		int rackCount = getNumberOfPopCanRacks();
+		int rackCount = getNumberOfProductRacks();
 		for (int i = 0; i < rackCount; i++){
-			if (getPopCanRack(i) == popRack){
+			if (getProductRack(i) == popRack){
 				return i;
 			}
 		}
@@ -296,7 +296,7 @@ public class VendingManager {
 	 * @return The name of the pop.
 	 */
 	String getPopCanRackName(PopCanRack popRack){
-		return getPopKindName(getPopCanRackIndex(popRack));
+		return getProductName(getPopCanRackIndex(popRack));
 	}
 
 	/**
@@ -324,7 +324,7 @@ public class VendingManager {
 	}
 	
 	//TODO DOCUMENT
-	public static CreditHandler getCreditHandler(){
+	public CreditHandler getCreditHandler(){
 		return credHandler;
 	}
 
@@ -365,34 +365,6 @@ public class VendingManager {
 	}
 
 	/**
-	 * A method for returning change.
-	 * May not return exact change.
-	 * Dispenses the largest denominations first.
-	 *
-	 * @throws DisabledException Some necessary hardware is disabled
-	 * @throws EmptyException CoinSlot is empty and a coin removal was attempted
-	 * @throws CapacityExceededException DeliveryChute is full
-	 */
-	void returnChange() throws CapacityExceededException, EmptyException, DisabledException{
-		int[] rackValues = getDescendingRackValues();
-		int coinVal = 0;
-		CoinRack rack;
-		for (int i=0; i < getNumberOfCoinRacks(); i++){
-			coinVal = rackValues[i];
-			rack = getCoinRackForCoinKind(coinVal);
-
-			while (getCreditHandler().getCredit() >= coinVal && rack.size() != 0){
-				rack.releaseCoin();
-				getCreditHandler().subtractCredit(coinVal);
-			}
-
-			if (getCreditHandler().getCredit() == 0){
-				break;
-			}
-		}
-	}
-
-	/**
 	 * Convenience method to display a message from other logic classes.
 	 * @param msg The message to be displayed.
 	 */
@@ -419,109 +391,13 @@ public class VendingManager {
 //^^^======================HARDWARE LOGIC END=======================^^^
 
 //vvv======================LOGIC INTERNALS START=======================vvv
-	
-
-	/**
-	 * Takes the coin values inside the machine and sorts them in
-	 * descending order for the purpose of change return
-	 * @return coins denominations in descending order as an array
-	 */
-	int[] getDescendingRackValues() {
-		int rackNumber = getNumberOfCoinRacks();
-		int[] rackAmounts = new int[rackNumber];
-
-		for (int i=0; i < rackNumber; i++){
-			rackAmounts[i] = getCoinKindForCoinRack(i);
-		}
-
-		Arrays.sort(rackAmounts);
-		int[] descending = new int[rackNumber];
-		//Reverse the array
-		for (int i = rackNumber - 1; i >= 0; i--){
-			descending[rackNumber - i - 1] = rackAmounts[i];
-		}
-		return descending;
-	}
-
-	/**
-	 * Checks that exact change could be provided for each possible purchase,
-	 * given the current credit.
-	 * @return True if exact change can be provided for each purchase
-	 */
-	public boolean checkExactChangeState(){
-		boolean exact = true;
-		int rackCount = getNumberOfPopCanRacks();
-
-		int popCost;
-		for (int i = 0; i < rackCount; i++){
-			popCost = getPopKindCost(i);
-			exact = canReturnExactChange(popCost);
-			if (!exact)
-				break;
-		}
-
-		return exact;
-	}
-
-	/**
-	 * Checks if valid change can be returned, but does not return anything.
-	 * Similar to returnChange, but sets the indicator light instead
-	 * @param cost The cost (in cents) of a hypothetical purchase
-	 * @return Whether exact change could be provided for an item of the given cost
-	 */
-	boolean canReturnExactChange(int cost){
-		boolean exact = true;
-
-		int credit = getCreditHandler().getCredit();
-		int excess = credit - cost; // i.e. credit after the possible purchase
-
-		int rackCount = getNumberOfCoinRacks();
-		int[] rackValues = getDescendingRackValues();
-
-		//Populate CoinRack count array
-		int[] rackAmounts = new int[getNumberOfCoinRacks()];
-		for (int i=0; i < rackCount; i++){
-			rackAmounts[i] = getCoinRackForCoinKind(rackValues[i]).size();
-			if (debug) System.out.println("CoinRack (value: " + rackValues[i]
-										+ ") has " + rackAmounts[i] + " coins.");
-		}
-		//Try to reduce the excess credit to 0
-		for (int i=0; i < rackCount; i++){
-			while (excess >= rackValues[i] && rackAmounts[i] != 0){
-				excess -= rackValues[i];
-				rackAmounts[i]--;
-			}
-			if (excess == 0){
-				if (debug) System.out.println("Correct Change");
-				break;
-			}
-		}
-
-		//If credit remains, inexact change would need to be be provided
-		if (excess > 0){
-			exact = false;
-			if (debug) System.out.println("Wrong change");
-		}
-
-		return exact;
-	}
-
 	/**
 	 * Checks if all of the pop racks are empty.
+	 * Relays message to product handler
 	 * @return True if all are empty, else false
 	 */
 	boolean checkAllProductsEmpty(){
-		boolean empty = true;
-
-		int popCount = getNumberOfPopCanRacks();
-		for (int i = 0; i < popCount; i++){
-			if (getPopCanRack(i).size() != 0){
-				empty = false;
-				break;
-			}
-		}
-
-		return empty;
+		return getProductHandler().checkAllProductsEmpty();
 	}
 
 	/**
@@ -540,6 +416,13 @@ public class VendingManager {
 			response = true;
 		}
 		return response;
+	}
+	/**
+	 * Returns the debugging state of the system.
+	 * @return Whether the VendingManager is in debug mode.
+	 */
+	boolean isDebug(){
+		return debug;
 	}
 
 	/**

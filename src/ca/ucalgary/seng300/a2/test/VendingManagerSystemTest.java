@@ -186,8 +186,6 @@ public class VendingManagerSystemTest {
 	@Test
 	public void testOverflowCoinRack() {
 
-		int coinRackCapacity = 10;
-
 		machine = new VendingMachine(cfg.coinKinds, cfg.popCanNames.size(), cfg.coinRackCapacity, 1, 1, 1, 10);
 		machine.configure(cfg.popCanNames, cfg.popCanCosts);
 
@@ -322,8 +320,8 @@ public class VendingManagerSystemTest {
 			}
 		}
 
-		assertEquals(false, manager.checkExactChangeState());
-		assertNotEquals(manager.checkExactChangeState(),("Thank you for your purchase!"));	}
+		assertEquals(false, manager.getCreditHandler().checkExactChangeState());
+		assertNotEquals(manager.getCreditHandler().checkExactChangeState(),("Thank you for your purchase!"));	}
 
 /**
 	 *
@@ -348,7 +346,7 @@ public class VendingManagerSystemTest {
 			}
 		}
 
-		assertEquals(true, manager.checkExactChangeState());
+		assertEquals(true, manager.getCreditHandler().checkExactChangeState());
 
 
 		machine.getSelectionButton(0).press();
@@ -363,7 +361,7 @@ public class VendingManagerSystemTest {
 			}
 		}
 
-		assertEquals(false, manager.checkExactChangeState());
+		assertEquals(false, manager.getCreditHandler().checkExactChangeState());
 
 
 	}

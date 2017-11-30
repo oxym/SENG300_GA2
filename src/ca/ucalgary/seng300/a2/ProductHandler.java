@@ -22,10 +22,10 @@ public class ProductHandler {
 	 */
 	void buy(int popIndex) throws InsufficientFundsException, EmptyException,
 											DisabledException, CapacityExceededException {
-		int cost = mgr.getPopKindCost(popIndex);
+		int cost = mgr.getProductCost(popIndex);
 
 		if (mgr.getCreditHandler().getCredit() >= cost){
-			mgr.getPopCanRack(popIndex).dispensePopCan(); //Will throw EmptyException if pop rack is empty
+			mgr.getProductRack(popIndex).dispensePopCan(); //Will throw EmptyException if pop rack is empty
 			mgr.getCreditHandler().subtractCredit(cost); //Will only be performed if the pop is successfully dispensed.
 			if (mgr.isGUIEnabled()) {
 				//TODO: update the gui delivery chute
@@ -34,7 +34,7 @@ public class ProductHandler {
 			//These coin-related actions may need to be nested in a conditional once additional
 			//Payment methods are supported. It depends on whether change is returned automatically.
 			mgr.getCoinReceptacle().storeCoins();
-			mgr.returnChange();
+			mgr.getCreditHandler().returnChange();
 
 			if (mgr.getCreditHandler().getCredit() > 0) {
 				mgr.displayCredit();
@@ -44,9 +44,26 @@ public class ProductHandler {
 
 		} else { //Not enough credit
 			int diff = cost - mgr.getCreditHandler().getCredit();
-			String popName = mgr.getPopKindName(popIndex);
+			String popName = mgr.getProductName(popIndex);
 			throw new InsufficientFundsException("Cannot buy " + popName + ". " + diff + " cents missing.");
 		}
+	}
+	/**
+	 * Checks if all of the pop racks are empty.
+	 * @return True if all are empty, else false
+	 */
+	boolean checkAllProductsEmpty(){
+		boolean empty = true;
+
+		int popCount = mgr.getNumberOfProductRacks();
+		for (int i = 0; i < popCount; i++){
+			if (mgr.getProductRack(i).size() != 0){
+				empty = false;
+				break;
+			}
+		}
+
+		return empty;
 	}
 }
 
