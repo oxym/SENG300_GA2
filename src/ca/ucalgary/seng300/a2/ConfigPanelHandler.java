@@ -9,7 +9,7 @@ public class ConfigPanelHandler {
 	private ConfigurationPanel config;
 	private DisplayDriver dispDriver;
 	
-	private static final String[] codes =new String[] {	// Indices
+	private static final String[] keyCodes =new String[] {	// Indices
 			"A","B","C","D","E","F","G","H","I","J", 	// 0 : 9
 			"K","L","M","N","O","P","Q","R","S","T", 	//10 : 19
 			"U","V","W","X","Y","Z", 				 	//20 : 25
@@ -23,7 +23,7 @@ public class ConfigPanelHandler {
 	private static final int INDEX_SHIFT = 36;
 	private static final int INDEX_ENTER = 37;
 	
-	private static final int KEY_COUNT = codes.length; 
+	private static final int KEY_COUNT = keyCodes.length; 
 	
 	private static final String
 		MENU_MAIN= "Press 1 to reprice a product",
@@ -52,13 +52,18 @@ public class ConfigPanelHandler {
 	public String getButtonDisplayCode(int index){
 		String code = ""; 
 		if (index >= 0 && index < KEY_COUNT){
-			code = codes[index];
+			code = keyCodes[index];
 		};
 		return code;
 	}
 	
 	public void pressKey(int key){
 		if (isLetter(key) || isNum(key)){
+			String symbol = getButtonDisplayCode(key);
+			if (!isShifted()){
+				symbol = symbol.toLowerCase(); 
+			}
+			
 			buffer += getButtonDisplayCode(key);
 			display(buffer);
 		}
@@ -86,7 +91,7 @@ public class ConfigPanelHandler {
 	
 	//TODO DOCUMENT
 	public boolean isSpecial(int key){
-		return key >= BOUND_SPECIAL[0] && key <= BOUND_SPECIAL[1];
+		return key >= BOUND_SPECIAL[0] || key <= BOUND_SPECIAL[1];
 	}
 	
 	//TODO DOCUMENT
@@ -103,6 +108,10 @@ public class ConfigPanelHandler {
 	public void toggleShift(){
 		shifted = !shifted;
 	};
+	
+	public boolean isShifted(){
+		return shifted;
+	}
 
 	//TODO DOCUMENT
 	public void display(String message){
@@ -154,7 +163,7 @@ public class ConfigPanelHandler {
 					display(MENU_REPRICE_COMPLETE);
 					state = "idle";
 				} else {
-					display("Error setting price" + MENU_REPRICE_SETPRICE);
+					display("Error setting price. " + MENU_REPRICE_SETPRICE);
 				}
 				
 			}		

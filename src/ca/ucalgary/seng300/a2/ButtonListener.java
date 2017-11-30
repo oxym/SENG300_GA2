@@ -47,6 +47,7 @@ public class ButtonListener extends VendingListener implements PushButtonListene
 		if (sIndex == -1){
 			int cIndex = mgr.getConfigButtonIndex(button); 
 			if (cIndex != -1){ 
+				mgr.getConfigPanelHandler().pressKey(cIndex);
 				//TODO Handle config panel input
 				//NOTE: The "Enter" button has index 38, even though there
 				//is no such index in the ConfigurationPanel's buttton array
