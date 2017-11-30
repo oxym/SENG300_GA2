@@ -80,6 +80,9 @@ public class VendingManager {
 	private VendingManager(){
 		eventLog = new Logger(eventLogName);
 
+		credHandler = new CreditHandler(this); 
+		prodHandler = new ProductHandler(this);
+		
 		displayListener = new DispListener(this);
 		buttonListener = ButtonListener.initialize(this);
 		popListener = PopListener.initialize(this);
