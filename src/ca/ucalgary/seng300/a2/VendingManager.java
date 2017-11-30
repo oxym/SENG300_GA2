@@ -594,7 +594,7 @@ public class VendingManager {
 	 * @param message Message to display in GUI
 	 */
 	void guiUpdateUserDisplay(String message){
-		if (mgr.isGUIEnabled()){
+		if (isGUIEnabled() && gui != null){
 			gui.getSidePanel().getDisplayPanel().updateMessage(message);
 		}
 
@@ -605,7 +605,7 @@ public class VendingManager {
 	 * @param message Message to display in GUI
 	 */
 	void guiUpdateConfigDisplay(String message){
-		if (mgr.isGUIEnabled()){
+		if (isGUIEnabled() && gui != null){
 			//TODO Add config panel message update call
 //			gui.getConfigPanel().getDisplayPanel().updateMessage(message);
 		}
@@ -616,7 +616,7 @@ public class VendingManager {
 	 * @param state The on/off state of the light
 	 */
 	void guiSetChangeLight(boolean state){
-		if (mgr.isGUIEnabled()){
+		if (isGUIEnabled() && gui != null){
 			//TODO modify gui exact change light state
 //			gui.getSidePanel().getDisplayPanel().indicatorOff(MachineConfiguration.EXACT_CHANGE);
 		}
@@ -627,7 +627,7 @@ public class VendingManager {
 	 * @param state The on/off state of the light 
 	 */
 	void guiSetOutOfOrderLight(boolean state){
-		if (mgr.isGUIEnabled()){
+		if (isGUIEnabled() && gui != null){
 			//TODO modify gui exact change light state
 //			gui.getSidePanel().getDisplayPanel().indicatorOff(MachineConfiguration.OUT_OF_ORDER);
 		}
@@ -637,7 +637,7 @@ public class VendingManager {
 	 * Notifies the GUI delivery chute that an item has been added
 	 */
 	void guiAddItemToChute(){
-		if (mgr.isGUIEnabled()){
+		if (mgr.isGUIEnabled() && gui != null){
 			gui.getDeliveryChutePanel().addItem();
 		}
 	}
@@ -646,7 +646,7 @@ public class VendingManager {
 	 * Notifies the GUI delivery chute that an item has been removed
 	 */
 	void guiRemoveItemFromChute(){
-		if (mgr.isGUIEnabled()){
+		if (mgr.isGUIEnabled() && gui != null){
 			gui.getDeliveryChutePanel().removeItems();			
 		}
 	}
