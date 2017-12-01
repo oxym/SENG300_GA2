@@ -44,7 +44,7 @@ public class GUIMain extends JFrame {
 	private GUIPanel titlePanel;
 	private GUIPanel selectionButtonPanel;
 	private GUIPanel deliveryChutePanel;
-	private GUIConfigurationDisplay configurationDisplay;
+	private static GUIConfigurationMain configurationMain;
 
 	protected static VendingMachine vm;
 	protected static VendingManager mgr;
@@ -61,6 +61,7 @@ public class GUIMain extends JFrame {
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setSize(X_SIZE, Y_SIZE);
 		setTitle(TITLE);
+		configurationMain = new GUIConfigurationMain(mgr);
 	}
 
 	/**
@@ -151,9 +152,11 @@ public class GUIMain extends JFrame {
 	 * Returns the configuration display object
 	 * @return the configuration display object
 	 */
-	public GUIConfigurationDisplay getConfigPanel() {
-		return configurationDisplay;
+	public static GUIConfigurationMain getConfigurationMain() {
+		return configurationMain;
 	}
+	
+	
 
 
     /**
