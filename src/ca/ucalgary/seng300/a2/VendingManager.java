@@ -611,7 +611,8 @@ public class VendingManager {
 	void guiUpdateConfigDisplay(String message){
 		if (isGUIEnabled() && gui != null){
 			//TODO Add config panel message update call
-			gui.getConfigPanel().getDisplayPanel().updateMessage(message);
+//			gui.getConfigDisplay().getDisplayPanel().updateMessage(message);
+			GUIMain.getConfigurationMain().getDisplayPanel().updateMessage(message);
 
 		}
 	}
