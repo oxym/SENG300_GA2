@@ -659,16 +659,18 @@ public class VendingManager {
 	 * Notifies the GUI coin return that a coin has been added
 	 */
 	void guiAddCoinToReturn() {
-		if(mgr.isGUIEnabled() && gui != null)
-			gui.getSidePanel().getCoinReturnPanel().addCoin();
+		if(mgr.isGUIEnabled() && gui != null){
+			gui.getSidePanel().getCoinReturnPanel().addCoin();			
+		}
 	}
 	
 	/*
 	 * Notifies the GUI coin return that coins have been removed
 	 */
 	void guiRemoveCoinFromReturn() {
-		if(mgr.isGUIEnabled() && gui != null)
-			gui.getSidePanel().getCoinReturnPanel().removeCoin();
+		if(mgr.isGUIEnabled() && gui != null){
+			gui.getSidePanel().getCoinReturnPanel().removeCoin();			
+		}
 	}
 //^^^======================GUI ACCESS END=======================^^^
 }

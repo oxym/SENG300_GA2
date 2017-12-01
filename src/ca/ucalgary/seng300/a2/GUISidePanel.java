@@ -33,7 +33,7 @@ public class GUISidePanel extends GUIPanel {
 		GridBagLayout gridbag = new GridBagLayout();
 		setLayout(gridbag);
 		//setOpaque(false);
-		setBackground(new Color(0,0,0, 30));
+		setBackground(COLOR_BACKGROUND);
 
 		Border border = BorderFactory.createMatteBorder(4, 4, 1, 1, COLOR_DARKGRAY);
 		this.setBorder(border);
@@ -76,6 +76,13 @@ public class GUISidePanel extends GUIPanel {
 	 */
 	public GUIDisplayMain getDisplayPanel() {
 		return displayPanel;
+	}
+	/**
+	 * Returns the main coin return panel
+	 * @return the coin return panel object
+	 */
+	public GUICoinReturn getCoinReturnPanel(){
+		return coinReturnPanel;
 	}
 
 }
