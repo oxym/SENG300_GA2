@@ -9,12 +9,11 @@ public class GUICardSlot extends GUIPanel {
 
 	@Override
 	void init() {
-		setBackground(COLOR_BACKGROUND);
+		setOpaque(false);
 		title = new JLabel("CardSlot Here");
 
 		add(title);
 		setVisible(true);
-
 
 	}
 

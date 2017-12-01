@@ -19,12 +19,12 @@ public class GUICoinReturn extends GUIPanel {
 	private static final long serialVersionUID = -375736403542638963L;
 
 	private JLabel title;
-	
+
 	//Component in the JPanel
 	private JLabel coinReturn;
-		
+
 	private int coinQty;
-		
+
 	/*
 	 * Default Constructor for coin return
 	 */
@@ -42,12 +42,13 @@ public class GUICoinReturn extends GUIPanel {
 		title = new JLabel("Coin Return Here");
 		GridBagConstraints constraints = new GridBagConstraints();
 		GridBagLayout gridbag = new GridBagLayout();
-		
+
 		setLayout(gridbag);
-		
-		ImageIcon returnIcon = new ImageIcon("images/coin_return_empty.png"); 
-		coinReturn = new JLabel(returnIcon); 
-		
+		setOpaque(false);
+
+		ImageIcon returnIcon = new ImageIcon("images/coin_return_empty.png");
+		coinReturn = new JLabel(returnIcon);
+
 		//Add components to the panel and make visible
 		constraints.anchor = GridBagConstraints.EAST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
@@ -56,29 +57,29 @@ public class GUICoinReturn extends GUIPanel {
 		constraints.weightx = 0.33;
 		constraints.weighty = 0.5;
 		constraints.gridwidth = GridBagConstraints.RELATIVE;
-		
+
 		add(coinReturn, constraints);
-		
+
 		MouseListener mouselistener = new MouseListener();
 		coinReturn.addMouseListener(mouselistener);
-		
+
 		add(title);
 		setVisible(true);
 
 
 	}
-	
+
 	/*
 	 * Adds coins to coin return
 	 */
 	public void addCoin() {
 		ImageIcon coinIcon;
-		
+
 		//Update coins in the coin return
 		coinQty++;
-		
+
 		//Select proper coin return image
-		if( coinQty == 0 ) 
+		if( coinQty == 0 )
 			coinIcon = new ImageIcon("images/coin_return_empty.png");
 		else if( coinQty >= 1 && coinQty < 200 ) {
 			coinIcon = new ImageIcon("images/coin_return_full.png");
@@ -88,33 +89,33 @@ public class GUICoinReturn extends GUIPanel {
 			coinIcon = new ImageIcon("images/coin_return_full.png");
 			GUIMain.getVendingManager().enableSafety(); //Enable safety until coins are removed?
 		}
-		
+
 		//Update image
 		coinReturn.setIcon(coinIcon);
 		update();
 	}
-	
+
 	/*
 	 * Removes coins from coin return
 	 */
 	public void removeCoin() {
-		
+
 		//Update quantity of coins in the return
 		if(coinQty > 0) {
 			coinQty = 0;
-		
+
 			ImageIcon coinIcon;
-			
+
 			if(coinQty == 0)
 				coinIcon = new ImageIcon("images/coin_return_empty.png");
-			else 
+			else
 				coinIcon = new ImageIcon("images/coin_return_full.png");
-		
+
 			coinReturn.setIcon(coinIcon);
 			update();
 		}
 	}
-	
+
 	/**
 	 * Mouse listener to handle clicks for coin return
 	 *
@@ -128,16 +129,16 @@ public class GUICoinReturn extends GUIPanel {
 	    {
 	    	GUIMain.getVendingManager().guiRemoveCoinFromReturn();
 	    	GUIMain.getVM().getCoinReturn().unload();
-	    	
+
 	    	JFrame changeFrame = new JFrame("Change Returned");
 	    	changeFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	    	changeFrame.setSize(300, 200);
 	    	JLabel changeLabel = new JLabel("Change returned is: " + coinQty);
 	    	GUIMain.getVM();
 	    	setVisible(true);
-	    	
-	    	
-	    	
+
+
+
 	    }
 	}
 }

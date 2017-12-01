@@ -28,6 +28,7 @@ public class GUICoinSlot extends GUIPanel {
 
 		// set look of panel
 		setBackground(COLOR_BACKGROUND);
+		setOpaque(false);
 		// GridBagConstraints constraints = new GridBagConstraints();
 		// GridBagLayout gridbag = new GridBagLayout();
 

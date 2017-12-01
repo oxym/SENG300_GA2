@@ -1,5 +1,6 @@
 package ca.ucalgary.seng300.a2;
 
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
@@ -28,10 +29,11 @@ public class GUISidePanel extends GUIPanel {
 	void init() {
 
 		//setup panel
-		setBackground(COLOR_BACKGROUND);
 		GridBagConstraints constraints = new GridBagConstraints();
 		GridBagLayout gridbag = new GridBagLayout();
 		setLayout(gridbag);
+		//setOpaque(false);
+		setBackground(new Color(0,0,0, 30));
 
 		Border border = BorderFactory.createMatteBorder(4, 4, 1, 1, COLOR_DARKGRAY);
 		this.setBorder(border);
@@ -55,11 +57,12 @@ public class GUISidePanel extends GUIPanel {
 		constraints.gridy = 0;
 		constraints.weighty = 0.0;
 		add(displayPanel, constraints);
+		constraints.weighty = 0.33;
 		constraints.gridy++;
 		add(coinSlotPanel, constraints);
-		constraints.weighty = 0.0;
-		constraints.gridy++;
-		add(cardSlotPanel, constraints);;
+//		constraints.weighty = 0.0;
+//		constraints.gridy++;
+//		add(cardSlotPanel, constraints);
 		constraints.weighty = 1.0;
 		constraints.gridy++;
 		add(coinReturnPanel, constraints);

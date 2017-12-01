@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -42,7 +43,8 @@ public class GUIDisplayMain extends GUIPanel {
 		GridBagLayout gridbag = new GridBagLayout();
 
 		setLayout(gridbag);
-		setBackground(COLOR_BACKGROUND);
+		setBackground(new Color(0,0,0, 1));
+		//setOpaque(false);
 
 		// initialize components
 		// ImageIcon display_background = new ImageIcon("images/display.png");
@@ -64,6 +66,8 @@ public class GUIDisplayMain extends GUIPanel {
 		Border border = BorderFactory.createLineBorder(Color.DARK_GRAY, 7);
 
 		display.setBorder(border);
+		//indicator[OUT_OF_ORDER].setOpaque(false);
+		//indicator[EXACT_CHANGE].setOpaque(false);
 
 		// add components and layout panel
 		constraints.anchor = GridBagConstraints.NORTH;
@@ -110,7 +114,7 @@ public class GUIDisplayMain extends GUIPanel {
 	 */
 	public void updateMessage(String message) {
 		display.setText(message);
-		update();
+		//update();
 	}
 
 	/*
@@ -125,8 +129,7 @@ public class GUIDisplayMain extends GUIPanel {
 		else
 			indicatorIcon = new ImageIcon("images/indicator_off.png");
 		indicator[index].setIcon(indicatorIcon);
-		update();
+		//update();
 	}
-
 
 }

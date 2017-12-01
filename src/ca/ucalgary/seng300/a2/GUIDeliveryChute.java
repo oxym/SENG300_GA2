@@ -52,6 +52,7 @@ public class GUIDeliveryChute extends GUIPanel implements GuiInterfaceDeliveryCh
 		GridBagLayout gridbag = new GridBagLayout();
 
 		setLayout(gridbag);
+		setOpaque(false);
 
 		// instantiate components
 		ImageIcon chuteIcon = new ImageIcon("images/dispenser_empty.png");

@@ -12,6 +12,7 @@ public class GUISelectionButtons extends GUIPanel {
 	void init() {
 		setBackground(COLOR_BACKGROUND);
 		title = new JLabel("Selection Buttons Here");
+		setOpaque(false);
 
 		add(title);
 		setVisible(true);
