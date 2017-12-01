@@ -13,6 +13,8 @@ import javax.swing.border.Border;
 import org.lsmr.vending.hardware.ConfigurationPanel;
 import org.lsmr.vending.hardware.VendingMachine;
 
+import ca.ucalgary.seng300.a2.GUIConfigurationDisplay;
+
 /**
  * The main window, this class is responsible for setting up the main JFrame and
  * populating it with various JPanels, that correspond to the hardware

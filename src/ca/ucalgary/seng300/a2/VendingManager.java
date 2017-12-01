@@ -602,7 +602,6 @@ public class VendingManager {
 		if (isGUIEnabled() && gui != null){
 			gui.getSidePanel().getDisplayPanel().updateMessage(message);
 		}
-
 	}
 	
 	/**
@@ -612,7 +611,8 @@ public class VendingManager {
 	void guiUpdateConfigDisplay(String message){
 		if (isGUIEnabled() && gui != null){
 			//TODO Add config panel message update call
-//			gui.getConfigPanel().getDisplayPanel().updateMessage(message);
+			gui.getConfigPanel().getDisplayPanel().updateMessage(message);
+
 		}
 	}
 	

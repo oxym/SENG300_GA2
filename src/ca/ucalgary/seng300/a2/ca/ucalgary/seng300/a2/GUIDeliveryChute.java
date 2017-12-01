@@ -2,6 +2,9 @@ package ca.ucalgary.seng300.a2;
 
 import javax.swing.JLabel;
 
+import ca.ucalgary.seng300.a2.GUIConfigurationListener;
+import ca.ucalgary.seng300.a2.GUIConfigurationMain;
+
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;

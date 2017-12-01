@@ -29,12 +29,14 @@ public class GUIDeliveryChute extends GUIPanel implements GuiInterfaceDeliveryCh
 	private JLabel chute;
 	private JButton lock;
 	private GUIConfigurationListener listener;
+	private VendingManager mgr;
 	GUIConfigurationMain configPanel;
 
 	/**
 	 * Default Constructor
 	 */
-	public GUIDeliveryChute() {
+	public GUIDeliveryChute(VendingManager mgr) {
+		this.mgr = mgr;
 		itemQty = 0;
 	}
 
@@ -174,7 +176,7 @@ public class GUIDeliveryChute extends GUIPanel implements GuiInterfaceDeliveryCh
 			case "unlock":
 				lock.setText("lock");
 				GUIMain.getVendingManager().enableSafety();
-				configPanel = new GUIConfigurationMain();
+				configPanel = new GUIConfigurationMain(mgr);
 				configPanel.init();
 				break;
 			}

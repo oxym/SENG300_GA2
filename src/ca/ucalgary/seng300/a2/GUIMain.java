@@ -44,6 +44,7 @@ public class GUIMain extends JFrame {
 	private GUIPanel titlePanel;
 	private GUIPanel selectionButtonPanel;
 	private GUIPanel deliveryChutePanel;
+	private GUIConfigurationDisplay configurationDisplay;
 
 	protected static VendingMachine vm;
 	protected static VendingManager mgr;
@@ -82,7 +83,7 @@ public class GUIMain extends JFrame {
 		sidePanel = new GUISidePanel();
 		titlePanel = new GUITitle();
 		selectionButtonPanel = new GUISelectionButtons();
-		deliveryChutePanel = new GUIDeliveryChute();
+		deliveryChutePanel = new GUIDeliveryChute(mgr);
 
 		sidePanel.setPreferredSize(panelSize);
 		sidePanel.setMinimumSize(panelSize);
@@ -146,6 +147,14 @@ public class GUIMain extends JFrame {
 		return mgr;
 	}
 
+	/**
+	 * Returns the configuration display object
+	 * @return the configuration display object
+	 */
+	public GUIConfigurationDisplay getConfigPanel() {
+		return configurationDisplay;
+	}
+
 
     /**
      * A panel that has a background image
@@ -168,4 +177,5 @@ public class GUIMain extends JFrame {
 			g.drawImage(bgImage, 0, 0, getWidth(), getHeight(), this);
         }
     }
+
 }

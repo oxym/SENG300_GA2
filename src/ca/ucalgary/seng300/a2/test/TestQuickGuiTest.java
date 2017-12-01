@@ -101,9 +101,16 @@ public class TestQuickGuiTest {
 
 	public void buyPop(int index) throws DisabledException {
 		Coin coin = new Coin(100);
-		for (int i = 0; i < 3; i++) { // Adds three dollars to the machine
+		for (int i = 0; i < 2; i++) { // Adds three dollars to the machine
 			try {
 				machine.getCoinSlot().addCoin(coin);
+			} catch (DisabledException e) {
+			}
+		}
+
+		for (int i = 0; i < 2; i++) { // Adds three dollars to the machine
+			try {
+				machine.getCoinSlot().addCoin(new Coin(25));
 			} catch (DisabledException e) {
 			}
 		}

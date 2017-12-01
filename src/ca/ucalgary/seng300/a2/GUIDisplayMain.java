@@ -1,6 +1,7 @@
 package ca.ucalgary.seng300.a2;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -43,12 +44,10 @@ public class GUIDisplayMain extends GUIPanel {
 		GridBagLayout gridbag = new GridBagLayout();
 
 		setLayout(gridbag);
-		setBackground(new Color(0,0,0, 1));
+		setBackground(new Color(0,0,0, 0));
 		//setOpaque(false);
 
 		// initialize components
-		// ImageIcon display_background = new ImageIcon("images/display.png");
-		// displayOutline = new JLabel(display_background);
 		ImageIcon indicatorOff = new ImageIcon("images/indicator_off.png");
 		indicator[OUT_OF_ORDER] = new JLabel(indicatorOff);
 		indicator[EXACT_CHANGE] = new JLabel(indicatorOff);
@@ -57,17 +56,16 @@ public class GUIDisplayMain extends GUIPanel {
 
 		display = new JTextField(MSG_INIT);
 		// display.setFont(new Font("MS Gothic", Font.PLAIN, 18));
-		display.setFont(new Font("Monospaced", Font.PLAIN, 14));
+		display.setFont(new Font("Monospaced", Font.PLAIN, 12));
 		display.setBackground(COLOR_BLACK);
 		display.setForeground(COLOR_DISPLAYTEXT);
 		display.setColumns(40);
+		display.setMinimumSize(new Dimension(200, 50));
 		display.setEditable(false);
 
 		Border border = BorderFactory.createLineBorder(Color.DARK_GRAY, 7);
 
 		display.setBorder(border);
-		//indicator[OUT_OF_ORDER].setOpaque(false);
-		//indicator[EXACT_CHANGE].setOpaque(false);
 
 		// add components and layout panel
 		constraints.anchor = GridBagConstraints.NORTH;
@@ -77,7 +75,7 @@ public class GUIDisplayMain extends GUIPanel {
 		constraints.weightx = 0.33;
 		constraints.weighty = 0.5;
 		constraints.gridwidth = GridBagConstraints.REMAINDER;
-		constraints.insets = new Insets(10, 5, 15, 5);
+		constraints.insets = new Insets(10, 0, 15, 0);
 		add(display, constraints);
 
 		// indicator lights

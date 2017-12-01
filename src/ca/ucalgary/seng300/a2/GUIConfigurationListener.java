@@ -8,14 +8,21 @@ import java.awt.event.ActionListener;
  *
  */
 public class GUIConfigurationListener implements ActionListener {
+	
+	private VendingManager mgr;
+	
+	public GUIConfigurationListener(VendingManager mgr) {
+		this.mgr = mgr;
+	}
 
-
-
+	
 	@Override
 	public void actionPerformed(ActionEvent event) {
 
 		String command = event.getActionCommand();
 		System.out.println(command);
+		
+		
 
 		switch (command) {
 
@@ -29,7 +36,7 @@ public class GUIConfigurationListener implements ActionListener {
 			break;
 
 			default:
-				//TODO: just press the associated button
+				mgr.getConfigPanelHandler().display(command);
 
 		}//end switch
 
