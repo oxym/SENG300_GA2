@@ -15,10 +15,21 @@ package org.lsmr.vending.hardware;
  * machine.
  */
 public class ConfigurationPanel {
-    private PushButton[] buttons = new PushButton[37];
+	private static final int BUTTON_COUNT = 37;
+    private PushButton[] buttons = new PushButton[BUTTON_COUNT];
     private PushButton enterButton = new PushButton();
     private Display internalDisplay = new Display();
 
+    /**
+     * Creates a standard configuration panel.
+     */
+    public ConfigurationPanel() {
+	for(int i = 0; i < BUTTON_COUNT; i++)
+	    buttons[i] = new PushButton();
+    }
+    
+    /**
+    
     /**
      * Accesses a particular button on the panel.
      * 
