@@ -19,12 +19,12 @@ public class GUICoinReturn extends GUIPanel {
 	private static final long serialVersionUID = -375736403542638963L;
 
 	private JLabel title;
-	
+
 	//Component in the JPanel
 	private JLabel coinReturn;
-		
+
 	private int coinQty;
-		
+
 	/*
 	 * Default Constructor for coin return
 	 */
@@ -42,12 +42,13 @@ public class GUICoinReturn extends GUIPanel {
 		title = new JLabel("Coin Return Here");
 		GridBagConstraints constraints = new GridBagConstraints();
 		GridBagLayout gridbag = new GridBagLayout();
-		
+
 		setLayout(gridbag);
-		
-		ImageIcon returnIcon = new ImageIcon("images/coin_return_empty.png"); 
-		coinReturn = new JLabel(returnIcon); 
-		
+		setOpaque(false);
+
+		ImageIcon returnIcon = new ImageIcon("images/coin_return_empty.png");
+		coinReturn = new JLabel(returnIcon);
+
 		//Add components to the panel and make visible
 		constraints.anchor = GridBagConstraints.EAST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
@@ -56,65 +57,85 @@ public class GUICoinReturn extends GUIPanel {
 		constraints.weightx = 0.33;
 		constraints.weighty = 0.5;
 		constraints.gridwidth = GridBagConstraints.RELATIVE;
-		
+
 		add(coinReturn, constraints);
-		
+
 		MouseListener mouselistener = new MouseListener();
 		coinReturn.addMouseListener(mouselistener);
-		
+
 		add(title);
 		setVisible(true);
 
 
 	}
-	
+
 	/*
 	 * Adds coins to coin return
 	 */
 	public void addCoin() {
 		ImageIcon coinIcon;
-		
+
 		//Update coins in the coin return
 		coinQty++;
-		
-		//Select proper coin return image
-		if( coinQty == 0 ) 
-			coinIcon = new ImageIcon("images/coin_return_empty.png");
-		else if( coinQty >= 1 && coinQty < 200 ) {
-			coinIcon = new ImageIcon("images/coin_return_full.png");
-			//GUIMain.getVendingManager().enableSafety();
-		}
-		else {
-			coinIcon = new ImageIcon("images/coin_return_full.png");
-			GUIMain.getVendingManager().enableSafety(); //Enable safety until coins are removed?
-		}
-		
-		//Update image
-		coinReturn.setIcon(coinIcon);
-		update();
-	}
+
+		//Check is the VendingMachine is locked
+		if(GUIMain.getVendingManager().getLock().isLocked()) {
+			//Select proper coin return image
+			if( coinQty == 0 )
+				coinIcon = new ImageIcon("images/coin_return_empty.png");
+			else if( coinQty >= 1 && coinQty < 200 ) {
+				coinIcon = new ImageIcon("images/coin_return_full.png");
+				GUIMain.getVendingManager().getCoinReturn().disable();
+			}
+			else {
+				coinIcon = new ImageIcon("images/coin_return_full.png");
+				GUIMain.getVendingManager().getCoinReturn().disable();
+			}
+
+			//Update image
+			coinReturn.setIcon(coinIcon);
+			update();
 	
+		} 
+		else 
+			//If unlocked disable coin return
+			GUIMain.getVendingManager().getCoinReturn().disable();
+
+	}
+
 	/*
 	 * Removes coins from coin return
 	 */
 	public void removeCoin() {
-		
+
 		//Update quantity of coins in the return
-		if(coinQty > 0) {
-			coinQty = 0;
 		
-			ImageIcon coinIcon;
-			
-			if(coinQty == 0)
-				coinIcon = new ImageIcon("images/coin_return_empty.png");
-			else 
-				coinIcon = new ImageIcon("images/coin_return_full.png");
-		
-			coinReturn.setIcon(coinIcon);
-			update();
+		if(GUIMain.getVendingManager().getLock().isLocked()) {
+			//Update quantity of coins in the return
+			if(coinQty > 0) {
+				coinQty = 0;
+
+				ImageIcon coinIcon;
+
+				//Select proper coin return image
+				if(coinQty == 0) {
+					coinIcon = new ImageIcon("images/coin_return_empty.png");
+					if(GUIMain.getVendingManager().getCoinReturn().hasSpace())
+						GUIMain.getVendingManager().getCoinReturn().enable();
+				}
+				else
+					coinIcon = new ImageIcon("images/coin_return_full.png");
+
+				//Update image
+				coinReturn.setIcon(coinIcon);
+				update();
+			}
 		}
+		else
+			//If unlocked disable coin return
+			GUIMain.getVendingManager().getCoinReturn().disable();
 	}
-	
+
 	/**
 	 * Mouse listener to handle clicks for coin return
 	 *
@@ -126,18 +147,20 @@ public class GUICoinReturn extends GUIPanel {
 	    @Override
 	    public void mousePressed(MouseEvent e)
 	    {
+	    	//Remove coins from coin return
 	    	GUIMain.getVendingManager().guiRemoveCoinFromReturn();
 	    	GUIMain.getVM().getCoinReturn().unload();
-	    	
+
+	    	//Display change returned window
 	    	JFrame changeFrame = new JFrame("Change Returned");
 	    	changeFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	    	changeFrame.setSize(300, 200);
 	    	JLabel changeLabel = new JLabel("Change returned is: " + coinQty);
-	    	GUIMain.getVM();
+	    	changeFrame.add(changeLabel);
 	    	setVisible(true);
-	    	
-	    	
-	    	
+
+
+
 	    }
 	}
 }
