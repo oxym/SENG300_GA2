@@ -24,7 +24,7 @@ public class GUITitle extends GUIPanel {
 	 */
 	@Override
 	void init() {
-		setBackground(COLOR_BACKGROUND);
+		setOpaque(false);
 		title = new JLabel("Title");
 		title.setFont(new Font("MS Gothic", Font.BOLD, 36));
 

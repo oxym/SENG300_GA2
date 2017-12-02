@@ -28,13 +28,16 @@ public class GUIConfigurationMain extends JFrame {
 
 	private GUIConfigurationDisplay displayPanel;
 	private GUIConfigurationKeypad  keypadPanel;
+	private VendingManager mgr;
 
 	/**
+	 * @param mgr
 	 *
 	 */
-	public GUIConfigurationMain() {
+	public GUIConfigurationMain(VendingManager mgr) {
 		setSize(X_SIZE, Y_SIZE);
 		setTitle(TITLE);
+		this.mgr = mgr;
 	}
 
 	/**
@@ -49,7 +52,7 @@ public class GUIConfigurationMain extends JFrame {
 
 		Dimension panelSize = new Dimension((int) (X_SIZE * H_SPLIT), Y_SIZE);
 		displayPanel = new GUIConfigurationDisplay();
-		keypadPanel = new GUIConfigurationKeypad();
+		keypadPanel = new GUIConfigurationKeypad(mgr);
 
 		//displayPanel.setPreferredSize(panelSize);
 		//displayPanel.setMinimumSize(panelSize);
@@ -68,7 +71,7 @@ public class GUIConfigurationMain extends JFrame {
 	 * Returns the configuration display panel
 	 * @return the display panel object
 	 */
-	public GuiInterfaceDisplay getDisplayPanel() {
+	public GUIConfigurationDisplay getDisplayPanel() {
 		return displayPanel;
 	}
 }

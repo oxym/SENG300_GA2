@@ -6,11 +6,11 @@ import org.lsmr.vending.hardware.EmptyException;
 
 public class ProductHandler {
 	private VendingManager mgr;
-	
+
 	public ProductHandler(VendingManager manager){
 		mgr = manager;
 	}
-	
+
 	/**
 	 * Handles a pop purchase. Checks if the pop rack has pop, confirms funds available,
 	 *  dispenses the pop, reduces available funds and deposits the added coins into storage.
@@ -27,9 +27,6 @@ public class ProductHandler {
 		if (mgr.getCreditHandler().getCredit() >= cost){
 			mgr.getProductRack(productIndex).dispensePopCan(); //Will throw EmptyException if pop rack is empty
 			mgr.getCreditHandler().subtractCredit(cost); //Will only be performed if the pop is successfully dispensed.
-			if (mgr.isGUIEnabled()) {
-				//TODO: update the gui delivery chute
-			}
 
 			//These coin-related actions may need to be nested in a conditional once additional
 			//Payment methods are supported. It depends on whether change is returned automatically.

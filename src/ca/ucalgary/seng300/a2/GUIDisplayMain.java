@@ -1,10 +1,12 @@
 package ca.ucalgary.seng300.a2;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -16,7 +18,7 @@ import javax.swing.border.Border;
  * lights
  *
  */
-public class GUIDisplayMain extends GUIPanel implements GuiInterfaceDisplay, GuiInterfaceIndicators {
+public class GUIDisplayMain extends GUIPanel {
 
 	private static final long serialVersionUID = 6739741022013889750L;
 	private static final String MSG_INIT = "Initializing...";
@@ -27,8 +29,7 @@ public class GUIDisplayMain extends GUIPanel implements GuiInterfaceDisplay, Gui
 	private JLabel[] label;
 	private JLabel[] indicator;
 
-	// TODO: Move these to configuration file
-	private String[] indicatorLabelText = { "Out Of Order", "Exact Change" };;
+	private String[] indicatorLabelText = MachineConfiguration.indicatorLabelText;
 
 	GUIDisplayMain() {
 	}
@@ -43,28 +44,31 @@ public class GUIDisplayMain extends GUIPanel implements GuiInterfaceDisplay, Gui
 		GridBagLayout gridbag = new GridBagLayout();
 
 		setLayout(gridbag);
-		setBackground(COLOR_BACKGROUND);
+		setBackground(new Color(0,0,0, 0));
+		//setOpaque(false);
 
 		// initialize components
-		// ImageIcon display_background = new ImageIcon("images/display.png");
-		// displayOutline = new JLabel(display_background);
 		ImageIcon indicatorOff = new ImageIcon("images/indicator_off.png");
 		indicator[OUT_OF_ORDER] = new JLabel(indicatorOff);
 		indicator[EXACT_CHANGE] = new JLabel(indicatorOff);
 		label[OUT_OF_ORDER] = new JLabel(indicatorLabelText[OUT_OF_ORDER]);
 		label[EXACT_CHANGE] = new JLabel(indicatorLabelText[EXACT_CHANGE]);
 
+		//set look of display
 		display = new JTextField(MSG_INIT);
 		// display.setFont(new Font("MS Gothic", Font.PLAIN, 18));
-		display.setFont(new Font("Monospaced", Font.PLAIN, 14));
+		display.setFont(new Font("Monospaced", Font.PLAIN, 12));
 		display.setBackground(COLOR_BLACK);
 		display.setForeground(COLOR_DISPLAYTEXT);
 		display.setColumns(40);
+		display.setMinimumSize(new Dimension(200, 50));
 		display.setEditable(false);
-
 		Border border = BorderFactory.createLineBorder(Color.DARK_GRAY, 7);
-
 		display.setBorder(border);
+
+		//set look of indicators
+		label[OUT_OF_ORDER].setForeground(COLOR_WHITE);
+		label[EXACT_CHANGE].setForeground(COLOR_WHITE);
 
 		// add components and layout panel
 		constraints.anchor = GridBagConstraints.NORTH;
@@ -74,7 +78,7 @@ public class GUIDisplayMain extends GUIPanel implements GuiInterfaceDisplay, Gui
 		constraints.weightx = 0.33;
 		constraints.weighty = 0.5;
 		constraints.gridwidth = GridBagConstraints.REMAINDER;
-		constraints.insets = new Insets(10, 5, 15, 5);
+		constraints.insets = new Insets(10, 0, 15, 0);
 		add(display, constraints);
 
 		// indicator lights
@@ -111,7 +115,7 @@ public class GUIDisplayMain extends GUIPanel implements GuiInterfaceDisplay, Gui
 	 */
 	public void updateMessage(String message) {
 		display.setText(message);
-		update();
+		//update();
 	}
 
 	/*
@@ -119,24 +123,14 @@ public class GUIDisplayMain extends GUIPanel implements GuiInterfaceDisplay, Gui
 	 *
 	 * @see ca.ucalgary.seng300.a2.gui.GuiInterfaceIndicators#indicatorOn(int)
 	 */
-	@Override
-	public void indicatorOn(int index) {
-		ImageIcon indicator_on = new ImageIcon("images/indicator_on.png");
-		indicator[index].setIcon(indicator_on);
-		update();
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see ca.ucalgary.seng300.a2.gui.GuiInterfaceIndicators#indicatorOff(int)
-	 */
-	@Override
-	public void indicatorOff(int index) {
-		ImageIcon indicator_on = new ImageIcon("images/indicator_off.png");
-		indicator[index].setIcon(indicator_on);
-		update();
+	public void indicatorSet(int index,boolean isLit) {
+		ImageIcon indicatorIcon;
+		if (isLit)
+			indicatorIcon = new ImageIcon("images/indicator_on.png");
+		else
+			indicatorIcon = new ImageIcon("images/indicator_off.png");
+		indicator[index].setIcon(indicatorIcon);
+		//update();
 	}
 
 }

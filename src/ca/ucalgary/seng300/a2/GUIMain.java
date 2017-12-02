@@ -4,9 +4,16 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 import javax.swing.border.Border;
 
@@ -37,6 +44,7 @@ public class GUIMain extends JFrame {
 	private GUIPanel titlePanel;
 	private GUIPanel selectionButtonPanel;
 	private GUIPanel deliveryChutePanel;
+	private static GUIConfigurationMain configurationMain;
 
 	protected static VendingMachine vm;
 	protected static VendingManager mgr;
@@ -53,6 +61,7 @@ public class GUIMain extends JFrame {
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setSize(X_SIZE, Y_SIZE);
 		setTitle(TITLE);
+		configurationMain = new GUIConfigurationMain(mgr);
 	}
 
 	/**
@@ -68,11 +77,14 @@ public class GUIMain extends JFrame {
 		Border border = BorderFactory.createLineBorder(Color.DARK_GRAY, 10);
 		((JComponent) pane).setBorder(border);
 
+		BackgroundPanel bgPanel = new BackgroundPanel();
+		bgPanel.setLayout(new BorderLayout());
+
 		Dimension panelSize = new Dimension((int) (X_SIZE * V_SPLIT), Y_SIZE);
 		sidePanel = new GUISidePanel();
 		titlePanel = new GUITitle();
 		selectionButtonPanel = new GUISelectionButtons();
-		deliveryChutePanel = new GUIDeliveryChute();
+		deliveryChutePanel = new GUIDeliveryChute(mgr);
 
 		sidePanel.setPreferredSize(panelSize);
 		sidePanel.setMinimumSize(panelSize);
@@ -82,14 +94,11 @@ public class GUIMain extends JFrame {
 		selectionButtonPanel.init();
 		deliveryChutePanel.init();
 
-		// for debugging to assist with layout of the panels
-		//if (DEBUG)
-		//	sidePanel.setBackground(Color.WHITE);
-
-		pane.add(sidePanel, BorderLayout.EAST);
-		pane.add(titlePanel, BorderLayout.NORTH);
-		pane.add(deliveryChutePanel, BorderLayout.SOUTH);
-		pane.add(selectionButtonPanel, BorderLayout.CENTER);
+		pane.add(bgPanel);
+		bgPanel.add(sidePanel, BorderLayout.EAST);
+		bgPanel.add(titlePanel, BorderLayout.NORTH);
+		bgPanel.add(deliveryChutePanel, BorderLayout.SOUTH);
+		bgPanel.add(selectionButtonPanel, BorderLayout.CENTER);
 
 		setVisible(true);
 	}
@@ -108,7 +117,7 @@ public class GUIMain extends JFrame {
 	 * Returns the side panel
 	 * @return the side panel object
 	 */
-	public GUISidePanel getSidePanel() {
+	protected GUISidePanel getSidePanel() {
 		return sidePanel;
 	}
 
@@ -116,7 +125,7 @@ public class GUIMain extends JFrame {
 	 * Returns the delivery chute panel
 	 * @return the delivery chute panel object
 	 */
-	public GuiInterfaceDeliveryChute getDeliveryChutePanel() {
+	protected GuiInterfaceDeliveryChute getDeliveryChutePanel() {
 		return (GuiInterfaceDeliveryChute) deliveryChutePanel;
 	}
 
@@ -124,7 +133,7 @@ public class GUIMain extends JFrame {
 	 * Returns the vending machine hardware that this gui is simulating
 	 * @return vending machine object
 	 */
-	public static VendingMachine getVM() {
+	protected static VendingMachine getVM() {
 		return vm;
 	}
 
@@ -132,7 +141,41 @@ public class GUIMain extends JFrame {
 	 * Returns the vending manager that this gui is connected to
 	 * @return vending manager object
 	 */
-	public static VendingManager getVendingManager() {
+	protected static VendingManager getVendingManager() {
 		return mgr;
 	}
+
+	/**
+	 * Returns the configuration display object
+	 * @return the configuration display object
+	 */
+	protected static GUIConfigurationMain getConfigurationMain() {
+		return configurationMain;
+	}
+
+
+
+
+    /**
+     * A panel that has a background image
+     *
+     */
+    private class BackgroundPanel extends JPanel{
+
+        private Image bgImage;
+
+		protected void paintComponent(Graphics g) {
+
+			try {
+				bgImage = ImageIO.read(new File("images/bg.png"));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+            super.paintComponent(g);
+
+			g.drawImage(bgImage, 0, 0, getWidth(), getHeight(), this);
+        }
+    }
+
 }

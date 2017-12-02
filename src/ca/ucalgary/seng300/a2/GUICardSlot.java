@@ -4,7 +4,6 @@ import javax.swing.JLabel;
 
 public class GUICardSlot extends GUIPanel {
 
-	private static final long serialVersionUID = -3561070445764413963L;
 	private JLabel title;
 
 	@Override
@@ -14,7 +13,6 @@ public class GUICardSlot extends GUIPanel {
 
 		add(title);
 		setVisible(true);
-
 
 	}
 

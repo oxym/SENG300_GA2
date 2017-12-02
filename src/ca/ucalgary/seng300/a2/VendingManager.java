@@ -602,7 +602,6 @@ public class VendingManager {
 		if (isGUIEnabled() && gui != null){
 			gui.getSidePanel().getDisplayPanel().updateMessage(message);
 		}
-
 	}
 	
 	/**
@@ -612,7 +611,9 @@ public class VendingManager {
 	void guiUpdateConfigDisplay(String message){
 		if (isGUIEnabled() && gui != null){
 			//TODO Add config panel message update call
-//			gui.getConfigPanel().getDisplayPanel().updateMessage(message);
+//			gui.getConfigDisplay().getDisplayPanel().updateMessage(message);
+			GUIMain.getConfigurationMain().getDisplayPanel().updateMessage(message);
+
 		}
 	}
 	
@@ -622,8 +623,7 @@ public class VendingManager {
 	 */
 	void guiSetChangeLight(boolean state){
 		if (isGUIEnabled() && gui != null){
-			//TODO modify gui exact change light state
-//			gui.getSidePanel().getDisplayPanel().indicatorOff(MachineConfiguration.EXACT_CHANGE);
+			gui.getSidePanel().getDisplayPanel().indicatorSet(MachineConfiguration.EXACT_CHANGE, state);
 		}
 	}
 	
@@ -633,8 +633,7 @@ public class VendingManager {
 	 */
 	void guiSetOutOfOrderLight(boolean state){
 		if (isGUIEnabled() && gui != null){
-			//TODO modify gui exact change light state
-//			gui.getSidePanel().getDisplayPanel().indicatorOff(MachineConfiguration.OUT_OF_ORDER);
+			gui.getSidePanel().getDisplayPanel().indicatorSet(MachineConfiguration.OUT_OF_ORDER, state);
 		}
 	}
 	
@@ -660,16 +659,18 @@ public class VendingManager {
 	 * Notifies the GUI coin return that a coin has been added
 	 */
 	void guiAddCoinToReturn() {
-		if(mgr.isGUIEnabled() && gui != null)
-			gui.getSidePanel().getCoinReturnPanel().addCoin();
+		if(mgr.isGUIEnabled() && gui != null){
+			gui.getSidePanel().getCoinReturnPanel().addCoin();			
+		}
 	}
 	
 	/*
 	 * Notifies the GUI coin return that coins have been removed
 	 */
 	void guiRemoveCoinFromReturn() {
-		if(mgr.isGUIEnabled() && gui != null)
-			gui.getSidePanel().getCoinReturnPanel().removeCoin();
+		if(mgr.isGUIEnabled() && gui != null){
+			gui.getSidePanel().getCoinReturnPanel().removeCoin();			
+		}
 	}
 //^^^======================GUI ACCESS END=======================^^^
 }

@@ -6,6 +6,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -28,12 +29,14 @@ public class GUIDeliveryChute extends GUIPanel implements GuiInterfaceDeliveryCh
 	private JLabel chute;
 	private JButton lock;
 	private GUIConfigurationListener listener;
+	private VendingManager mgr;
 	GUIConfigurationMain configPanel;
 
 	/**
 	 * Default Constructor
 	 */
-	public GUIDeliveryChute() {
+	public GUIDeliveryChute(VendingManager mgr) {
+		this.mgr = mgr;
 		itemQty = 0;
 	}
 
@@ -51,6 +54,7 @@ public class GUIDeliveryChute extends GUIPanel implements GuiInterfaceDeliveryCh
 		GridBagLayout gridbag = new GridBagLayout();
 
 		setLayout(gridbag);
+		setOpaque(false);
 
 		// instantiate components
 		ImageIcon chuteIcon = new ImageIcon("images/dispenser_empty.png");
@@ -73,6 +77,7 @@ public class GUIDeliveryChute extends GUIPanel implements GuiInterfaceDeliveryCh
 		constraints.weightx = 0.33;
 		constraints.weighty = 0.5;
 		constraints.gridwidth = GridBagConstraints.RELATIVE;
+		constraints.insets = new Insets(0,0,50,0);
 		add(chute, constraints);
 
 		constraints.weightx = 0.05;
@@ -164,15 +169,14 @@ public class GUIDeliveryChute extends GUIPanel implements GuiInterfaceDeliveryCh
 
 			case "lock":
 				lock.setText("unlock");
-				GUIMain.getVendingManager().disableSafety();
-				configPanel.dispose();
+				GUIMain.getVM().getLock().lock();
+				GUIMain.getConfigurationMain().dispose();
 				break;
 
 			case "unlock":
 				lock.setText("lock");
-				GUIMain.getVendingManager().enableSafety();
-				configPanel = new GUIConfigurationMain();
-				configPanel.init();
+				GUIMain.getVM().getLock().unlock();
+				GUIMain.getConfigurationMain().init();
 				break;
 			}
 		}
