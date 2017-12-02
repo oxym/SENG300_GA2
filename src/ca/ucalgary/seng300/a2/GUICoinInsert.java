@@ -67,10 +67,17 @@ public class GUICoinInsert extends JFrame {
 
 
 		for (int i = 0; i < coinValues.length; i++) {
-			buttons[i] = new JButton(Integer.toString(coinValues[i]), icon);
+
+			//format button text
+			int dollars = coinValues[i] / 100;
+			int cents = coinValues[i] % 100;
+			String buttonText = String.format("  $%3d.%02d", dollars, cents);
+
+			buttons[i] = new JButton(buttonText, icon);
 			buttons[i].addActionListener(listener);
 			buttons[i].setAlignmentX(CENTER_ALIGNMENT);
 			buttons[i].setMaximumSize(new Dimension(300,50));
+			buttons[i].setActionCommand(Integer.toString(coinValues[i]));
 			pane.add(buttons[i]);
 			pane.add(Box.createVerticalGlue());
 		}
@@ -82,7 +89,7 @@ public class GUICoinInsert extends JFrame {
 	 * Listener for button events
 	 *
 	 */
-	public class CoinButtonListener implements ActionListener {
+	private class CoinButtonListener implements ActionListener {
 
 		/*
 		 * (non-Javadoc)

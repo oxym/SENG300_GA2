@@ -54,6 +54,7 @@ public class GUIDisplayMain extends GUIPanel {
 		label[OUT_OF_ORDER] = new JLabel(indicatorLabelText[OUT_OF_ORDER]);
 		label[EXACT_CHANGE] = new JLabel(indicatorLabelText[EXACT_CHANGE]);
 
+		//set look of display
 		display = new JTextField(MSG_INIT);
 		// display.setFont(new Font("MS Gothic", Font.PLAIN, 18));
 		display.setFont(new Font("Monospaced", Font.PLAIN, 12));
@@ -62,10 +63,12 @@ public class GUIDisplayMain extends GUIPanel {
 		display.setColumns(40);
 		display.setMinimumSize(new Dimension(200, 50));
 		display.setEditable(false);
-
 		Border border = BorderFactory.createLineBorder(Color.DARK_GRAY, 7);
-
 		display.setBorder(border);
+
+		//set look of indicators
+		label[OUT_OF_ORDER].setForeground(COLOR_WHITE);
+		label[EXACT_CHANGE].setForeground(COLOR_WHITE);
 
 		// add components and layout panel
 		constraints.anchor = GridBagConstraints.NORTH;

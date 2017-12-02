@@ -25,29 +25,15 @@ public class GUICoinSlot extends GUIPanel {
 	void init() {
 
 		// set look of panel
-		setBackground(COLOR_BACKGROUND);
+		//setBackground(COLOR_BACKGROUND);
 		setOpaque(false);
-		// GridBagConstraints constraints = new GridBagConstraints();
-		// GridBagLayout gridbag = new GridBagLayout();
 
-		// setLayout(gridbag);
-
-		// instantiate components
+		// instantiate components and set behaviour
 		ImageIcon coinSlotIcon = new ImageIcon("images/coinslot.png");
 		coinSlot = new JLabel(coinSlotIcon);
 		MouseListener mouseListener = new MouseListener();
 		coinSlot.addMouseListener(mouseListener);
 
-		// add components to the panel and set visibility
-
-		// constraints.anchor = GridBagConstraints.WEST;
-		// constraints.fill = GridBagConstraints.HORIZONTAL;
-		// constraints.gridx = 0;
-		// constraints.gridy = 0;
-		// constraints.weightx = 0.33;
-		// constraints.weighty = 0.5;
-		// constraints.gridwidth = GridBagConstraints.RELATIVE;
-		// add(chute, constraints);
 		add(coinSlot);
 
 		setVisible(true);

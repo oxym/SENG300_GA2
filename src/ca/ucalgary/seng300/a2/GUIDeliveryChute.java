@@ -169,13 +169,13 @@ public class GUIDeliveryChute extends GUIPanel implements GuiInterfaceDeliveryCh
 
 			case "lock":
 				lock.setText("unlock");
-				GUIMain.getVendingManager().disableSafety();
-				configPanel.dispose();
+				GUIMain.getVM().getLock().lock();
+				GUIMain.getConfigurationMain().dispose();
 				break;
 
 			case "unlock":
 				lock.setText("lock");
-				GUIMain.getVendingManager().enableSafety();
+				GUIMain.getVM().getLock().unlock();
 				GUIMain.getConfigurationMain().init();
 				break;
 			}

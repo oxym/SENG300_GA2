@@ -94,9 +94,6 @@ public class GUIMain extends JFrame {
 		selectionButtonPanel.init();
 		deliveryChutePanel.init();
 
-		// for debugging to assist with layout of the panels
-		//if (DEBUG)
-		//	sidePanel.setBackground(Color.WHITE);
 		pane.add(bgPanel);
 		bgPanel.add(sidePanel, BorderLayout.EAST);
 		bgPanel.add(titlePanel, BorderLayout.NORTH);
@@ -120,7 +117,7 @@ public class GUIMain extends JFrame {
 	 * Returns the side panel
 	 * @return the side panel object
 	 */
-	public GUISidePanel getSidePanel() {
+	protected GUISidePanel getSidePanel() {
 		return sidePanel;
 	}
 
@@ -128,7 +125,7 @@ public class GUIMain extends JFrame {
 	 * Returns the delivery chute panel
 	 * @return the delivery chute panel object
 	 */
-	public GuiInterfaceDeliveryChute getDeliveryChutePanel() {
+	protected GuiInterfaceDeliveryChute getDeliveryChutePanel() {
 		return (GuiInterfaceDeliveryChute) deliveryChutePanel;
 	}
 
@@ -136,7 +133,7 @@ public class GUIMain extends JFrame {
 	 * Returns the vending machine hardware that this gui is simulating
 	 * @return vending machine object
 	 */
-	public static VendingMachine getVM() {
+	protected static VendingMachine getVM() {
 		return vm;
 	}
 
@@ -144,7 +141,7 @@ public class GUIMain extends JFrame {
 	 * Returns the vending manager that this gui is connected to
 	 * @return vending manager object
 	 */
-	public static VendingManager getVendingManager() {
+	protected static VendingManager getVendingManager() {
 		return mgr;
 	}
 
@@ -152,11 +149,11 @@ public class GUIMain extends JFrame {
 	 * Returns the configuration display object
 	 * @return the configuration display object
 	 */
-	public static GUIConfigurationMain getConfigurationMain() {
+	protected static GUIConfigurationMain getConfigurationMain() {
 		return configurationMain;
 	}
-	
-	
+
+
 
 
     /**

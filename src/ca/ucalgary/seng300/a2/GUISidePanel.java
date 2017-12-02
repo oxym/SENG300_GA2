@@ -33,7 +33,7 @@ public class GUISidePanel extends GUIPanel {
 		GridBagLayout gridbag = new GridBagLayout();
 		setLayout(gridbag);
 		//setOpaque(false);
-		setBackground(COLOR_BACKGROUND);
+		setBackground(COLOR_TRANSPARENT_SEMI);
 
 		Border border = BorderFactory.createMatteBorder(4, 4, 1, 1, COLOR_DARKGRAY);
 		this.setBorder(border);

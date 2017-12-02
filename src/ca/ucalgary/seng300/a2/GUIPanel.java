@@ -21,8 +21,11 @@ public abstract class GUIPanel extends JPanel {
 	public static final Color COLOR3 = new Color(193, 221, 230);
 	public static final Color COLOR_FONT = new Color(255, 255, 255);
 	public static final Color COLOR_BLACK = new Color(0,0,0);
+	public static final Color COLOR_WHITE = new Color(255, 255, 255);
 	public static final Color COLOR_DARKGRAY = Color.DARK_GRAY;
 	public static final Color COLOR_DISPLAYTEXT = new Color(0,222,255);
+	public static final Color COLOR_TRANSPARENT = new Color(0,0,0,0);
+	public static final Color COLOR_TRANSPARENT_SEMI = new Color(0,0,0,60);
 
 
 	/**
