@@ -19,27 +19,14 @@ public class GUIConfigurationListener implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent event) {
 
-		String command = event.getActionCommand();
-		System.out.println(command);
+		ConfigPanelHandler cfghand = mgr.getConfigPanelHandler();
+		String keyName = event.getActionCommand();
 		
+		System.out.println(keyName);
 		
-
-		switch (command) {
-
-
-		case "enter":
-
-			break;
-
-		case "shift":
-
-			break;
-
-			default:
-				mgr.getConfigPanelHandler().display(command);
-
-		}//end switch
-
+		int kIndex = cfghand.getKeyIndex(keyName);
+		if (kIndex >= 0){ // If it exists
+			cfghand.pressKey(kIndex);
+		}
 	}
-
 }
