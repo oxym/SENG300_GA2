@@ -57,8 +57,7 @@ public class GUIConfigurationDisplay extends GUIPanel {
 	}
 
 	public void updateMessage(String message) {
-		display = new JTextField(message);
-		add(display);
+		display.setText(message);
 	}
 
 
