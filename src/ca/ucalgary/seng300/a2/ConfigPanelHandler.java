@@ -36,11 +36,16 @@ public class ConfigPanelHandler {
 	private int product = -1; 
 	private String buffer = ""; 
 	
+
 	//TODO DOCUMENT
 	public ConfigPanelHandler(VendingManager manager){
 		mgr = manager;
 		config = mgr.getConfigurationPanel();
 		dispDriver = new DisplayDriver(config.getDisplay());
+	}
+	
+	public String[] getKeyCodes(){
+		return keyCodes;
 	}
 	
 	/**
@@ -77,6 +82,24 @@ public class ConfigPanelHandler {
 			//TODO Decide if bad key presses need to be handled?
 		}
 		
+	}
+	
+	/**
+	 * Gets the index of the button whose value - or name - 
+	 * matches the given string. Matching is case insensitive.
+	 * @param keyName The name of the button to find
+	 * @return The index of the button, or -1 if not found
+	 */
+	public int getKeyIndex(String keyName){
+		int kIndex = -1;
+		if (keyName != null)
+			for (int i = 0; i < KEY_COUNT; i++){
+				if (keyCodes[i].equalsIgnoreCase(keyName)){
+					kIndex = i;
+					break;
+				}
+			}
+		return kIndex;
 	}
 	
 	//TODO DOCUMENT
