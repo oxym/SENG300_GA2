@@ -1,6 +1,7 @@
 package ca.ucalgary.seng300.a2;
 
-import javax.swing.JLabel;
+import javax.swing.*;
+import java.awt.*;
 
 public class GUISelectionButtons extends GUIPanel {
 
