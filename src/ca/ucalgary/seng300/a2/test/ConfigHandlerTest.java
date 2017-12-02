@@ -34,21 +34,63 @@ public class ConfigHandlerTest {
 		configH = new ConfigPanelHandler(manager);
 	}
 	
-	/*
+	/**
 	 * Tests for getButtonDisplayCode
 	 */
 	@Test
-	public void invalidButton(){	
-		String code = configH.getButtonDisplayCode(-1);
-		System.out.println(code);
-		assertEquals("", configH.getButtonDisplayCode(1));
+	public void invalidIndex(){	
+		String code = configH.getButtonDisplayCode(38);
+		assertEquals("", code);
 	}
 	
 	@Test
-	public void invalidButton2(){	
-		String code = configH.getButtonDisplayCode(1);
-		System.out.println(code);
-		assertEquals("B", configH.getButtonDisplayCode(1));
+	public void lowerEdgeCase(){	
+		String code = configH.getButtonDisplayCode(0);
+		assertEquals("A", code);
 	}
 	
+	@Test
+	public void upperEdgeCase(){	
+		String code = configH.getButtonDisplayCode(37);
+		assertEquals("Enter", code);
+	}
+	
+	/**
+	 * Character type tests.
+	 * All of the ones below are passing but theyre not showing up as code coverage in the ConfigPanelHandler
+	 */
+	@Test
+	public void isLetterTrueLower(){
+		assertEquals(true ,configH.isLetter(0));
+	}
+	
+	@Test
+	public void isLetterTrueUpper(){
+		assertEquals(true ,configH.isLetter(25));
+	}
+	
+	@Test
+	public void isLetterFalse(){
+		assertEquals(false ,configH.isLetter(26));
+	}
+
+	@Test
+	public void isNumLower(){
+		assertEquals(true ,configH.isNum(26));
+	}
+	
+	@Test
+	public void isNumUpper(){
+		assertEquals(true ,configH.isNum(35));
+	}
+	
+	@Test
+	public void isNumFalseUpper(){
+		assertEquals(false ,configH.isNum(36));
+	}
+	
+	@Test
+	public void isNumFalseLower(){
+		assertEquals(false ,configH.isNum(25));
+	}
 }
