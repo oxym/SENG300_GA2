@@ -38,8 +38,16 @@ public class ConfigHandlerTest {
 	 * Tests for getButtonDisplayCode
 	 */
 	@Test
-	public void invalidIndex(){	
+	public void invalidIndex_OOB(){	
 		String code = configH.getButtonDisplayCode(38);
+		assertEquals("", code);
+	}
+	/**
+	 * Tests for getButtonDisplayCode
+	 */
+	@Test
+	public void invalidIndex_Negative(){	
+		String code = configH.getButtonDisplayCode(-1);
 		assertEquals("", code);
 	}
 	
@@ -58,6 +66,7 @@ public class ConfigHandlerTest {
 	/**
 	 * Character type tests.
 	 * All of the ones below are passing but theyre not showing up as code coverage in the ConfigPanelHandler
+	 * EDIT [Thomas]: Running them on my machine shows full coverage of isNum() and 3/4 branch coverage of isLetter()
 	 */
 	@Test
 	public void isLetterTrueLower(){
