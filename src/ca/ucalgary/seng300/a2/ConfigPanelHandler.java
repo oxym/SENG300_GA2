@@ -219,9 +219,9 @@ public class ConfigPanelHandler {
 	 */
 	private boolean updateProductCost(int index, int cost){
 		ArrayList<String> productNames = new ArrayList<String>();
-		ArrayList<Integer> productCosts = new ArrayList<Integer>();		
+		ArrayList<Integer> productCosts = new ArrayList<Integer>();
+
 		int prodCount = mgr.getNumberOfProductRacks();
-		
 		String prodName;
 		int prodCost;
 		for (int i = 0; i < prodCount; i++){
@@ -229,8 +229,8 @@ public class ConfigPanelHandler {
 			prodCost = (i == index && cost != -1) 
 					? cost : mgr.getProductCost(i);
 			
-			productNames.set(i, prodName);
-			productCosts.set(i, prodCost);
+			productNames.add(prodName);
+			productCosts.add(prodCost);
 		}
 		
 		return mgr.configureVendingMachine(productNames, productCosts);
