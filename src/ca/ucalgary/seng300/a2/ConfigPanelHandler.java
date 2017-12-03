@@ -26,9 +26,9 @@ public class ConfigPanelHandler {
 	private static final int KEY_COUNT = keyCodes.length; 
 	
 	private static final String
-		MENU_MAIN= "Press 1 to reprice a product",
-		MENU_REPRICE_SELECT = "Enter the index of the product to reprice",
-		MENU_REPRICE_SETPRICE = "Enter a new product price",
+		MENU_MAIN= "(1): Reprice a product",
+		MENU_REPRICE_SELECT = "Index of product to reprice",
+		MENU_REPRICE_SETPRICE = "Enter the new price",
 		MENU_REPRICE_COMPLETE = "Product repriced.";
 	
 	
