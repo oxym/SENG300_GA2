@@ -114,7 +114,8 @@ public class GUIDisplayMain extends GUIPanel {
 	 *            The message to display
 	 */
 	public void updateMessage(String message) {
-		display.setText(message);
+		if (display != null)
+			display.setText(message);
 		//update();
 	}
 

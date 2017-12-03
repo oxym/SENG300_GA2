@@ -31,13 +31,16 @@ import org.lsmr.vending.hardware.VendingMachine;
 public class GUIMain extends JFrame {
 
 	private static final long serialVersionUID = 8968054066670899143L;
-
+	private boolean initialized = false;
+	
 	public static final boolean DEBUG = true;
 	public static final int X_SIZE = 768;
 	public static final int Y_SIZE = 1024;
 	public static final double V_SPLIT = 0.35;
 	public static final String TITLE = "Vending Machine";
 
+	
+	
 	// The right panel holds the JPanels for the
 	// display, coinslot, cardslot, and coinreturn
 	private GUISidePanel sidePanel;
@@ -57,7 +60,7 @@ public class GUIMain extends JFrame {
 	public GUIMain(VendingMachine vm, VendingManager mgr, int[] acceptedCoins) {
 		GUIMain.vm = vm;
 		GUIMain.mgr = mgr;
-		this.acceptedCoins = acceptedCoins;
+		GUIMain.acceptedCoins = acceptedCoins;
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setSize(X_SIZE, Y_SIZE);
 		setTitle(TITLE);
@@ -99,10 +102,16 @@ public class GUIMain extends JFrame {
 		bgPanel.add(titlePanel, BorderLayout.NORTH);
 		bgPanel.add(deliveryChutePanel, BorderLayout.SOUTH);
 		bgPanel.add(selectionButtonPanel, BorderLayout.CENTER);
-
 		setVisible(true);
+		initialized = true;
 	}
 
+	/**
+	 * Returns the initalization state of the GUI
+	 */
+	public boolean isInitialized(){
+		return initialized;
+	}
 	/**
 	 *
 	 * updatePanel - repaints the panel

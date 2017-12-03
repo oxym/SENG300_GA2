@@ -73,8 +73,10 @@ public class VendingManager {
 		VendingMachine machine = new VendingMachine(cfg.coinKinds, cfg.selectionButtonCount, cfg.coinRackCapacity, cfg.productRackCapacity,
 				cfg.receptacleCapacity, cfg.deliveryChuteCapacity, cfg.coinReturnCapacity);
 		machine.configure(cfg.productNames, cfg.productCosts);
+		machine.loadCoins(10,10,10,10,10);
+		machine.loadPopCans(10,10,10,10,10,10);
 
-		VendingManager.initialize(machine, cfg.coinKinds);
+		VendingManager.initialize(machine);
 	}
 	
 	/**
@@ -110,7 +112,7 @@ public class VendingManager {
 	 * the Vending logic package.
 	 * @param host The VendingMachine which the VendingManager is intended to manage.
 	 */
-	public static VendingManager initialize(VendingMachine host, int[] coinValues){
+	public static VendingManager initialize(VendingMachine host){
 		vm = host;
 		mgr = new VendingManager();
 
@@ -599,7 +601,7 @@ public class VendingManager {
 	 * @param message Message to display in GUI
 	 */
 	void guiUpdateUserDisplay(String message){
-		if (isGUIEnabled() && gui != null){
+		if (isGUIEnabled() && gui != null && gui.isInitialized()){
 			gui.getSidePanel().getDisplayPanel().updateMessage(message);
 		}
 	}
@@ -609,10 +611,11 @@ public class VendingManager {
 	 * @param message Message to display in GUI
 	 */
 	void guiUpdateConfigDisplay(String message){
-		if (isGUIEnabled() && gui != null){
-			//TODO Add config panel message update call
-//			gui.getConfigDisplay().getDisplayPanel().updateMessage(message);
-			GUIMain.getConfigurationMain().getDisplayPanel().updateMessage(message);
+		if (isGUIEnabled() && gui != null && gui.isInitialized()){			
+			GUIConfigurationMain configPanel = GUIMain.getConfigurationMain();
+			if (configPanel.isVisible()){
+				configPanel.getDisplayPanel().updateMessage(message);
+			}
 
 		}
 	}
@@ -622,7 +625,7 @@ public class VendingManager {
 	 * @param state The on/off state of the light
 	 */
 	void guiSetChangeLight(boolean state){
-		if (isGUIEnabled() && gui != null){
+		if (isGUIEnabled() && gui != null && gui.isInitialized()){
 			gui.getSidePanel().getDisplayPanel().indicatorSet(MachineConfiguration.EXACT_CHANGE, state);
 		}
 	}
@@ -632,7 +635,7 @@ public class VendingManager {
 	 * @param state The on/off state of the light 
 	 */
 	void guiSetOutOfOrderLight(boolean state){
-		if (isGUIEnabled() && gui != null){
+		if (isGUIEnabled() && gui != null && gui.isInitialized()){
 			gui.getSidePanel().getDisplayPanel().indicatorSet(MachineConfiguration.OUT_OF_ORDER, state);
 		}
 	}
@@ -641,7 +644,7 @@ public class VendingManager {
 	 * Notifies the GUI delivery chute that an item has been added
 	 */
 	void guiAddItemToChute(){
-		if (mgr.isGUIEnabled() && gui != null){
+		if (mgr.isGUIEnabled() && gui != null && gui.isInitialized()){
 			gui.getDeliveryChutePanel().addItem();
 		}
 	}
@@ -650,7 +653,7 @@ public class VendingManager {
 	 * Notifies the GUI delivery chute that an item has been removed
 	 */
 	void guiRemoveItemFromChute(){
-		if (mgr.isGUIEnabled() && gui != null){
+		if (mgr.isGUIEnabled() && gui != null && gui.isInitialized()){
 			gui.getDeliveryChutePanel().removeItems();			
 		}
 	}
@@ -659,7 +662,7 @@ public class VendingManager {
 	 * Notifies the GUI coin return that a coin has been added
 	 */
 	void guiAddCoinToReturn() {
-		if(mgr.isGUIEnabled() && gui != null){
+		if(mgr.isGUIEnabled() && gui != null && gui.isInitialized()){
 			gui.getSidePanel().getCoinReturnPanel().addCoin();			
 		}
 	}
@@ -668,7 +671,7 @@ public class VendingManager {
 	 * Notifies the GUI coin return that coins have been removed
 	 */
 	void guiRemoveCoinFromReturn() {
-		if(mgr.isGUIEnabled() && gui != null){
+		if(mgr.isGUIEnabled() && gui != null && gui.isInitialized()){
 			gui.getSidePanel().getCoinReturnPanel().removeCoin();			
 		}
 	}
