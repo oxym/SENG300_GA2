@@ -47,10 +47,6 @@ public class ConfigPanelHandler {
 		showMainMenu("");
 	}
 	
-	public String[] getKeyCodes(){
-		return keyCodes;
-	}
-	
 	/**
 	 * Returns the display code for the given button index.
 	 * Returns an empty string if the given index is out of range.
@@ -72,7 +68,7 @@ public class ConfigPanelHandler {
 				symbol = symbol.toLowerCase(); 
 			}
 			
-			buffer += getButtonDisplayCode(key);
+			buffer += symbol;
 			display(buffer);
 		}
 		else if (isShift(key)){
