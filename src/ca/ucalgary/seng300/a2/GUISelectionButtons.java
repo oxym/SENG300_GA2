@@ -49,9 +49,12 @@ public class GUISelectionButtons extends GUIPanel {
 		
 		// Populate btns array with JButtons
 		for (int i = 0; i < btns.length; ++i) {
-			String imagePath = "images/select_button_" + GUIMain.getVendingManager().getProductName(i) + ".png";
-			btns[i] = new JButton("", new ImageIcon(imagePath));
+			String productName = JButton(GUIMain.getVendingManager().getProductName(i);
+			String imagePath = "images/select_button_" + productName + ".png";
+			btns[i] = new JButton(productName, new ImageIcon(imagePath));
 			btns[i].addActionListener(new SelectionButtonListener(i));
+			btns[i].setVerticalTextPosition(SwingConstants.BOTTOM);
+			btns[i].setHorizontalTextPosition(SwingConstants.CENTER);
 		}
 
 		int y = 0;
