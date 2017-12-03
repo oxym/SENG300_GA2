@@ -15,13 +15,9 @@ public class GUISelectionButtons extends GUIPanel {
 	private JLabel title;
 	
 	private JButton[] btns;
-	
-	private SelectionButtonListener listener;
 
 	@Override
 	void init() {
-		
-		listener = new SelectionButtonListener();
 		
 		setBackground(COLOR_BACKGROUND);
 		title = new JLabel("Make your choice!");
@@ -34,7 +30,7 @@ public class GUISelectionButtons extends GUIPanel {
 		// Add title to titlePanel
 		titlePanel = new JPanel();
 		titlePanel.setLayout(new GridBagLayout());
-		titlePanel.setBackground(COLOR_BACKGROUND);
+		titlePanel.setBackground(COLOR_TRANSPARENT);
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		titlePanel.add(title);
@@ -45,7 +41,7 @@ public class GUISelectionButtons extends GUIPanel {
 		// Create buttonPanel
 		buttonPanel = new JPanel();
 		buttonPanel.setLayout(new GridBagLayout());
-		buttonPanel.setBackground(COLOR_BACKGROUND);
+		buttonPanel.setBackground(COLOR_TRANSPARENT);
 		
 		// Number of different types of pops in Vending Machine
 		int popTypes = GUIMain.getVendingManager().getNumberOfSelectionButtons();
@@ -53,8 +49,9 @@ public class GUISelectionButtons extends GUIPanel {
 		
 		// Populate btns array with JButtons
 		for (int i = 0; i < btns.length; ++i) {
-			btns[i] = new JButton(GUIMain.getVendingManager().getProductName(i));
-			btns[i].addActionListener(listener);
+			String imagePath = "images/select_button_" + GUIMain.getVendingManager().getProductName(i) + ".png";
+			btns[i] = new JButton("", new ImageIcon(imagePath));
+			btns[i].addActionListener(new SelectionButtonListener(i));
 		}
 
 		int y = 0;
@@ -86,12 +83,16 @@ public class GUISelectionButtons extends GUIPanel {
 	}
 	
 	private class SelectionButtonListener implements ActionListener {
+		
+		private int btnID;
+		
+		public SelectionButtonListener(int btnID) {
+			this.btnID = btnID;
+		}
 
 		@Override
 		public void actionPerformed(ActionEvent event) {
-			String btnName = event.getActionCommand();
-			
-			// TODO: connect btn click to VM
+			GUIMain.getVM().getSelectionButton(this.btnID).press();
 		}
 	}
 }
