@@ -39,7 +39,7 @@ public class VendingManagerSystemTest {
 				cfg.receptacleCapacity, cfg.deliveryChuteCapacity, cfg.coinReturnCapacity);
 		machine.configure(cfg.productNames, cfg.productCosts);
 
-		manager = VendingManager.initialize(machine, cfg.coinKinds);
+		manager = VendingManager.initialize(machine);
 
 		machine.disableSafety(); //needed due to singleton instance being passed to multiple tests
 								 //that appear to clone the current state of the machine at the time of instantiation
@@ -218,7 +218,7 @@ public class VendingManagerSystemTest {
 		machine.loadPopCans(1, 1, 1, 1, 1, 1);
 		machine.loadCoins(5, 5, 5, 5, 5);
 
-		manager = VendingManager.initialize(machine, cfg.coinKinds);
+		manager = VendingManager.initialize(machine);
 
 		Coin coin = new Coin(1);
 		machine.getCoinSlot().addCoin(coin);
@@ -377,7 +377,7 @@ public class VendingManagerSystemTest {
 		machine = new VendingMachine(cfg.coinKinds, cfg.productNames.size(), 10, 10,	10, 1, 10);
 		machine.configure(cfg.productNames, cfg.productCosts);
 
-		manager = VendingManager.initialize(machine, cfg.coinKinds);
+		manager = VendingManager.initialize(machine);
 
 		machine.loadPopCans(10, 10, 10, 10, 10, 10);
 		machine.disableSafety();

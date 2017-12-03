@@ -22,7 +22,7 @@ public class ConfigPanelTester {
 		cfg = new MachineConfiguration();
 		vmachine = new VendingMachine(cfg.coinKinds, cfg.selectionButtonCount, cfg.coinRackCapacity, cfg.productRackCapacity,
 				cfg.receptacleCapacity, cfg.deliveryChuteCapacity, cfg.coinReturnCapacity);
-		vmanager = VendingManager.initialize(vmachine, cfg.coinKinds);
+		vmanager = VendingManager.initialize(vmachine);
 	}
 
 	@Test

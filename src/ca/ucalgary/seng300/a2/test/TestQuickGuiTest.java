@@ -29,7 +29,7 @@ public class TestQuickGuiTest {
 				cfg.receptacleCapacity, cfg.deliveryChuteCapacity, cfg.coinReturnCapacity);
 		machine.configure(cfg.productNames, cfg.productCosts);
 
-		manager = VendingManager.initialize(machine, cfg.coinKinds);
+		manager = VendingManager.initialize(machine);
 
 		machine.disableSafety(); //needed due to singleton instance being passed to multiple tests
 								 //that appear to clone the current state of the machine at the time of instantiation

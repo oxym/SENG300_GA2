@@ -27,7 +27,7 @@ public class ConfigHandlerTest {
 				cfg.receptacleCapacity, cfg.deliveryChuteCapacity, cfg.coinReturnCapacity);
 		machine.configure(cfg.productNames, cfg.productCosts);
 
-		manager = VendingManager.initialize(machine, cfg.coinKinds);
+		manager = VendingManager.initialize(machine);
 
 		machine.disableSafety(); //needed due to singleton instance being passed to multiple tests
 
