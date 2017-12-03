@@ -51,7 +51,7 @@ public class GUIConfigurationMain extends JFrame {
 		((JComponent) pane).setBorder(border);
 
 		Dimension panelSize = new Dimension((int) (X_SIZE * H_SPLIT), Y_SIZE);
-		displayPanel = new GUIConfigurationDisplay();
+		displayPanel = new GUIConfigurationDisplay(mgr);
 		keypadPanel = new GUIConfigurationKeypad(mgr);
 
 		//displayPanel.setPreferredSize(panelSize);

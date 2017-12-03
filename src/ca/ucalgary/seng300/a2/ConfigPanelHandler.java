@@ -29,8 +29,10 @@ public class ConfigPanelHandler {
 		MENU_MAIN= "Press 1 to reprice a product",
 		MENU_REPRICE_SELECT = "Enter the index of the product to reprice",
 		MENU_REPRICE_SETPRICE = "Enter a new product price",
-		MENU_REPRICE_COMPLETE = "Product repriced. " + MENU_MAIN;
+		MENU_REPRICE_COMPLETE = "Product repriced.";
 	
+	
+	private String dispMessage = ""; 
 	
 	private String state = "idle";
 	private int product = -1; 
@@ -42,6 +44,7 @@ public class ConfigPanelHandler {
 		mgr = manager;
 		config = mgr.getConfigurationPanel();
 		dispDriver = new DisplayDriver(config.getDisplay());
+		showMainMenu("");
 	}
 	
 	public String[] getKeyCodes(){
@@ -102,6 +105,14 @@ public class ConfigPanelHandler {
 		return kIndex;
 	}
 	
+	/**
+	 * Retrieves the text that was last shown on the configuration panel display.
+	 * @return The last displayed message
+	 */
+	public String getDisplayMessage(){
+		return dispMessage;
+	}
+	
 	//TODO DOCUMENT
 	public boolean isLetter(int key){
 		return key >= BOUND_LETTER[0] && key <= BOUND_LETTER[1];
@@ -138,61 +149,89 @@ public class ConfigPanelHandler {
 
 	//TODO DOCUMENT
 	public void display(String message){
+		dispMessage = message;
 		dispDriver.newMessage(message);
 	}
 	
+	//TODO DOCUMENT
+	private void showMainMenu(String extraMsg){
+		state = "idle";
+		
+		extraMsg = (extraMsg != null && !extraMsg.equals("")) 
+				? extraMsg  + " "
+				: "";
+		display(extraMsg + MENU_MAIN);
+		
+		clearTextBuffer();
+		clearProductBuffer();
+	}
+
+	//TODO DOCUMENT
+	private void showProductSelectMenu(String extraMsg){
+		state = "product_select";
+		
+		extraMsg = (extraMsg != null && !extraMsg.equals("")) 
+				? extraMsg + " "
+				: "";
+		display(extraMsg + MENU_REPRICE_SELECT);
+		
+		clearTextBuffer();
+	}
+
+	//TODO DOCUMENT
+	private void showProductPriceMenu(String extraMsg){
+		state = "price_enter";
+		
+		extraMsg = (extraMsg != null && !extraMsg.equals("")) 
+				? extraMsg  + " "
+				: "";
+		display(extraMsg + MENU_REPRICE_SETPRICE);
+	
+		clearTextBuffer();
+	}
+	
+	//TODO DOCUMENT
 	private void pressEnter(){
 		int productCount = mgr.getNumberOfProductRacks();
 		switch(state){
 		case "idle":
 			if (buffer.equals("1")){
-				display(MENU_REPRICE_SELECT);
-				state = "product_select";
+				showProductSelectMenu("");
 			} else{
-				display("Error. " + MENU_MAIN);
+				showMainMenu("Error.");
 			}
-			clearTextBuffer();
 			break;
 		
 		case "product_select":
 			int tempProduct = -1;
-			try{
+			try{ //Check the input is a valid number
 				tempProduct = (int) Integer.parseInt(buffer);
 			} catch (NumberFormatException e){}
 			
 			if (tempProduct < 0 || tempProduct >= productCount){
-				display("Improper number entry. " + MENU_REPRICE_SELECT);
+				showProductSelectMenu("Invalid product selection.");
 			} else {
 				product = tempProduct;
-				display(MENU_REPRICE_SETPRICE);
-				state = "price_enter";
+				showProductPriceMenu("");
 			}
-			
-			clearTextBuffer();
 			break;
 		
 		case "price_enter":
 			int price = -1;
-			try{
+			try{ //Check the input is a valid number
 				price = (int) Integer.parseInt(buffer);
 			} catch (NumberFormatException e){}
 			
-			
-			if (price < 0){
-				display("Price must be a positive integer. " + MENU_REPRICE_SELECT);
-			} else {
+			if (price < 0){ //If it's not a valid number
+				showProductPriceMenu("Invalid price.");
+			} else { 
 				boolean success = updateProductCost(product, price);
 				if (success) {
-					display(MENU_REPRICE_COMPLETE);
-					state = "idle";
-				} else {
-					display("Error setting price. " + MENU_REPRICE_SETPRICE);
+					showMainMenu(MENU_REPRICE_COMPLETE);
+				} else { // This should ever happen
+					showProductPriceMenu("Unknown pricing error.");
 				}
-				
 			}		
-			
-			clearTextBuffer();
-			clearProductBuffer();
 			break;
 		}
 	}

@@ -15,14 +15,17 @@ public class GUIConfigurationDisplay extends GUIPanel {
 	private static final long serialVersionUID = 1541606205308730945L;
 	private JTextField display;
 	private VendingManager mgr;
-	private ConfigPanelHandler cfg;
 
-	private String technicianWelcomeText = "Hey";
 
+
+	public GUIConfigurationDisplay(VendingManager manager){
+		mgr = manager;
+	}
+	
 	@Override
-	void init() {
-
-		display = new JTextField(technicianWelcomeText);
+	void init() {		
+		String dispMsg = mgr.getConfigPanelHandler().getDisplayMessage();
+		display = new JTextField(dispMsg);
 
 
 		/**
@@ -41,14 +44,9 @@ public class GUIConfigurationDisplay extends GUIPanel {
 
 
 		// add components and layout panel
-
 		add(display);
 
-
-
 		setVisible(true);
-
-
 	}
 
 
