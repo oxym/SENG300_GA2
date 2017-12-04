@@ -3,6 +3,7 @@ package ca.ucalgary.seng300.a2;
 import java.util.Arrays;
 import java.util.List;
 
+import org.lsmr.vending.Coin;
 import org.lsmr.vending.hardware.*;
 
 import java.io.FileNotFoundException;
@@ -674,7 +675,8 @@ public class VendingManager {
 	 */
 	void guiRemoveCoinFromReturn() {
 		if(mgr.isGUIEnabled() && gui != null && gui.isInitialized()){
-			gui.getSidePanel().getCoinReturnPanel().removeCoin();			
+			List<Coin> result = GUIMain.getVM().getCoinReturn().unload();
+			gui.getSidePanel().getCoinReturnPanel().removeCoin(result);			
 		}
 	}
 //^^^======================GUI ACCESS END=======================^^^

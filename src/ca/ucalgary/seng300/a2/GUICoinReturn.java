@@ -6,10 +6,14 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
+import org.lsmr.vending.Coin;
 
 /*
  * This panel simulates the coin return users click to get change back
@@ -41,7 +45,8 @@ public class GUICoinReturn extends GUIPanel {
 		GridBagLayout gridbag = new GridBagLayout();
 
 		setLayout(gridbag);
-		setOpaque(false);
+		setBackground(COLOR_TRANSPARENT);
+		//setOpaque(false);
 
 		ImageIcon returnIcon = new ImageIcon("images/coin_return_empty.png");
 		coinReturn = new JLabel(returnIcon);
@@ -102,7 +107,7 @@ public class GUICoinReturn extends GUIPanel {
 	/*
 	 * Removes coins from coin return
 	 */
-	public void removeCoin() {
+	public void removeCoin(List<Coin> result) {
 
 		//Update quantity of coins in the return
 
@@ -118,12 +123,21 @@ public class GUICoinReturn extends GUIPanel {
 					coinIcon = new ImageIcon("images/coin_return_empty.png");
 					if(GUIMain.getVendingManager().getCoinReturn().hasSpace())
 						GUIMain.getVendingManager().getCoinReturn().enable();
+
 				}
 				else
 					coinIcon = new ImageIcon("images/coin_return_full.png");
 
 				//Update image
 				coinReturn.setIcon(coinIcon);
+
+				//Display change returned window
+				JOptionPane.showMessageDialog(null,
+					    //("Change returned is: " + coinQty),
+						("Coin Return Emptied"),
+					    "Change Returned",
+					    JOptionPane.PLAIN_MESSAGE);
+
 				update();
 			}
 		}
@@ -145,17 +159,6 @@ public class GUICoinReturn extends GUIPanel {
 	    {
 	    	//Remove coins from coin return
 	    	GUIMain.getVendingManager().guiRemoveCoinFromReturn();
-	    	GUIMain.getVM().getCoinReturn().unload();
-
-	    	//Display change returned window
-	    	JFrame changeFrame = new JFrame("Change Returned");
-	    	changeFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-	    	changeFrame.setSize(300, 200);
-	    	JLabel changeLabel = new JLabel("Change returned is: " + coinQty);
-	    	changeFrame.add(changeLabel);
-	    	setVisible(true);
-
-
 
 	    }
 	}

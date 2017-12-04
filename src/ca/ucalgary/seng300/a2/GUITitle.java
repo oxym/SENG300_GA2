@@ -25,8 +25,9 @@ public class GUITitle extends GUIPanel {
 	@Override
 	void init() {
 		setOpaque(false);
-		title = new JLabel("Title");
-		title.setFont(new Font("MS Gothic", Font.BOLD, 36));
+		title = new JLabel("Not Just Any Vending Machine");
+		title.setForeground(COLOR2);
+		title.setFont(new Font("MS Gothic", Font.BOLD, 32));
 
 		add(title);
 		setVisible(true);

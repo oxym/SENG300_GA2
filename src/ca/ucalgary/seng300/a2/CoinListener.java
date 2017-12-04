@@ -164,12 +164,19 @@ public class CoinListener extends VendingListener implements
 			if (i != coins.length - 1){
 				coinStr += " ";
 			}
+			if (mgr.isGUIEnabled())
+				mgr.guiAddCoinToReturn();
 		}
+		mgr.display("");
+
+
+
 		mgr.log("Coin(s) + (" + coinStr + ") delivered to coin return.");
 	}
 
 	@Override
 	public void returnIsFull(CoinReturn coinReturn) {
+		mgr.enableSafety();
 		mgr.log("Coin return full");
 		mgr.enableSafety();
 	}
