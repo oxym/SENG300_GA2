@@ -25,6 +25,11 @@ public class CreditHandler {
 		return credit;
 	}
 	
+	/**
+	 * Returns the type of currency that the machine is currently configured to accept.
+	 * Represented as a three-letter, capitalized currency code, e.g. "CAD", "USD", "EUR", "YEN".
+	 * @return The currency code of the current configuration.
+	 */
 	public String getCurrency(){
 		return currency;
 	}

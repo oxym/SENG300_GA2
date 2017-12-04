@@ -16,7 +16,7 @@ public class GUISidePanel extends GUIPanel {
 
 	private static final long serialVersionUID = -7159132536080286074L;
 
-	//components in this JPanel
+	//Components in this JPanel
 	private GUIDisplayMain displayPanel;
 	private GUICoinSlot coinSlotPanel;
 	private GUICardSlot cardSlotPanel;
