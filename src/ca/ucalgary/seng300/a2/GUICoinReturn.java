@@ -18,8 +18,6 @@ public class GUICoinReturn extends GUIPanel {
 
 	private static final long serialVersionUID = -375736403542638963L;
 
-	private JLabel title;
-
 	//Component in the JPanel
 	private JLabel coinReturn;
 
@@ -39,7 +37,6 @@ public class GUICoinReturn extends GUIPanel {
 	@Override
 	void init() {
 		setBackground(COLOR_BACKGROUND);
-		title = new JLabel("Coin Return Here");
 		GridBagConstraints constraints = new GridBagConstraints();
 		GridBagLayout gridbag = new GridBagLayout();
 
@@ -63,7 +60,6 @@ public class GUICoinReturn extends GUIPanel {
 		MouseListener mouselistener = new MouseListener();
 		coinReturn.addMouseListener(mouselistener);
 
-		add(title);
 		setVisible(true);
 
 
@@ -95,9 +91,9 @@ public class GUICoinReturn extends GUIPanel {
 			//Update image
 			coinReturn.setIcon(coinIcon);
 			update();
-	
-		} 
-		else 
+
+		}
+		else
 			//If unlocked disable coin return
 			GUIMain.getVendingManager().getCoinReturn().disable();
 
@@ -109,7 +105,7 @@ public class GUICoinReturn extends GUIPanel {
 	public void removeCoin() {
 
 		//Update quantity of coins in the return
-		
+
 		if(GUIMain.getVendingManager().getLock().isLocked()) {
 			//Update quantity of coins in the return
 			if(coinQty > 0) {

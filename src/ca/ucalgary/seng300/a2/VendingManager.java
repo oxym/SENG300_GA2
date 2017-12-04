@@ -118,6 +118,8 @@ public class VendingManager {
 
 		if(GUI_enabled) 
 			mgr.startGui();
+		
+		mgr.disableSafety();
 
 		return getInstance();
 	}

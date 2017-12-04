@@ -1,6 +1,8 @@
 package ca.ucalgary.seng300.a2;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,12 +15,12 @@ public class GUISelectionButtons extends GUIPanel {
 	private JPanel buttonPanel;
 
 	private JLabel title;
-	
+
 	private JButton[] btns;
 
 	@Override
 	void init() {
-		
+
 		setBackground(COLOR_BACKGROUND);
 		title = new JLabel("Make your choice!");
 		setOpaque(false);
@@ -42,40 +44,35 @@ public class GUISelectionButtons extends GUIPanel {
 		buttonPanel = new JPanel();
 		buttonPanel.setLayout(new GridBagLayout());
 		buttonPanel.setBackground(COLOR_TRANSPARENT);
-		
+
+		Border emptyBorder = BorderFactory.createEmptyBorder();
+
+
 		// Number of different types of pops in Vending Machine
 		int popTypes = GUIMain.getVendingManager().getNumberOfSelectionButtons();
 		btns = new JButton[popTypes];
-		
+
 		// Populate btns array with JButtons
 		for (int i = 0; i < btns.length; ++i) {
 			String productName = GUIMain.getVendingManager().getProductName(i);
-			String imagePath = "images/select_button_" + productName + ".png";
+			String imagePath = "images/select_button_" + i + ".png";
 			btns[i] = new JButton(productName, new ImageIcon(imagePath));
+			btns[i].setFont(new Font("MS Gothic", Font.BOLD, 20));
+			btns[i].setBackground(COLOR_TRANSPARENT);
+			btns[i].setBorder(emptyBorder);
+
 			btns[i].addActionListener(new SelectionButtonListener(i));
-			btns[i].setVerticalTextPosition(SwingConstants.BOTTOM);
+			btns[i].setVerticalTextPosition(SwingConstants.CENTER);
 			btns[i].setHorizontalTextPosition(SwingConstants.CENTER);
 		}
 
-		int y = 0;
-		int x = 0;
-		int counter = 0;
-		
 		// Place JButtons on buttonPanel
 		for(int i=0; i < btns.length; i++){
-			
-		    gbc.gridx = x;
-		    gbc.gridy = y;
+
+			gbc.insets = new Insets(20,15,20,15);
+		    gbc.gridx = i % 2;
+		    gbc.gridy = Math.floorDiv(i,  2);
 		    buttonPanel.add(btns[i], gbc);
-		    
-		    if (counter >= popTypes / 3) {
-		    		y += 1;
-		    		x = 0;
-		    		counter = 0;
-		    } else {
-			    counter += 1;
-			    x += 1;
-		    }
 		}
 
 		gbc.gridx = 0;
@@ -84,11 +81,11 @@ public class GUISelectionButtons extends GUIPanel {
 
 		setVisible(true);
 	}
-	
+
 	private class SelectionButtonListener implements ActionListener {
-		
+
 		private int btnID;
-		
+
 		public SelectionButtonListener(int btnID) {
 			this.btnID = btnID;
 		}
