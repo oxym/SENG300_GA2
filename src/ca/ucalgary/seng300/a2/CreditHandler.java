@@ -84,12 +84,14 @@ public class CreditHandler {
 		}
 	}
 
-	/**
-	 * Checks if valid change can be returned, but does not return anything.
-	 * Similar to returnChange, but sets the indicator light instead
-	 * @param cost The cost (in cents) of a hypothetical purchase
-	 * @return Whether exact change could be provided for an item of the given cost
-	 */
+
+/*
+	
+	 Checks if valid change can be returned, but does not return anything.
+	 Similar to returnChange, but sets the indicator light instead
+	 @param cost The cost (in cents) of a hypothetical purchase
+	 @return Whether exact change could be provided for an item of the given cost
+
 	boolean canReturnExactChange(int cost){
 		boolean exact = true;
 
@@ -126,12 +128,14 @@ public class CreditHandler {
 		return exact;
 	}
 	
-	/**
-	 * Checks that exact change could be provided for each possible purchase,
-	 * given the current credit.
-	 * @return True if exact change can be provided for each purchase
-	 */
-	/*public boolean checkExactChangeState(){
+*/
+	
+/*
+	  Checks that exact change could be provided for each possible purchase,
+	  given the current credit.
+	  @return True if exact change can be provided for each purchase
+	 
+	public boolean checkExactChangeState(){
 		boolean exact = true;
 		int rackCount = mgr.getNumberOfProductRacks();
 
@@ -145,7 +149,7 @@ public class CreditHandler {
 
 		return exact;
 	}
-	*/
+*/
 	
 	/**
 	 * Returns a formatted string to display credit.
