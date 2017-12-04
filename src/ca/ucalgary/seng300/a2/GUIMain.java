@@ -161,9 +161,7 @@ public class GUIMain extends JFrame {
 	protected static GUIConfigurationMain getConfigurationMain() {
 		return configurationMain;
 	}
-
-
-
+	
 
     /**
      * A panel that has a background image

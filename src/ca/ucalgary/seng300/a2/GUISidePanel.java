@@ -1,6 +1,7 @@
 package ca.ucalgary.seng300.a2;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
@@ -32,7 +33,7 @@ public class GUISidePanel extends GUIPanel {
 		GridBagConstraints constraints = new GridBagConstraints();
 		GridBagLayout gridbag = new GridBagLayout();
 		setLayout(gridbag);
-		//setOpaque(false);
+		setOpaque(false);
 		setBackground(COLOR_TRANSPARENT_SEMI);
 
 		Border border = BorderFactory.createMatteBorder(4, 4, 1, 1, COLOR_DARKGRAY);
@@ -69,6 +70,13 @@ public class GUISidePanel extends GUIPanel {
 
 		setVisible(true);
 	}
+
+	protected void paintComponent(Graphics g)
+    {
+        g.setColor( getBackground() );
+        g.fillRect(0, 0, getWidth(), getHeight());
+        super.paintComponent(g);
+    }
 
 	/**
 	 * Returns the main display panel

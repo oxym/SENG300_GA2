@@ -14,7 +14,7 @@ import ca.ucalgary.seng300.a2.VendingManager;
  * A quick gui test for functionality of what is working
  *
  */
-public class TestQuickGuiTest {
+public class TestGui {
 
 	public VendingMachine machine = null;
 	private VendingManager manager = null;

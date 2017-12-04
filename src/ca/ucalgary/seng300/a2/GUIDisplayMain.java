@@ -43,8 +43,8 @@ public class GUIDisplayMain extends GUIPanel {
 		GridBagLayout gridbag = new GridBagLayout();
 
 		setLayout(gridbag);
-		setBackground(new Color(0,0,0, 0));
-		//setOpaque(false);
+		setBackground(new Color(0,0,0,0));
+		setOpaque(false);
 
 		// initialize components
 		ImageIcon indicatorOff = new ImageIcon("images/indicator_off.png");
@@ -131,6 +131,7 @@ public class GUIDisplayMain extends GUIPanel {
 			indicatorIcon = new ImageIcon("images/indicator_off.png");
 		indicator[index].setIcon(indicatorIcon);
 		//update();
+		//GUIMain.repaint();
 	}
 
 }
