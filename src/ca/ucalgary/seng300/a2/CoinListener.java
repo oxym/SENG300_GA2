@@ -53,12 +53,14 @@ public class CoinListener extends VendingListener implements
 		mgr.getCreditHandler().addCredit(coin.getValue());
 		mgr.displayCredit();
 
+		/*
 		if (mgr.getCreditHandler().checkExactChangeState()){
 			mgr.getExactChangeLight().deactivate();
 		}
 		else{
 			mgr.getExactChangeLight().activate();
 		}
+		*/
 	}
 //^^^=======================COIN SlOT LISTENER METHODS END=======================^^^
 

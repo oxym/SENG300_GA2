@@ -456,9 +456,11 @@ public class VendingManager {
 		mgr.getCreditHandler().returnChange();
 	}
 	/** @see CreditHandler */
+	/*
 	public boolean checkExactChangeState(){
 		return mgr.getCreditHandler().checkExactChangeState();
 	}
+	*/
 	/** @see CreditHandler */
 	public String getCreditMessage(){
 		return mgr.getCreditHandler().getCreditMessage();

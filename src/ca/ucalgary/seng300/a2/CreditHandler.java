@@ -72,8 +72,15 @@ public class CreditHandler {
 			}
 
 			if (getCredit() == 0){
+				if (mgr.getExactChangeLight().isActive()) {
+					mgr.getExactChangeLight().deactivate();
+				}
 				break;
 			}
+		}
+		
+		if (getCredit() != 0) {
+			mgr.getExactChangeLight().activate();
 		}
 	}
 
@@ -124,7 +131,7 @@ public class CreditHandler {
 	 * given the current credit.
 	 * @return True if exact change can be provided for each purchase
 	 */
-	public boolean checkExactChangeState(){
+	/*public boolean checkExactChangeState(){
 		boolean exact = true;
 		int rackCount = mgr.getNumberOfProductRacks();
 
@@ -138,6 +145,7 @@ public class CreditHandler {
 
 		return exact;
 	}
+	*/
 	
 	/**
 	 * Returns a formatted string to display credit.
