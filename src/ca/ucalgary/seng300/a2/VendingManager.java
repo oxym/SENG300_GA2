@@ -113,15 +113,12 @@ public class VendingManager {
 		displayDriver = new DisplayDriver(mgr, mgr.getDisplay());
 		displayDriver.greetingMessage();
 
-		if (mgr.isOutOfOrder())
-			mgr.enableSafety();
-		else
-			mgr.disableSafety();
-
 		mgr.registerListeners();
 
 		if(GUI_enabled)
 			mgr.startGui();
+
+		mgr.disableSafety();
 
 		return getInstance();
 	}

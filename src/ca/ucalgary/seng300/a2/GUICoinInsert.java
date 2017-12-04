@@ -105,7 +105,7 @@ public class GUICoinInsert extends JFrame {
 			try {
 				GUIMain.getVM().getCoinSlot().addCoin(coin);
 			} catch (DisabledException e) {
-				System.out.println("System is disabled");
+				GUIMain.getVendingManager().display("System is Disabled", 3);
 			}
 		}
 	}
