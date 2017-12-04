@@ -679,7 +679,7 @@ public class VendingManager {
 	 */
 	void guiRemoveCoinFromReturn() {
 		if(mgr.isGUIEnabled() && gui != null && gui.isInitialized()){
-			List<Coin> result = GUIMain.getVM().getCoinReturn().unload();
+			List<Coin> result = (List<Coin>)GUIMain.getVM().getCoinReturn().unload();
 			gui.getSidePanel().getCoinReturnPanel().removeCoin(result);
 		}
 	}
