@@ -449,12 +449,11 @@ public class VendingManager {
 	void returnChange() throws CapacityExceededException, EmptyException, DisabledException{
 		mgr.getCreditHandler().returnChange();
 	}
-	/** @see CreditHandler */
-	/*
+	/** @see CreditHandler */	
 	public boolean checkExactChangeState(){
 		return mgr.getCreditHandler().checkExactChangeState();
 	}
-	*/
+
 	/** @see CreditHandler */
 	public String getCreditMessage(){
 		return mgr.getCreditHandler().getCreditMessage();
