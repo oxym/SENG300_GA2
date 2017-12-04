@@ -34,7 +34,9 @@ public class PopListener extends VendingListener implements PopCanRackListener, 
 //vvv=======================POP CAN RACK LISTENER METHODS START=======================vvv
 	//TODO Decide whether these events should be logged or handled
 	@Override
-	public void popCansLoaded(PopCanRack rack, PopCan... popCans) {}
+	public void popCansLoaded(PopCanRack rack, PopCan... popCans) {
+		mgr.disableSafety(); //Only *actually* disables the safety if no other conditions are met
+	}
 	@Override
 	public void popCansUnloaded(PopCanRack rack, PopCan... popCans) {}
 

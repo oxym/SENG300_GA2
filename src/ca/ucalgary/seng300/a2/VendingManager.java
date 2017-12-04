@@ -118,7 +118,16 @@ public class VendingManager {
 		if(GUI_enabled)
 			mgr.startGui();
 
-		mgr.disableSafety();
+		mgr.getLock().unlock(); //Since it initializes to be "true"
+
+		//TODO: Uncomment these four lines once reason for their initial removal is known
+		if (mgr.isOutOfOrder()){
+			mgr.enableSafety();
+		} else{
+			mgr.disableSafety();
+		}
+		
+		
 
 		return getInstance();
 	}
