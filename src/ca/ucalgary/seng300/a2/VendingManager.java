@@ -50,11 +50,11 @@ public class VendingManager {
 	private static CoinListener coinListener;
 	private static LightListener lightListener;
 	private static MachineLockListener lockListener;
-	
+
 	private static CreditHandler credHandler;
 	private static ProductHandler prodHandler;
 	private static ConfigPanelHandler configHandler;
-	
+
 
 	private static Logger eventLog;
 	private static String eventLogName = "VendingLog.txt";
@@ -79,33 +79,13 @@ public class VendingManager {
 
 		VendingManager.initialize(machine);
 	}
-	
+
 	/**
 	 * Singleton constructor. Initializes and stores the singleton instances
 	 * of hardware listeners. Registers the listeners with the appropriate hardware.
 	 * Sets up the event log and display driver.
 	 */
 	private VendingManager(){
-		eventLog = new Logger(eventLogName);
-
-		credHandler = new CreditHandler(this); 
-		prodHandler = new ProductHandler(this);
-		configHandler = new ConfigPanelHandler(this);
-		
-		displayListener = new DispListener(this);
-		
-		buttonListener = ButtonListener.initialize(this);
-		popListener = PopListener.initialize(this);
-		lightListener = LightListener.initialize(this);
-		coinListener = CoinListener.initialize(this);
-		lockListener = MachineLockListener.initialize(this);
-
-		registerListeners();
-		
-		displayDriver = new DisplayDriver(getDisplay());
-		displayDriver.greetingMessage();
-		
-		if (isOutOfOrder()) enableSafety();
 	}
 
 	/**
@@ -117,9 +97,33 @@ public class VendingManager {
 		vm = host;
 		mgr = new VendingManager();
 
-		if(GUI_enabled) 
+		///////////// moved from constructor class - delete this message after verification of no issues with the move
+		//changed occurrences of 'this' to 'mgr'
+		eventLog = new Logger(eventLogName);
+
+		credHandler = new CreditHandler(mgr);
+		prodHandler = new ProductHandler(mgr);
+		configHandler = new ConfigPanelHandler(mgr);
+
+		displayListener = new DispListener(mgr);
+
+		buttonListener = ButtonListener.initialize(mgr);
+		popListener = PopListener.initialize(mgr);
+		lightListener = LightListener.initialize(mgr);
+		coinListener = CoinListener.initialize(mgr);
+		lockListener = MachineLockListener.initialize(mgr);
+
+		mgr.registerListeners();
+
+		displayDriver = new DisplayDriver(mgr.getDisplay());
+		displayDriver.greetingMessage();
+
+		if (mgr.isOutOfOrder()) mgr.enableSafety();
+		/////////
+
+		if(GUI_enabled)
 			mgr.startGui();
-		
+
 		mgr.disableSafety();
 
 		return getInstance();
@@ -139,10 +143,10 @@ public class VendingManager {
 	private void registerListeners(){
 		getDisplay().register(displayListener);
 		getConfigurationPanel().getDisplay().register(displayListener);
-		
+
 		registerPopCanRackListener(popListener);
 		getDeliveryChute().register(popListener);
-		
+
 		getCoinSlot().register(coinListener);
 		getCoinReceptacle().register(coinListener);
 		registerCoinRackListener(coinListener);
@@ -279,15 +283,15 @@ public class VendingManager {
 		return vm.getConfigurationPanel();
 	}
 	boolean configureVendingMachine(List<String> popCanNames, List<Integer> popCanCosts){
-		boolean success = false; 
+		boolean success = false;
 		//Must match current product configuration or we reject the request
 		if (popCanNames.size() == mgr.getNumberOfProductRacks() &&
 			popCanCosts.size() == popCanNames.size()){
 			vm.configure(popCanNames, popCanCosts);
 			success = true;
 		}
-		
-			
+
+
 		return success;
 	}
 
@@ -303,7 +307,7 @@ public class VendingManager {
 		}
 		return types;
 	}
-	
+
 	/**
 	 * Takes the coin values inside the machine and sorts them in
 	 * descending order for the purpose of change return
@@ -325,7 +329,7 @@ public class VendingManager {
 		}
 		return descending;
 	}
-	
+
 	/**
 	 * Returns the index of the given SelectionButton,
 	 * which implies the index of the associated PopRack.
@@ -341,7 +345,7 @@ public class VendingManager {
 		}
 		return -1;
 	}
-	
+
 	/**
 	 * Returns the index of the given SelectionButton in the config panel.
 	 * @param button The button of interest.
@@ -358,7 +362,7 @@ public class VendingManager {
 		if (button == config.getEnterButton()){
 			//Then return a "pseudo-index" of configButtonMaxIndex+1
 			//Is used internally to facilitate handling of the "enter" key
-			return buttonCount; 
+			return buttonCount;
 		}
 		return -1;
 	}
@@ -377,7 +381,7 @@ public class VendingManager {
 		}
 		return -1;
 	}
-	
+
 	/**
 	  * Returns the name pop in the given PopCanRack.
 	 * @param popRack The PopCanRack to check the name for.
@@ -411,14 +415,14 @@ public class VendingManager {
 		return getCoinKindForCoinRack(getCoinRackIndex(coinRack));
 	}
 //^^^=======================ACCESSORS END=======================^^^
-	
+
 //vvv====================FUNCTIONALITY HANDLERS START===================vvv
 	//TODO DOCUMENT
 	public CreditHandler getCreditHandler(){
 		return credHandler;
 	}
-	
-	//TODO DOCUMENT	
+
+	//TODO DOCUMENT
 	public ProductHandler getProductHandler(){
 		return prodHandler;
 	}
@@ -426,11 +430,11 @@ public class VendingManager {
 	public ConfigPanelHandler getConfigPanelHandler(){
 		return configHandler;
 	}
-	
+
 	//The below accessor methods are preserved in VendingManager
 	//are intended to decouple other logic classes (e.g. listeners) from
 	//the handler classes.
-	
+
 	/** @see CreditHandler */
 	public int getCredit(){
 		return mgr.getCreditHandler().getCredit();
@@ -459,7 +463,7 @@ public class VendingManager {
 	public String getCreditMessage(){
 		return mgr.getCreditHandler().getCreditMessage();
 	}
-	
+
 	/** @see ProductHandler */
 	void buy(int productIndex) throws InsufficientFundsException, EmptyException,
 	DisabledException, CapacityExceededException {
@@ -470,7 +474,7 @@ public class VendingManager {
 		return getProductHandler().checkAllProductsEmpty();
 	}
 //^^^====================FUNCTIONALITY HANDLERS END===================^^^
-	
+
 //vvv=======================HARDWARE LOGIC START=======================vvv
 	/**
 	 * Used by calling code to to enable the safety.
@@ -540,7 +544,7 @@ public class VendingManager {
 		}
 		return response;
 	}
-	
+
 	/**
 	 * Returns the debugging state of the system.
 	 * @return Whether the VendingManager is in debug mode.
@@ -582,7 +586,7 @@ public class VendingManager {
 			if (debug) System.out.println(e);
 		}
 	}
-	
+
 //^^^======================LOGIC INTERNALS END=======================^^^
 
 //vvv======================GUI ACCESS START=======================vvv
@@ -593,12 +597,12 @@ public class VendingManager {
 		gui = new GUIMain(vm, mgr, getCoinRackValues());
 		gui.init();
 	}
-	
+
 	//TODO DOCUMENT
 	boolean isGUIEnabled(){
 		return GUI_enabled;
 	}
-	
+
 	/**
 	 * Updates the user display in the GUI
 	 * @param message Message to display in GUI
@@ -608,13 +612,13 @@ public class VendingManager {
 			gui.getSidePanel().getDisplayPanel().updateMessage(message);
 		}
 	}
-	
+
 	/**
 	 * Updates the config panel display in the GUI
 	 * @param message Message to display in GUI
 	 */
 	void guiUpdateConfigDisplay(String message){
-		if (isGUIEnabled() && gui != null && gui.isInitialized()){			
+		if (isGUIEnabled() && gui != null && gui.isInitialized()){
 			GUIConfigurationMain configPanel = GUIMain.getConfigurationMain();
 			if (configPanel.isVisible()){
 				configPanel.getDisplayPanel().updateMessage(message);
@@ -622,7 +626,7 @@ public class VendingManager {
 
 		}
 	}
-	
+
 	/**
 	 * Updates the GUI "exact change" light state
 	 * @param state The on/off state of the light
@@ -632,17 +636,17 @@ public class VendingManager {
 			gui.getSidePanel().getDisplayPanel().indicatorSet(MachineConfiguration.EXACT_CHANGE, state);
 		}
 	}
-	
+
 	/**
 	 * Updates the GUI "out of order" light state
-	 * @param state The on/off state of the light 
+	 * @param state The on/off state of the light
 	 */
 	void guiSetOutOfOrderLight(boolean state){
 		if (isGUIEnabled() && gui != null && gui.isInitialized()){
 			gui.getSidePanel().getDisplayPanel().indicatorSet(MachineConfiguration.OUT_OF_ORDER, state);
 		}
 	}
-	
+
 	/**
 	 * Notifies the GUI delivery chute that an item has been added
 	 */
@@ -651,32 +655,32 @@ public class VendingManager {
 			gui.getDeliveryChutePanel().addItem();
 		}
 	}
-	
+
 	/**
 	 * Notifies the GUI delivery chute that an item has been removed
 	 */
 	void guiRemoveItemFromChute(){
 		if (mgr.isGUIEnabled() && gui != null && gui.isInitialized()){
-			gui.getDeliveryChutePanel().removeItems();			
+			gui.getDeliveryChutePanel().removeItems();
 		}
 	}
-	
+
 	/*
 	 * Notifies the GUI coin return that a coin has been added
 	 */
 	void guiAddCoinToReturn() {
 		if(mgr.isGUIEnabled() && gui != null && gui.isInitialized()){
-			gui.getSidePanel().getCoinReturnPanel().addCoin();			
+			gui.getSidePanel().getCoinReturnPanel().addCoin();
 		}
 	}
-	
+
 	/*
 	 * Notifies the GUI coin return that coins have been removed
 	 */
 	void guiRemoveCoinFromReturn() {
 		if(mgr.isGUIEnabled() && gui != null && gui.isInitialized()){
 			List<Coin> result = GUIMain.getVM().getCoinReturn().unload();
-			gui.getSidePanel().getCoinReturnPanel().removeCoin(result);			
+			gui.getSidePanel().getCoinReturnPanel().removeCoin(result);
 		}
 	}
 //^^^======================GUI ACCESS END=======================^^^

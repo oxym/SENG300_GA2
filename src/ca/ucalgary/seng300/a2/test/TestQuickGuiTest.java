@@ -50,6 +50,7 @@ public class TestQuickGuiTest {
 		Thread.sleep(selfTestDelay);
 		machine.disableSafety();
 		Thread.sleep(selfTestDelay);
+		machine.disableSafety();
 
 		//lights
 		machine.getExactChangeLight().activate();

@@ -9,7 +9,7 @@ public class ButtonListener extends VendingListener implements PushButtonListene
 
 	private static ButtonListener listener;
 	private static VendingManager mgr;
-	
+
 	private ButtonListener(){}
 
 	/**
@@ -29,7 +29,7 @@ public class ButtonListener extends VendingListener implements PushButtonListene
 	static ButtonListener getInstance(){
 		return listener;
 	}
-	
+
 //vvv=======================BUTTON LISTENER METHODS START=======================vvv
 	/**
 	 * Responds to "pressed" notifications from registered PushButtons.
@@ -43,10 +43,10 @@ public class ButtonListener extends VendingListener implements PushButtonListene
 
 		String productName = mgr.getProductName(sIndex);
 		mgr.log("Button for: " + productName + ", button: " + sIndex + " pressed.");
-		
+
 		if (sIndex == -1){
-			int cIndex = mgr.getConfigButtonIndex(button); 
-			if (cIndex != -1){ 
+			int cIndex = mgr.getConfigButtonIndex(button);
+			if (cIndex != -1){
 				mgr.getConfigPanelHandler().pressKey(cIndex);
 				//TODO Handle config panel input
 				//NOTE: The "Enter" button has index 38, even though there
@@ -58,7 +58,11 @@ public class ButtonListener extends VendingListener implements PushButtonListene
 				//Assumes a 1-to-1, strictly ordered mapping between popIndex and and butttonindex
 				mgr.getProductHandler().buy(sIndex);
 			} catch(InsufficientFundsException e){
-				mgr.display(e.toString(), 5);
+				int creditRequired = mgr.getProductCost(sIndex);
+				int dollars = creditRequired / 100;
+				int cents = creditRequired % 100;
+				String costString = String.format("Cost: $%3d.%02d", dollars, cents);
+				mgr.display(costString, 5);
 			} catch(DisabledException e){
 				mgr.display("Vending machine disabled", 5);
 			} catch (EmptyException e){
@@ -68,5 +72,5 @@ public class ButtonListener extends VendingListener implements PushButtonListene
 			}
 		}
 	}
-//^^^=======================BUTTON LISTENER METHODS END=======================^^^	
+//^^^=======================BUTTON LISTENER METHODS END=======================^^^
 }
