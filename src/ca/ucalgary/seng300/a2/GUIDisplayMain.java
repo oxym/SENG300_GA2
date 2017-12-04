@@ -24,7 +24,6 @@ public class GUIDisplayMain extends GUIPanel {
 	private static final String MSG_INIT = "Initializing...";
 	private static final int OUT_OF_ORDER = MachineConfiguration.OUT_OF_ORDER;
 	private static final int EXACT_CHANGE = MachineConfiguration.EXACT_CHANGE;
-	private JLabel displayOutline;
 	private JTextField display;
 	private JLabel[] label;
 	private JLabel[] indicator;
