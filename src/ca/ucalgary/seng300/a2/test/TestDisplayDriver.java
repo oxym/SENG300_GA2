@@ -22,7 +22,7 @@ public class TestDisplayDriver {
 		dummyDisplay = new Display();
 		testDisplayListener = new DispListener(null);
 		dummyDisplay.register(testDisplayListener);
-		displayDriver = new DisplayDriver(dummyDisplay);
+		displayDriver = new DisplayDriver(null, dummyDisplay);
 	}
 
 	////////////////////////////////////////////////////////////////////////

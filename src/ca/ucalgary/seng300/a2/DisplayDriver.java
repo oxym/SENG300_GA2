@@ -26,9 +26,9 @@ public class DisplayDriver {
 	 * @param display
 	 *            the display object that is driven/controlled by this class
 	 */
-	public DisplayDriver(Display display) {
+	public DisplayDriver(VendingManager mgr, Display display) {
 		this.display = display;
-		mgr = VendingManager.getInstance();
+		this.mgr = mgr;
 		timer = new Timer();
 	}
 

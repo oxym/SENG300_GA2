@@ -97,15 +97,11 @@ public class VendingManager {
 		vm = host;
 		mgr = new VendingManager();
 
-		///////////// moved from constructor class - delete this message after verification of no issues with the move
-		//changed occurrences of 'this' to 'mgr'
 		eventLog = new Logger(eventLogName);
 
 		credHandler = new CreditHandler(mgr);
 		prodHandler = new ProductHandler(mgr);
 		configHandler = new ConfigPanelHandler(mgr);
-
-		displayListener = new DispListener(mgr);
 
 		buttonListener = ButtonListener.initialize(mgr);
 		popListener = PopListener.initialize(mgr);
@@ -113,18 +109,19 @@ public class VendingManager {
 		coinListener = CoinListener.initialize(mgr);
 		lockListener = MachineLockListener.initialize(mgr);
 
-		mgr.registerListeners();
-
-		displayDriver = new DisplayDriver(mgr.getDisplay());
+		displayListener = new DispListener(mgr);
+		displayDriver = new DisplayDriver(mgr, mgr.getDisplay());
 		displayDriver.greetingMessage();
 
-		if (mgr.isOutOfOrder()) mgr.enableSafety();
-		/////////
+		if (mgr.isOutOfOrder())
+			mgr.enableSafety();
+		else
+			mgr.disableSafety();
+
+		mgr.registerListeners();
 
 		if(GUI_enabled)
 			mgr.startGui();
-
-		mgr.disableSafety();
 
 		return getInstance();
 	}

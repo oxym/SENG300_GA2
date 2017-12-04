@@ -8,45 +8,45 @@ public class ConfigPanelHandler {
 	private VendingManager mgr;
 	private ConfigurationPanel config;
 	private DisplayDriver dispDriver;
-	
+
 	private static final String[] keyCodes =new String[] {	// Indices
 			"A","B","C","D","E","F","G","H","I","J", 	// 0 : 9
 			"K","L","M","N","O","P","Q","R","S","T", 	//10 : 19
 			"U","V","W","X","Y","Z", 				 	//20 : 25
 			"0","1","2","3","4","5","6","7","8","9",	//26 : 35
 			"Shift","Enter"};							//36 : 37
-	
+
 	private boolean shifted = false;
 	private static final int[] BOUND_LETTER = new int[] {0,25}; //Inclusive
 	private static final int[] BOUND_NUM = new int[] {26,35}; //Inclusive
 	private static final int[] BOUND_SPECIAL = new int[] {36,37}; //Inclusive
 	private static final int INDEX_SHIFT = 36;
 	private static final int INDEX_ENTER = 37;
-	
-	private static final int KEY_COUNT = keyCodes.length; 
-	
+
+	private static final int KEY_COUNT = keyCodes.length;
+
 	private static final String
 		MENU_MAIN= "(1): Reprice a product",
 		MENU_REPRICE_SELECT = "Index of product to reprice",
 		MENU_REPRICE_SETPRICE = "Enter the new price",
 		MENU_REPRICE_COMPLETE = "Product repriced.";
-	
-	
-	private String dispMessage = ""; 
-	
+
+
+	private String dispMessage = "";
+
 	private String state = "idle";
-	private int product = -1; 
-	private String buffer = ""; 
-	
+	private int product = -1;
+	private String buffer = "";
+
 
 	//TODO DOCUMENT
 	public ConfigPanelHandler(VendingManager manager){
 		mgr = manager;
 		config = mgr.getConfigurationPanel();
-		dispDriver = new DisplayDriver(config.getDisplay());
+		dispDriver = new DisplayDriver(mgr, config.getDisplay());
 		showMainMenu("");
 	}
-	
+
 	/**
 	 * Returns the display code for the given button index.
 	 * Returns an empty string if the given index is out of range.
@@ -54,20 +54,20 @@ public class ConfigPanelHandler {
 	 * @return Display code, e.g. "A", "Shift". Can be empty but not null.
 	 */
 	public String getButtonDisplayCode(int index){
-		String code = ""; 
+		String code = "";
 		if (index >= 0 && index < KEY_COUNT){
 			code = keyCodes[index];
 		};
 		return code;
 	}
-	
+
 	public void pressKey(int key){
 		if (isLetter(key) || isNum(key)){
 			String symbol = getButtonDisplayCode(key);
 			if (!isShifted()){
-				symbol = symbol.toLowerCase(); 
+				symbol = symbol.toLowerCase();
 			}
-			
+
 			buffer += symbol;
 			display(buffer);
 		}
@@ -80,11 +80,11 @@ public class ConfigPanelHandler {
 		else{
 			//TODO Decide if bad key presses need to be handled?
 		}
-		
+
 	}
-	
+
 	/**
-	 * Gets the index of the button whose value - or name - 
+	 * Gets the index of the button whose value - or name -
 	 * matches the given string. Matching is case insensitive.
 	 * @param keyName The name of the button to find
 	 * @return The index of the button, or -1 if not found
@@ -100,7 +100,7 @@ public class ConfigPanelHandler {
 			}
 		return kIndex;
 	}
-	
+
 	/**
 	 * Retrieves the text that was last shown on the configuration panel display.
 	 * @return The last displayed message
@@ -108,37 +108,37 @@ public class ConfigPanelHandler {
 	public String getDisplayMessage(){
 		return dispMessage;
 	}
-	
+
 	//TODO DOCUMENT
 	public boolean isLetter(int key){
 		return key >= BOUND_LETTER[0] && key <= BOUND_LETTER[1];
 	}
-	
+
 	//TODO DOCUMENT
 	public boolean isNum(int key){
 		return key >= BOUND_NUM[0] && key <= BOUND_NUM[1];
 	}
-	
+
 	//TODO DOCUMENT
 	public boolean isSpecial(int key){
 		return key >= BOUND_SPECIAL[0] && key <= BOUND_SPECIAL[1];
 	}
-	
+
 	//TODO DOCUMENT
 	public boolean isShift(int key){
 		return key == INDEX_SHIFT;
 	}
-	
+
 	//TODO DOCUMENT
 	public boolean isEnter(int key){
 		return key == INDEX_ENTER;
 	}
-	
+
 	//TODO DOCUMENT
 	public void toggleShift(){
 		shifted = !shifted;
 	};
-	
+
 	public boolean isShifted(){
 		return shifted;
 	}
@@ -148,16 +148,16 @@ public class ConfigPanelHandler {
 		dispMessage = message;
 		dispDriver.newMessage(message);
 	}
-	
+
 	//TODO DOCUMENT
 	private void showMainMenu(String extraMsg){
 		state = "idle";
-		
-		extraMsg = (extraMsg != null && !extraMsg.equals("")) 
+
+		extraMsg = (extraMsg != null && !extraMsg.equals(""))
 				? extraMsg  + " "
 				: "";
 		display(extraMsg + MENU_MAIN);
-		
+
 		clearTextBuffer();
 		clearProductBuffer();
 	}
@@ -165,27 +165,27 @@ public class ConfigPanelHandler {
 	//TODO DOCUMENT
 	private void showProductSelectMenu(String extraMsg){
 		state = "product_select";
-		
-		extraMsg = (extraMsg != null && !extraMsg.equals("")) 
+
+		extraMsg = (extraMsg != null && !extraMsg.equals(""))
 				? extraMsg + " "
 				: "";
 		display(extraMsg + MENU_REPRICE_SELECT);
-		
+
 		clearTextBuffer();
 	}
 
 	//TODO DOCUMENT
 	private void showProductPriceMenu(String extraMsg){
 		state = "price_enter";
-		
-		extraMsg = (extraMsg != null && !extraMsg.equals("")) 
+
+		extraMsg = (extraMsg != null && !extraMsg.equals(""))
 				? extraMsg  + " "
 				: "";
 		display(extraMsg + MENU_REPRICE_SETPRICE);
-	
+
 		clearTextBuffer();
 	}
-	
+
 	//TODO DOCUMENT
 	private void pressEnter(){
 		int productCount = mgr.getNumberOfProductRacks();
@@ -197,13 +197,13 @@ public class ConfigPanelHandler {
 				showMainMenu("Error.");
 			}
 			break;
-		
+
 		case "product_select":
 			int tempProduct = -1;
 			try{ //Check the input is a valid number
 				tempProduct = (int) Integer.parseInt(buffer);
 			} catch (NumberFormatException e){}
-			
+
 			if (tempProduct < 0 || tempProduct >= productCount){
 				showProductSelectMenu("Invalid product selection.");
 			} else {
@@ -211,43 +211,43 @@ public class ConfigPanelHandler {
 				showProductPriceMenu("");
 			}
 			break;
-		
+
 		case "price_enter":
 			int price = -1;
 			try{ //Check the input is a valid number
 				price = (int) Integer.parseInt(buffer);
 			} catch (NumberFormatException e){}
-			
+
 			if (price < 0){ //If it's not a valid number
 				showProductPriceMenu("Invalid price.");
-			} else { 
+			} else {
 				boolean success = updateProductCost(product, price);
 				if (success) {
 					showMainMenu(MENU_REPRICE_COMPLETE);
 				} else { // This should ever happen
 					showProductPriceMenu("Unknown pricing error.");
 				}
-			}		
+			}
 			break;
 		}
 	}
-	
+
 	/**
 	 * Clears the buffer that tracks which product has been selected
 	 */
 	private void clearProductBuffer(){
 		product = -1;
 	}
-	
+
 	/**
 	 * Clears the buffer that tracks entered text
 	 */
 	private void clearTextBuffer(){
 		buffer = "";
 	}
-	
+
 	/**
-	 * Updates the VendingMachine configuration to adjust a product cost.  
+	 * Updates the VendingMachine configuration to adjust a product cost.
 	 * @param index The product index to change
 	 * @param cost The new, non-zero cost of the product
 	 * @return True if the configuration is successful; else false
@@ -261,13 +261,13 @@ public class ConfigPanelHandler {
 		int prodCost;
 		for (int i = 0; i < prodCount; i++){
 			prodName = mgr.getProductName(i);
-			prodCost = (i == index && cost != -1) 
+			prodCost = (i == index && cost != -1)
 					? cost : mgr.getProductCost(i);
-			
+
 			productNames.add(prodName);
 			productCosts.add(prodCost);
 		}
-		
+
 		return mgr.configureVendingMachine(productNames, productCosts);
 	}
 }
