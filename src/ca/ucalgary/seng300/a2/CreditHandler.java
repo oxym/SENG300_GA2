@@ -52,6 +52,9 @@ public class CreditHandler {
 		mgr.log("Credit removed:" + subtracted);
 	}
 	
+	
+
+	
 	/**
 	 * A method for returning change.
 	 * May not return exact change.
@@ -63,7 +66,9 @@ public class CreditHandler {
 	 * @throws EmptyException CoinSlot is empty and a coin removal was attempted
 	 * @throws CapacityExceededException DeliveryChute is full
 	 */
-	void returnChange() throws CapacityExceededException, EmptyException, DisabledException{
+	 
+
+	void returnChange(){
 		int[] rackValues = mgr.getDescendingCoinRackValues();
 		int coinVal = 0;
 		CoinRack rack;
@@ -72,34 +77,40 @@ public class CreditHandler {
 			rack = mgr.getCoinRackForCoinKind(coinVal);
 
 			while (getCredit() >= coinVal && rack.size() != 0){
-				rack.releaseCoin();
-				subtractCredit(coinVal);
+				try {
+				  rack.releaseCoin();
+				  subtractCredit(coinVal);
+				} catch (CapacityExceededException e1) {
+					mgr.getExactChangeLight().activate();
+				} catch (EmptyException e2) {
+					mgr.getExactChangeLight().activate();
+				} catch (DisabledException e3) {
+					mgr.getExactChangeLight().activate();
+				}
 			}
 
 			if (getCredit() == 0){
-				if (mgr.getExactChangeLight().isActive()) {
-					mgr.getExactChangeLight().deactivate();
-				}
 				break;
 			}
 		}
-
+				
 		//Updates the exact change light state according to the after-purchase credit
-		if (checkExactChangeState()){
-			mgr.getExactChangeLight().deactivate();
-		} else{
+		if (getCredit() != 0){
 			mgr.getExactChangeLight().activate();
+		} else{
+			if(mgr.getExactChangeLight().isActive()) mgr.getExactChangeLight().deactivate();
 		}
 	}
 
 
 
-	/**
-	 Checks if valid change can be returned, but does not return anything.
-	 Similar to returnChange, but sets the indicator light instead
-	 @param cost The cost (in cents) of a hypothetical purchase
-	 @return Whether exact change could be provided for an item of the given cost
- 	*/
+/*	
+	 *Checks if valid change can be returned, but does not return anything.
+	 *Similar to returnChange, but sets the indicator light instead
+	 *@param cost The cost (in cents) of a hypothetical purchase
+	 * @return Whether exact change could be provided for an item of the given cost
+ 	
+	@Deprecated
 	boolean canReturnExactChange(int cost){
 		boolean exact = true;
 
@@ -135,13 +146,13 @@ public class CreditHandler {
 
 		return exact;
 	}
-
+*/
 	
-	/**
+/*
 	  Checks that exact change could be provided for each possible purchase,
 	  given the current credit.
 	  @return True if exact change can be provided for each purchase
-	*/
+	
 	public boolean checkExactChangeState(){
 		boolean exact = true;
 		int rackCount = mgr.getNumberOfProductRacks();
@@ -156,7 +167,8 @@ public class CreditHandler {
 
 		return exact;
 	}
-
+*/
+	
 	
 	/**
 	 * Returns a formatted string to display credit.

@@ -118,7 +118,7 @@ public class VendingManager {
 		if(GUI_enabled)
 			mgr.startGui();
 
-		mgr.getLock().unlock(); //Since it initializes to be "true"
+		//mgr.getLock().unlock(); //Since it initializes to be "true"
 
 		//TODO: Uncomment these four lines once reason for their initial removal is known
 		if (mgr.isOutOfOrder()){
@@ -459,9 +459,9 @@ public class VendingManager {
 		mgr.getCreditHandler().returnChange();
 	}
 	/** @see CreditHandler */	
-	public boolean checkExactChangeState(){
-		return mgr.getCreditHandler().checkExactChangeState();
-	}
+	//public boolean checkExactChangeState(){
+	//	return mgr.getCreditHandler().checkExactChangeState();
+	//}
 
 	/** @see CreditHandler */
 	public String getCreditMessage(){
@@ -542,7 +542,7 @@ public class VendingManager {
 			!getCoinReceptacle().hasSpace() ||
 			!getCoinReturn().hasSpace() ||
 			checkAllProductsEmpty() ||
-			getLock().isLocked()
+			!getLock().isLocked()
 		) {
 			response = true;
 		}

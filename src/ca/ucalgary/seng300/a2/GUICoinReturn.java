@@ -46,7 +46,7 @@ public class GUICoinReturn extends GUIPanel {
 
 		setLayout(gridbag);
 		setBackground(COLOR_TRANSPARENT);
-		//setOpaque(false);
+		setOpaque(false);
 
 		ImageIcon returnIcon = new ImageIcon("images/coin_return_empty.png");
 		coinReturn = new JLabel(returnIcon);
